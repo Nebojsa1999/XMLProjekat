@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  user_service:
+    image: user_service
+    container_name: user_service
+    build:
+      context: .
+      dockerfile: ./user_service/Dockerfile
+    restart: on-failure
+    environment:
+      USER_DB_HOST: ${USER_DB_HOST}
+      USER_DB_PORT: ${USER_DB_PORT}
+      USER_SERVICE_PORT: ${USER_SERVICE_PORT}
+    depends_on:
+      - user_db
+    networks:
+      - network
+
+  posting_service:
+    image: posting_service
+    container_name: posting_service
+    build:
+      context: .
+      dockerfile: ./posting_service/Dockerfile
+    restart: on-failure
+    environment:
+      POSTING_DB_HOST: ${POSTING_DB_HOST}
+      POSTING_DB_PORT: ${POSTING_DB_PORT}
+      POSTING_SERVICE_PORT: ${POSTING_SERVICE_PORT}
+    depends_on:
+      - posting_db
+    networks:
+      - network
+
+  user_db:
+    image: mongo
+    container_name: user_db
+    restart: on-failure
+    networks:
+      - network
+
+  posting_db:
+    image: mongo
+    container_name: posting_db
+    restart: on-failure
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
