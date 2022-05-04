@@ -59,6 +59,7 @@ func getAllUsernames() []string {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer cursor.Close(context.TODO())
 
 	var allUsernames []string
 	for cursor.Next(context.TODO()) {
@@ -91,6 +92,7 @@ func getAllEmails() []string {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer cursor.Close(context.TODO())
 
 	var allEmails []string
 	for cursor.Next(context.TODO()) {

@@ -35,9 +35,10 @@ func Connect() {
 	DB = client
 
 	<-quit
+}
 
-	err = client.Disconnect(context.TODO())
-	if err != nil {
+func Disconnect() {
+	if err := DB.Disconnect(context.TODO()); err != nil {
 		log.Fatal(err)
 	} else {
 		fmt.Println("Connection to MongoDB \"user_db\" closed.")
