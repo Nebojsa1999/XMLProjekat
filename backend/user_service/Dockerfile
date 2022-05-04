@@ -31,3 +31,7 @@ EXPOSE 8000
 
 # Command to run the executable
 CMD ["./main"]
+# https://dev.to/koddr/go-fiber-by-examples-delving-into-built-in-functions-1p3k#configuration
+# Subsection PREFORK note: When using Docker, make sure the application is running
+# with CMD ./app or CMD ["sh", "-c", "/app"] into project's Dockerfile.
+#CMD ["sh", "-c", "./main"]
