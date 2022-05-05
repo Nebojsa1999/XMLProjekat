@@ -9,5 +9,6 @@
     <orderEntry type="module" module-name="dislinkt-backend" />
     <orderEntry type="module" module-name="xws" />
     <orderEntry type="module" module-name="xws-bsep-master" />
+    <orderEntry type="module" module-name="pape" />
   </component>
 </module>

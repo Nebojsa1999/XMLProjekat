@@ -2,20 +2,23 @@ package domain
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
+type Post struct {
+	Id            primitive.ObjectID `bson:"_id"`
+	OwnerId       primitive.ObjectID `bson:"owner_Id"`
+	Content       string             `bson:"content"`
+	Image         string             `bson:"image"`
+	LikesCount    int64              `bson:"likes"`
+	DislikesCount int64              `bson:"dislikes"`
+	Comments      []Comment          `bson:"comments"`
+	Link          string             `bson:"link"`
+}
 type Comment struct {
-	Id       primitive.ObjectID `bson:"_id"`
-	Content  string             `bson:"content"`
-	Date     string             `bson:"date"`
-	Username string             `bson:"username"`
+	Code    string `bson:"code"`
+	Content string `bson:"content"`
 }
 
-type Post struct {
-	Id primitive.ObjectID `bson:"_id"`
-	//	Username string             `bson:"username"`
-	Content     string `bson:"content"`
-	DateCreated string `bson:"date_created"`
-	//	Image    string             `bson:"image"`
-	//	Likes    []string           `bson:"likes"`
-	//	Dislikes []string           `bson:"dislikes"`
-	//	Comments []Comment          `bson:"comments"`
+type LikeOrDislike struct {
+	Id                primitive.ObjectID `bson:"_id"`
+	LikedOrDislikedBy primitive.ObjectID `bson:"liked_or_disliked_by"`
+	PostId            primitive.ObjectID `bson:"post_id"`
 }
