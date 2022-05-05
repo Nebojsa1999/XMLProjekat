@@ -22,3 +22,14 @@ type LikeOrDislike struct {
 	LikedOrDislikedBy primitive.ObjectID `bson:"liked_or_disliked_by"`
 	PostId            primitive.ObjectID `bson:"post_id"`
 }
+
+type NewPostRequest struct {
+	Id   primitive.ObjectID `bson:"_id"`
+	Post Post               `bson:"post"`
+}
+
+type CommentOnPostRequest struct {
+	Id      primitive.ObjectID `bson:"_id"`
+	PostID  primitive.ObjectID `bson:"post_id"`
+	Comment Comment            `bson:"comment"`
+}

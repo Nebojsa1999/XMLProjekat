@@ -1,1 +1,0 @@
-package posting_service

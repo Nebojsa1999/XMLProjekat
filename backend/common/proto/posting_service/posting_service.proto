@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+option go_package = "github.com/Nebojsa1999/XMLProjekat/backend/common/post";
+
+package post;
+
+import "google/api/annotations.proto";
+
+service PostingService{
+  rpc GetPostFromUser(GetPostRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      get: "/user/{id}/post/{post_id}"
+    };
+  }
+  rpc GetAllPosts(GetAllRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/post"
+    };
+  }
+  rpc GetAllPostsFromUser(GetRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/user/{id}/post"
+    };
+  }
+  rpc CreatePost(NewPostRequest) returns(NewPostResponse) {
+    option (google.api.http) = {
+      post: "/user/{id}/post",
+      body: "post"
+    };
+  }
+  rpc CreateComment(CommentOnPostRequest) returns(CommentOnPostResponse) {
+    option (google.api.http) = {
+      post: "/user/{id}/post/{post_id}/comment",
+      body: "comment"
+    };
+  }
+
+  rpc InsertLikeOrDislike(LikeOrDislikePostRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      put: "/user/{id}/post/{post_id}/likeordislike/{type}",
+      body: "likeordislike"
+    };
+  }
+
+}
+
+message GetRequest {
+  string id = 1;
+}
+
+message GetResponse {
+  Post post = 1;
+}
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+  repeated Post posts = 1;
+}
+
+message Post {
+  string id = 1;
+  string owner_id = 2;
+  string content = 3;
+  string image = 4;
+  int64 likes = 5;
+  int64 dislikes = 6;
+  repeated Comment comments = 7;
+  string link = 8;
+}
+
+message GetPostRequest {
+  string id = 1;
+  string post_id = 2;
+}
+
+message GetPostResponse {
+  Post post = 1;
+}
+
+message NewPostRequest {
+  string id = 1;
+  Post post = 2;
+}
+
+message NewPostResponse {
+  Post post = 1;
+}
+
+message CommentOnPostRequest{
+  string id = 1;
+  string post_id = 2;
+  Comment comment = 3;
+}
+
+message CommentOnPostResponse{
+  Comment comment=1;
+}
+
+
+message Comment {
+  string code = 1;
+  string content = 2;
+}
+
+
+message LikeOrDislikePostRequest{
+  string id = 1;
+  string post_id = 2;
+  string type = 3;
+  string reaction = 4;
+}
