@@ -37,8 +37,8 @@ service PostingService{
 
   rpc InsertLikeOrDislike(LikeOrDislikePostRequest) returns(GetResponse) {
     option (google.api.http) = {
-      put: "/user/{id}/post/{post_id}/likeordislike/{type}",
-      body: "likeordislike"
+      put: "/user/{id}/post/{post_id}/liked_or_disliked_by/{type}",
+      body: "liked_or_disliked_by"
     };
   }
 
@@ -109,5 +109,5 @@ message LikeOrDislikePostRequest{
   string id = 1;
   string post_id = 2;
   string type = 3;
-  string reaction = 4;
+  string liked_or_disliked_by = 4;
 }
