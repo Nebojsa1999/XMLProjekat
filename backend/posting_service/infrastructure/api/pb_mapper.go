@@ -2,8 +2,8 @@ package api
 
 
 import (
-	pb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/domain"
+	pb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
