@@ -1,26 +1,25 @@
 package api
 
-
 import (
-	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/domain"
 	pb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
+	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func mapPost(post *domain.Post) *pb.Post {
-	postPb := &pb.Post {
-		Id:	 post.Id.Hex(),
-		Content: post.Content,
-		Image: post.Image,
-		LikesCount: post.LikesCount,
+	postPb := &pb.Post{
+		Id:            post.Id.Hex(),
+		Content:       post.Content,
+		Image:         post.Image,
+		LikesCount:    post.LikesCount,
 		DislikesCount: post.DislikesCount,
-		Link: post.Link
+		Link:          post.Link,
 	}
 
-	for _, Comment := range post.Comments {
-		postPb.Comments = append(postPb.Comments, &pb.Comment {
-			Code: comment.Code,
-			Content: comment.Content
+	for _, comment := range post.Comments {
+		postPb.Comments = append(postPb.Comments, &pb.Comment{
+			Code:    comment.Code,
+			Content: comment.Content,
 		})
 	}
 
@@ -31,20 +30,20 @@ func mapPostRequest(postPb *pb.Post) *domain.Post {
 	id, _ := primitive.ObjectIDFromHex(postPb.Id)
 	ownerId, _ := primitive.ObjectIDFromHex(postPb.OwnerId)
 	Post := &domain.Post{
-		Id: id,
-		OwnerId: ownerId,
-		Conent: postPb.Conent,
-		Image: postPb.Image,
-		LikesCount: postPb.LikesCount,
+		Id:            id,
+		OwnerId:       ownerId,
+		Content:       postPb.Content,
+		Image:         postPb.Image,
+		LikesCount:    postPb.LikesCount,
 		DislikesCount: postPb.DislikesCount,
-		Comments: make([]domain.Post, 0),
-		Link: postPb.Link,
+		Comments:      make([]domain.Comment, 0),
+		Link:          postPb.Link,
 	}
 
 	for _, commentPb := range postPb.Comments {
-		comment := domain.Comment {
-			Code: commentPb.Code,
-			Content: commentPb.Content
+		comment := domain.Comment{
+			Code:    commentPb.Code,
+			Content: commentPb.Content,
 		}
 
 		Post.Comments = append(Post.Comments, comment)
@@ -55,8 +54,8 @@ func mapPostRequest(postPb *pb.Post) *domain.Post {
 
 func mapComment(commentPb *domain.Comment) *pb.Comment {
 	Comment := &pb.Comment{
-		Code: commentPb.Code,
-		Content: commentPb.Content
+		Code:    commentPb.Code,
+		Content: commentPb.Content,
 	}
 
 	return Comment
@@ -64,8 +63,8 @@ func mapComment(commentPb *domain.Comment) *pb.Comment {
 
 func mapCommentOnPostRequest(commentPb *pb.Comment) *domain.Comment {
 	Comment := &domain.Comment{
-		Code: commentPb.Code,
-		Content: commentPb.Content
+		Code:    commentPb.Code,
+		Content: commentPb.Content,
 	}
 
 	return Comment

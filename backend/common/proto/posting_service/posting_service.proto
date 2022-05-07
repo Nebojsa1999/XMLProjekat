@@ -64,8 +64,8 @@ message Post {
   string owner_id = 2;
   string content = 3;
   string image = 4;
-  int64 likes = 5;
-  int64 dislikes = 6;
+  int64 likesCount = 5;
+  int64 dislikesCount = 6;
   repeated Comment comments = 7;
   string link = 8;
 }

@@ -1,10 +1,9 @@
 package api
 
-
 import (
 	"context"
+
 	pb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
-	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/domain"
 	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/application"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -15,8 +14,8 @@ type PostHandler struct {
 }
 
 func NewPostHandler(service *application.PostService) *PostHandler {
-	return &PostHandler {cc
-		service: service
+	return &PostHandler{
+		service: service,
 	}
 }
 
@@ -25,7 +24,7 @@ func (handler *PostHandler) GetPostFromUser(ctx context.Context, request *pb.Get
 	if err != nil {
 		return nil, err
 	}
-	ObjectPostId, err := primitive.ObjectIDFromHex(request.PostId)
+	objectPostId, err := primitive.ObjectIDFromHex(request.PostId)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +34,7 @@ func (handler *PostHandler) GetPostFromUser(ctx context.Context, request *pb.Get
 	}
 	postPb := mapPost(post)
 	response := &pb.GetResponse{
-		Post: postPb
+		Post: postPb,
 	}
 	return response, nil
 }
@@ -43,7 +42,7 @@ func (handler *PostHandler) GetPostFromUser(ctx context.Context, request *pb.Get
 //todo: GetAllPosts
 
 func (handler *PostHandler) GetAllPostsFromUser(ctx context.Context, request *pb.GetRequest) (*pb.GetAllResponse, error) {
-	id := request.PostId
+	id := request.Id
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
@@ -55,13 +54,13 @@ func (handler *PostHandler) GetAllPostsFromUser(ctx context.Context, request *pb
 	}
 
 	response := &pb.GetAllResponse{
-		Posts: []*pb.Post{}
+		Posts: []*pb.Post{},
 	}
 	for _, post := range posts {
-		current := mapPost(post),
+		current := mapPost(post)
 		response.Posts = append(response.Posts, current)
 	}
-	return response
+	return response, nil
 }
 
 func (handler *PostHandler) CreatePost(ctx context.Context, request *pb.NewPostRequest) (*pb.NewPostResponse, error) {
@@ -71,8 +70,8 @@ func (handler *PostHandler) CreatePost(ctx context.Context, request *pb.NewPostR
 	}
 
 	newPost, err := handler.service.CreatePost(objectId, mapPostRequest(request.Post))
-	response := pb.NewPostRequest{
-		Post: mapPost(newPost)
+	response := &pb.NewPostResponse{
+		Post: mapPost(newPost),
 	}
 	return response, err
 }
