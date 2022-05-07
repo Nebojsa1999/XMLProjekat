@@ -2,8 +2,8 @@ package api
 
 import (
 	"context"
-	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/application"
 	pb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
+	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/application"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -30,7 +30,7 @@ func (handler *UserHandler) Get(ctx context.Context, request *pb.GetRequest) (*p
 		return nil, err
 	}
 
-	userPb := mapUser(user)
+	userPb := mapDomainUserToPbUser(user)
 	response := &pb.GetResponse{
 		User: userPb,
 	}
@@ -47,11 +47,21 @@ func (handler *UserHandler) GetAll(ctx context.Context, request *pb.GetAllReques
 	response := &pb.GetAllResponse{
 		Users: []*pb.User{},
 	}
-
 	for _, user := range users {
-		current := mapUser(user)
+		current := mapDomainUserToPbUser(user)
 		response.Users = append(response.Users, current)
 	}
 
 	return response, nil
+}
+
+func (handler *UserHandler) RegisterANewUser(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+	newUser := mapPbUserToDomainUser(request.User)
+
+	message, err := handler.service.RegisterANewUser(newUser)
+	response := &pb.RegisterResponse{
+		Message: message,
+	}
+
+	return response, err
 }
