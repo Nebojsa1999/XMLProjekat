@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/domain"
 
 	pb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/application"
@@ -39,7 +40,20 @@ func (handler *PostHandler) GetPostFromUser(ctx context.Context, request *pb.Get
 	return response, nil
 }
 
-//todo: GetAllPosts
+func (handler *PostHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
+	posts, err := handler.service.GetAllPosts()
+	if err != nil {
+		return nil, err
+	}
+	response := &pb.GetAllResponse{
+		Posts: []*pb.Post{},
+	}
+	for _, post := range posts {
+		current := mapPost(post)
+		response.Posts = append(response.Posts, current)
+	}
+	return response, nil
+}
 
 func (handler *PostHandler) GetAllPostsFromUser(ctx context.Context, request *pb.GetRequest) (*pb.GetAllResponse, error) {
 	id := request.Id
@@ -95,3 +109,39 @@ func (handler *PostHandler) CreateComment(ctx context.Context, request *pb.Comme
 }
 
 //todo: updateLikes, updateDislikes
+func (handler *PostHandler) InsertLikeOrDislike(ctx context.Context, request *pb.LikeOrDislikePostRequest) (*pb.GetResponse, error) {
+	objectId, err := primitive.ObjectIDFromHex(request.Id)
+	if err != nil {
+		return nil, err
+	}
+	objectPostId, err := primitive.ObjectIDFromHex(request.PostId)
+	if err != nil {
+		return nil, err
+	}
+
+	objectLikedOrDislikedBy, err := primitive.ObjectIDFromHex(request.LikedOrDislikedBy)
+	if err != nil {
+		return nil, err
+	}
+	liked_or_disliked_by := &domain.LikeOrDislike{
+		Id:                objectId,
+		PostId:            objectPostId,
+		LikedOrDislikedBy: objectLikedOrDislikedBy,
+	}
+
+	var updatedPost *domain.Post
+	var err1 error
+	if request.Type == "like" {
+		updatedPost, err1 = handler.service.UpdateLikes(liked_or_disliked_by)
+	}
+	if request.Type == "dislike" {
+		updatedPost, err1 = handler.service.UpdateDislikes(liked_or_disliked_by)
+	}
+	if err1 != nil {
+		return nil, err1
+	}
+	response := &pb.GetResponse{
+		Post: mapPost(updatedPost),
+	}
+	return response, err
+}
