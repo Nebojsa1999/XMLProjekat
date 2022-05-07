@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+
 	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/domain"
 
 	pb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
@@ -108,7 +109,6 @@ func (handler *PostHandler) CreateComment(ctx context.Context, request *pb.Comme
 	return response, err
 }
 
-//todo: updateLikes, updateDislikes
 func (handler *PostHandler) InsertLikeOrDislike(ctx context.Context, request *pb.LikeOrDislikePostRequest) (*pb.GetResponse, error) {
 	objectId, err := primitive.ObjectIDFromHex(request.Id)
 	if err != nil {
