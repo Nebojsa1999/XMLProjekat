@@ -43,6 +43,16 @@ func (store *UserMongoDBStore) GetByUsername(username string) (*domain.User, err
 	return store.filterOne(filter)
 }
 
+func (store *UserMongoDBStore) GetByUsernameAndPassword(username string, password string) (*domain.User, error) {
+	filter := bson.M{"username": username, "password": password}
+	existingUser, err := store.filterOne(filter)
+	if err != nil {
+		return nil, err
+	}
+
+	return existingUser, nil
+}
+
 func (store *UserMongoDBStore) GetByEmail(email string) (*domain.User, error) {
 	filter := bson.M{"email": email}
 

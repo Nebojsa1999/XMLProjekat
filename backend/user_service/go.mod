@@ -26,6 +26,7 @@ require (
 
 require (
 	github.com/Nebojsa1999/XMLProjekat/backend/common v1.0.0
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	go.mongodb.org/mongo-driver v1.9.0
 	google.golang.org/grpc v1.46.0
 )

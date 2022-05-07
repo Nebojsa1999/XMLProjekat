@@ -1,8 +1,12 @@
 package application
 
 import (
+	"fmt"
 	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/domain"
+	jwt "github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"os"
+	"time"
 )
 
 type UserService struct {
@@ -41,4 +45,36 @@ func (service *UserService) RegisterANewUser(user *domain.User) (string, error) 
 	}
 
 	return service.store.RegisterANewUser(user)
+}
+
+func (service *UserService) Login(credentials *domain.Credentials) (*domain.JWTToken, error) {
+	_, err := service.store.GetByUsernameAndPassword(credentials.Username, credentials.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	jwtToken, err := service.GenerateJWTToken(credentials.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	return jwtToken, nil
+}
+
+func (service *UserService) GenerateJWTToken(username string) (*domain.JWTToken, error) {
+	var tokenSigningKey = []byte(os.Getenv("SECRET_FOR_JWT"))
+	jwtToken := jwt.New(jwt.SigningMethodHS256)
+	claims := jwtToken.Claims.(jwt.MapClaims)
+
+	claims["authorized"] = true
+	claims["username"] = username
+	claims["exp"] = time.Now().Add(time.Hour).Unix()
+
+	jwtTokenString, err := jwtToken.SignedString(tokenSigningKey)
+	if err != nil {
+		err = fmt.Errorf("Error occured during signing of token: %s", err)
+		return nil, err
+	}
+
+	return &domain.JWTToken{Token: jwtTokenString}, nil
 }

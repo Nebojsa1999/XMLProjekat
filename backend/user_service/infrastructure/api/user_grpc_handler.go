@@ -65,3 +65,14 @@ func (handler *UserHandler) RegisterANewUser(ctx context.Context, request *pb.Re
 
 	return response, err
 }
+
+func (handler *UserHandler) Login(ctx context.Context, request *pb.LoginRequest) (*pb.LoginResponse, error) {
+	userCredentials := mapPbCredentialsToDomainCredentials(request.Credentials)
+
+	jwtToken, err := handler.service.Login(userCredentials)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.LoginResponse{Token: jwtToken.Token}, nil
+}
