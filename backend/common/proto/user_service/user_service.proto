@@ -20,8 +20,14 @@ service UserService{
   }
   rpc RegisterANewUser(RegisterRequest) returns(RegisterResponse) {
     option (google.api.http) = {
-      post: "/user"
+      post: "/user/register",
       body: "user"
+    };
+  }
+  rpc Login(LoginRequest) returns(LoginResponse) {
+    option (google.api.http) = {
+      post: "/user/login",
+      body: "credentials"
     };
   }
 }
@@ -49,6 +55,14 @@ message RegisterResponse {
   string message = 1;
 }
 
+message LoginRequest {
+  Credentials credentials = 1;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
 message User {
   string id = 1;
   string username = 2;
@@ -69,4 +83,9 @@ message User {
   string education = 12;
   string skills = 13;
   string interests = 14;
+}
+
+message Credentials {
+  string username = 1;
+  string password = 2;
 }
