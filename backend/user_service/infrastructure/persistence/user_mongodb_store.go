@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	DATABASE = "users"
+	DATABASE = "user_db"
 	COLLECTION = "users"
 )
 
@@ -25,26 +25,38 @@ func NewUserMongoDBStore(client *mongo.Client) domain.UserStore {
 	}
 }
 
-func (store *UserMongoDBStore) Get(id primitive.ObjectID) (*domain.User, error) {
-	filter := bson.M{"_id": id}
-
-	return store.filterOne(filter)
-}
-
 func (store *UserMongoDBStore) GetAll() ([]*domain.User, error) {
 	filter := bson.D{{}}
 
 	return store.filter(filter)
 }
 
-func (store *UserMongoDBStore) Insert(user *domain.User) error {
+func (store *UserMongoDBStore) Get(id primitive.ObjectID) (*domain.User, error) {
+	filter := bson.M{"_id": id}
+
+	return store.filterOne(filter)
+}
+
+func (store *UserMongoDBStore) GetByUsername(username string) (*domain.User, error) {
+	filter := bson.M{"username": username}
+
+	return store.filterOne(filter)
+}
+
+func (store *UserMongoDBStore) GetByEmail(email string) (*domain.User, error) {
+	filter := bson.M{"email": email}
+
+	return store.filterOne(filter)
+}
+
+func (store *UserMongoDBStore) RegisterANewUser(user *domain.User) (string, error) {
 	result, err := store.users.InsertOne(context.TODO(), user)
 	if err != nil {
-		return err
+		return "Error occured while inserting new user into database!", err
 	}
 
 	user.Id = result.InsertedID.(primitive.ObjectID)
-	return nil
+	return "Success: user has been registrated.", nil
 }
 
 func (store *UserMongoDBStore) DeleteAll() {

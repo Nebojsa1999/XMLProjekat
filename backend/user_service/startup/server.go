@@ -2,12 +2,12 @@ package startup
 
 import (
 	"fmt"
+	user "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/application"
 	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/domain"
 	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/infrastructure/api"
 	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/infrastructure/persistence"
 	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/startup/config"
-	user "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 	"log"
@@ -48,7 +48,7 @@ func (server *Server) initUserStore(client *mongo.Client) domain.UserStore {
 	store := persistence.NewUserMongoDBStore(client)
 	store.DeleteAll()
 	for _, user := range users{
-		err := store.Insert(user)
+		_, err := store.RegisterANewUser(user)
 		if err != nil {
 			log.Fatal(err)
 		}
