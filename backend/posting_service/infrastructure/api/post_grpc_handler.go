@@ -76,4 +76,22 @@ func (handler *PostHandler) CreatePost(ctx context.Context, request *pb.NewPostR
 	return response, err
 }
 
-//todo: updateLikes, updateDislikes, CreateComment
+func (handler *PostHandler) CreateComment(ctx context.Context, request *pb.CommentOnPostRequest) (*pb.CommentOnPostResponse, error) {
+
+	objectId, err := primitive.ObjectIDFromHex(request.Id)
+	if err != nil {
+		return nil, err
+	}
+	objectPostId, err := primitive.ObjectIDFromHex(request.PostId)
+	if err != nil {
+		return nil, err
+	}
+
+	newComment, err := handler.service.CreateComment(objectId, objectPostId, mapCommentOnPostRequest(request.Comment))
+	response := &pb.CommentOnPostResponse{
+		Comment: mapComment(newComment),
+	}
+	return response, err
+}
+
+//todo: updateLikes, updateDislikes
