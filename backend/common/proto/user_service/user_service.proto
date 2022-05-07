@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+option go_package = "github.com/Nebojsa1999/XMLProjekat/backend/common/user";
+
+package user;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service UserService{
+  rpc Get(GetRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      get: "/user/{id}"
+    };
+  }
+  rpc GetAll(GetAllRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/user"
+    };
+  }
+  rpc RegisterANewUser(RegisterRequest) returns(RegisterResponse) {
+    option (google.api.http) = {
+      post: "/user"
+      body: "user"
+    };
+  }
+}
+
+message GetRequest {
+  string id = 1;
+}
+
+message GetResponse {
+  User user = 1;
+}
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+  repeated User users = 1;
+}
+
+message RegisterRequest {
+  User user = 1;
+}
+
+message RegisterResponse {
+  string message = 1;
+}
+
+message User {
+  string id = 1;
+  string username = 2;
+  string password = 3;
+  bool isPrivate = 4;
+  string firstName = 5;
+  string lastName = 6;
+  string email = 7;
+  enum Gender {
+    Undefined = 0;
+    Male = 1;
+    Female = 2;
+  }
+  Gender gender = 8;
+  google.protobuf.Timestamp dateOfBirth = 9;
+  string biography = 10;
+  string workExperience = 11;
+  string education = 12;
+  string skills = 13;
+  string interests = 14;
+}
