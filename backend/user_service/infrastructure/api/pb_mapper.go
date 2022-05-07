@@ -64,3 +64,21 @@ func mapPbGenderToDomainGender(gender pb.User_Gender) domain.Gender {
 		return domain.Female
 	}
 }
+
+func mapDomainCredentialsToPbCredentials(credentials *domain.Credentials) *pb.Credentials {
+	credentialsPb := &pb.Credentials{
+		Username: credentials.Username,
+		Password: credentials.Password,
+	}
+
+	return credentialsPb
+}
+
+func mapPbCredentialsToDomainCredentials(credentialsPb *pb.Credentials) *domain.Credentials {
+	newCredentials := &domain.Credentials{
+		Username: credentialsPb.Username,
+		Password: credentialsPb.Password,
+	}
+
+	return newCredentials
+}

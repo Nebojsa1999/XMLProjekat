@@ -28,3 +28,12 @@ type User struct {
 	Skills         string             `json:"skills" bson:"skills"`
 	Interests      string             `json:"interests" bson:"interests"`
 }
+
+type Credentials struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type JWTToken struct {
+	Token string `json:"token"`
+}
