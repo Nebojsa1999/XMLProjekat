@@ -20,6 +20,68 @@ type PostMongoDBStore struct {
 	posts *mongo.Database
 }
 
+func (store *PostMongoDBStore) GetAllPosts() ([]*domain.Post, error) {
+	filter := bson.D{{}}
+	x := []string{"000000000000000000001111", "111100000000000000000000"}
+	posts := []*domain.Post{}
+	for _, id := range x {
+		userPost, _ := store.filter(filter, id)
+		for _, post := range userPost {
+			posts = append(posts, post)
+		}
+	}
+	return posts, nil
+}
+
+func (store *PostMongoDBStore) UpdateLikes(liked_or_disliked_by *domain.LikeOrDislike) (*domain.Post, error) {
+	post, err := store.GetPostFromUser(liked_or_disliked_by.Id, liked_or_disliked_by.PostId)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	post.LikesCount = post.LikesCount + 1
+
+	filter := bson.M{"_id": liked_or_disliked_by.PostId}
+	update := bson.D{
+		{"$set", bson.D{{"likes", post.LikesCount}}},
+	}
+
+	insertResult, err := store.posts.Collection(COLLECTION+liked_or_disliked_by.Id.Hex()).UpdateOne(context.TODO(), filter,
+		update)
+	if err != nil {
+		return nil, err
+	}
+	if insertResult.MatchedCount != 1 {
+		log.Fatal(err, "Greska")
+		return nil, err
+	}
+	return post, err
+}
+
+func (store *PostMongoDBStore) UpdateDislikes(liked_or_disliked_by *domain.LikeOrDislike) (*domain.Post, error) {
+	post, err := store.GetPostFromUser(liked_or_disliked_by.Id, liked_or_disliked_by.PostId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	post.DislikesCount = post.DislikesCount + 1
+
+	filter := bson.M{"_id": liked_or_disliked_by.PostId}
+	update := bson.D{
+		{"$set", bson.D{{"dislikes", post.DislikesCount}}},
+	}
+
+	insertResult, err := store.posts.Collection(COLLECTION+liked_or_disliked_by.Id.Hex()).UpdateOne(context.TODO(), filter,
+		update)
+	if err != nil {
+		return nil, err
+	}
+	if insertResult.MatchedCount != 1 {
+		log.Fatal(err, "Greska")
+		return nil, err
+	}
+	return post, err
+}
+
 func NewPostMongoDBStore(client *mongo.Client) domain.PostStore {
 
 	posts := client.Database(DATABASE)
