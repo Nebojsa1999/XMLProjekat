@@ -3,7 +3,6 @@ package startup
 import (
 	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -11,7 +10,7 @@ var users = []*domain.User{
 	{
 		Id: getObjectId("623b0cc3a34d25d8567f9f82"),
 		Username: "Darijan98",
-		Password: getHashOfThePassword("malaMaca9"),
+		Password: "malaMaca9",
 		FirstName: "Darijan",
 		LastName: "Mićić",
 		Email: "darijan.micic10@gmail.com",
@@ -31,12 +30,6 @@ func getObjectId(id string) primitive.ObjectID {
 	}
 
 	return primitive.NewObjectID()
-}
-
-func getHashOfThePassword(password string) []byte {
-	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 14)
-
-	return hash
 }
 
 func getParsedDateOfBirthFrom(dateOfBirthAsString string) time.Time {
