@@ -8,6 +8,8 @@ services:
       context: .
       dockerfile: ./user_service/Dockerfile
     restart: on-failure
+    ports:
+      - "8000:8000"
     environment:
       USER_DB_HOST: ${USER_DB_HOST}
       USER_DB_PORT: ${USER_DB_PORT}
@@ -24,6 +26,8 @@ services:
       context: .
       dockerfile: ./posting_service/Dockerfile
     restart: on-failure
+    ports:
+      - "8000:8000"
     environment:
       POSTING_DB_HOST: ${POSTING_DB_HOST}
       POSTING_DB_PORT: ${POSTING_DB_PORT}
@@ -34,14 +38,14 @@ services:
       - network
 
   user_db:
-    image: mongo
+    image: mongo:4.4.6
     container_name: user_db
     restart: on-failure
     networks:
       - network
 
   posting_db:
-    image: mongo
+    image: mongo:4.4.6
     container_name: posting_db
     restart: on-failure
     networks:
