@@ -6,6 +6,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -81,4 +82,70 @@ func (service *UserService) GenerateJWTToken(username string) (*domain.JWTToken,
 	}
 
 	return &domain.JWTToken{Token: jwtTokenString}, nil
+}
+
+func (service *UserService) IsUserPrivate(id primitive.ObjectID) (bool, error) {
+	return service.store.IsUserPrivate(id)
+}
+
+func (service *UserService) GetIdsOfAllPublicUsers() ([]primitive.ObjectID, error) {
+	allPublicUsers, err := service.store.GetAllPublicUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	var idsOfAllPublicUsers []primitive.ObjectID
+	for _, user := range allPublicUsers {
+		idsOfAllPublicUsers = append(idsOfAllPublicUsers, user.Id)
+	}
+
+	return idsOfAllPublicUsers, err
+}
+
+func (service *UserService) SearchPublicUsers(criteria string) ([]*domain.User, error) {
+	var publicUsersMatchingCriteria []*domain.User
+
+	criteria = strings.TrimSpace(criteria)
+	splitSearch := strings.Split(criteria, " ")
+
+	for _, splitSearchPart := range splitSearch {
+		publicUsersWithMatchingUsername, err := service.store.SearchPublicUsersByUsername(splitSearchPart)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, userOneSlice := range publicUsersWithMatchingUsername {
+			publicUsersMatchingCriteria = appendIfMissing(publicUsersMatchingCriteria, userOneSlice)
+		}
+
+		publicUsersWithMatchingFirstName, err := service.store.SearchPublicUsersByFirstName(splitSearchPart)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, userOneSlice := range publicUsersWithMatchingFirstName {
+			publicUsersMatchingCriteria = appendIfMissing(publicUsersMatchingCriteria, userOneSlice)
+		}
+
+		publicUsersWithMatchingLastName, err := service.store.SearchPublicUsersByLastName(splitSearchPart)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, userOneSlice := range publicUsersWithMatchingLastName {
+			publicUsersMatchingCriteria = appendIfMissing(publicUsersMatchingCriteria, userOneSlice)
+		}
+	}
+
+	return publicUsersMatchingCriteria, nil
+}
+
+func appendIfMissing(slice []*domain.User, i *domain.User) []*domain.User {
+	for _, element := range slice {
+		if element.Id == i.Id {
+			return slice
+		}
+	}
+
+	return append(slice, i)
 }

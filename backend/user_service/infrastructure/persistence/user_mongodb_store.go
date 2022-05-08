@@ -73,6 +73,38 @@ func (store *UserMongoDBStore) DeleteAll() {
 	store.users.DeleteMany(context.TODO(), bson.D{{}})
 }
 
+func (store *UserMongoDBStore) IsUserPrivate(id primitive.ObjectID) (bool, error) {
+	filter := bson.M{"_id": id}
+
+	result, err := store.filterOne(filter)
+
+	return result.IsPrivate, err
+}
+
+func (store *UserMongoDBStore) GetAllPublicUsers() ([]*domain.User, error) {
+	filter := bson.M{"is_private": false}
+
+	return store.filter(filter)
+}
+
+func (store *UserMongoDBStore) SearchPublicUsersByUsername(criteria string) ([]*domain.User, error) {
+	filter := bson.M{"is_private": false, "username": primitive.Regex{Pattern: criteria, Options: "i"}}
+
+	return store.filter(filter)
+}
+
+func (store *UserMongoDBStore) SearchPublicUsersByFirstName(criteria string) ([]*domain.User, error) {
+	filter := bson.M{"is_private": false, "first_name": primitive.Regex{Pattern: criteria, Options: "i"}}
+
+	return store.filter(filter)
+}
+
+func (store *UserMongoDBStore) SearchPublicUsersByLastName(criteria string) ([]*domain.User, error) {
+	filter := bson.M{"is_private": false, "last_name": primitive.Regex{Pattern: criteria, Options: "i"}}
+
+	return store.filter(filter)
+}
+
 func (store *UserMongoDBStore) filter(filter interface{}) ([]*domain.User, error) {
 	cursor, err := store.users.Find(context.TODO(), filter)
 	defer cursor.Close(context.TODO())
