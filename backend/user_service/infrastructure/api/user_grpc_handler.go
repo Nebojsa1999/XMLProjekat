@@ -70,12 +70,16 @@ func (handler *UserHandler) Login(ctx context.Context, request *pb.LoginRequest)
 	userCredentials := mapPbCredentialsToDomainCredentials(request.Credentials)
 
 	jwtToken, message, err := handler.service.Login(userCredentials)
+	if err != nil {
+		return nil, err
+	}
+
 	response := &pb.LoginResponse{
 		Token: jwtToken.Token,
 		Message: message,
 	}
 
-	return response, err
+	return response, nil
 }
 
 func (handler *UserHandler) IsUserPrivate(ctx context.Context, request *pb.IsPrivateRequest) (*pb.IsPrivateResponse, error) {

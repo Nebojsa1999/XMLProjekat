@@ -51,7 +51,7 @@ func (service *UserService) RegisterANewUser(user *domain.User) (string, error) 
 func (service *UserService) Login(credentials *domain.Credentials) (*domain.JWTToken, string, error) {
 	existingUser, err := service.store.GetByUsername(credentials.Username)
 	if err != nil {
-		return nil, "There is no user with that username.", err
+		return nil, "There is no user with that username.", nil
 	}
 
 	if credentials.Password != existingUser.Password {
@@ -77,7 +77,7 @@ func (service *UserService) GenerateJWTToken(username string) (*domain.JWTToken,
 
 	jwtTokenString, err := jwtToken.SignedString(tokenSigningKey)
 	if err != nil {
-		err = fmt.Errorf("Error occured during signing of token: %s", err)
+		err = fmt.Errorf("Error occurred during signing of token: %s", err)
 		return nil, err
 	}
 

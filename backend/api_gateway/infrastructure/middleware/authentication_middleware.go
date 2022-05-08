@@ -66,5 +66,6 @@ func isAProtectedRoute(method, path string) bool {
 		}
 	}
 
-	return true
+	//return true
+	return false
 }
