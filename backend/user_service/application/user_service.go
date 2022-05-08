@@ -47,18 +47,22 @@ func (service *UserService) RegisterANewUser(user *domain.User) (string, error) 
 	return service.store.RegisterANewUser(user)
 }
 
-func (service *UserService) Login(credentials *domain.Credentials) (*domain.JWTToken, error) {
-	_, err := service.store.GetByUsernameAndPassword(credentials.Username, credentials.Password)
+func (service *UserService) Login(credentials *domain.Credentials) (*domain.JWTToken, string, error) {
+	existingUser, err := service.store.GetByUsername(credentials.Username)
 	if err != nil {
-		return nil, err
+		return nil, "There is no user with that username.", err
+	}
+
+	if credentials.Password != existingUser.Password {
+		return nil, "Password is incorrect.", nil
 	}
 
 	jwtToken, err := service.GenerateJWTToken(credentials.Username)
 	if err != nil {
-		return nil, err
+		return nil, "Error occurred during generating JWT token, login failed!", err
 	}
 
-	return jwtToken, nil
+	return jwtToken, "Success: user has been logged in.", nil
 }
 
 func (service *UserService) GenerateJWTToken(username string) (*domain.JWTToken, error) {
