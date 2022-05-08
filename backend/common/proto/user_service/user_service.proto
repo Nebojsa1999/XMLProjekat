@@ -30,6 +30,14 @@ service UserService{
       body: "credentials"
     };
   }
+  rpc IsUserPrivate(IsPrivateRequest) returns(IsPrivateResponse) {}
+  rpc GetIdsOfAllPublicUsers(GetIdsOfAllPublicUsersRequest) returns(GetIdsOfAllPublicUsersResponse) {}
+  rpc SearchPublicUsers(SearchPublicUsersRequest) returns(SearchPublicUsersResponse) {
+    option (google.api.http) = {
+      post: "/user/search",
+      body: "criteria"
+    };
+  }
 }
 
 message GetRequest {
@@ -62,6 +70,28 @@ message LoginRequest {
 message LoginResponse {
   string token = 1;
   string message = 2;
+}
+
+message IsPrivateRequest {
+  string id = 1;
+}
+
+message IsPrivateResponse {
+  bool private = 1;
+}
+
+message GetIdsOfAllPublicUsersRequest {}
+
+message GetIdsOfAllPublicUsersResponse {
+  repeated string ids = 1;
+}
+
+message SearchPublicUsersRequest {
+  string criteria = 1;
+}
+
+message SearchPublicUsersResponse {
+  repeated User users = 1;
 }
 
 message User {

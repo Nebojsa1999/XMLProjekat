@@ -26,6 +26,9 @@ type UserServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	RegisterANewUser(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	IsUserPrivate(ctx context.Context, in *IsPrivateRequest, opts ...grpc.CallOption) (*IsPrivateResponse, error)
+	GetIdsOfAllPublicUsers(ctx context.Context, in *GetIdsOfAllPublicUsersRequest, opts ...grpc.CallOption) (*GetIdsOfAllPublicUsersResponse, error)
+	SearchPublicUsers(ctx context.Context, in *SearchPublicUsersRequest, opts ...grpc.CallOption) (*SearchPublicUsersResponse, error)
 }
 
 type userServiceClient struct {
@@ -72,6 +75,33 @@ func (c *userServiceClient) Login(ctx context.Context, in *LoginRequest, opts ..
 	return out, nil
 }
 
+func (c *userServiceClient) IsUserPrivate(ctx context.Context, in *IsPrivateRequest, opts ...grpc.CallOption) (*IsPrivateResponse, error) {
+	out := new(IsPrivateResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/IsUserPrivate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetIdsOfAllPublicUsers(ctx context.Context, in *GetIdsOfAllPublicUsersRequest, opts ...grpc.CallOption) (*GetIdsOfAllPublicUsersResponse, error) {
+	out := new(GetIdsOfAllPublicUsersResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/GetIdsOfAllPublicUsers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) SearchPublicUsers(ctx context.Context, in *SearchPublicUsersRequest, opts ...grpc.CallOption) (*SearchPublicUsersResponse, error) {
+	out := new(SearchPublicUsersResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/SearchPublicUsers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -80,6 +110,9 @@ type UserServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	RegisterANewUser(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	IsUserPrivate(context.Context, *IsPrivateRequest) (*IsPrivateResponse, error)
+	GetIdsOfAllPublicUsers(context.Context, *GetIdsOfAllPublicUsersRequest) (*GetIdsOfAllPublicUsersResponse, error)
+	SearchPublicUsers(context.Context, *SearchPublicUsersRequest) (*SearchPublicUsersResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -98,6 +131,15 @@ func (UnimplementedUserServiceServer) RegisterANewUser(context.Context, *Registe
 }
 func (UnimplementedUserServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedUserServiceServer) IsUserPrivate(context.Context, *IsPrivateRequest) (*IsPrivateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsUserPrivate not implemented")
+}
+func (UnimplementedUserServiceServer) GetIdsOfAllPublicUsers(context.Context, *GetIdsOfAllPublicUsersRequest) (*GetIdsOfAllPublicUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetIdsOfAllPublicUsers not implemented")
+}
+func (UnimplementedUserServiceServer) SearchPublicUsers(context.Context, *SearchPublicUsersRequest) (*SearchPublicUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchPublicUsers not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -184,6 +226,60 @@ func _UserService_Login_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_IsUserPrivate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsPrivateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).IsUserPrivate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/IsUserPrivate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).IsUserPrivate(ctx, req.(*IsPrivateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetIdsOfAllPublicUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetIdsOfAllPublicUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetIdsOfAllPublicUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/GetIdsOfAllPublicUsers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetIdsOfAllPublicUsers(ctx, req.(*GetIdsOfAllPublicUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_SearchPublicUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchPublicUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).SearchPublicUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/SearchPublicUsers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).SearchPublicUsers(ctx, req.(*SearchPublicUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -206,6 +302,18 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Login",
 			Handler:    _UserService_Login_Handler,
+		},
+		{
+			MethodName: "IsUserPrivate",
+			Handler:    _UserService_IsUserPrivate_Handler,
+		},
+		{
+			MethodName: "GetIdsOfAllPublicUsers",
+			Handler:    _UserService_GetIdsOfAllPublicUsers_Handler,
+		},
+		{
+			MethodName: "SearchPublicUsers",
+			Handler:    _UserService_SearchPublicUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
