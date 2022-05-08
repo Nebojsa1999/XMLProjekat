@@ -22,7 +22,7 @@ type PostMongoDBStore struct {
 
 func (store *PostMongoDBStore) GetAllPosts() ([]*domain.Post, error) {
 	filter := bson.D{{}}
-	x := []string{"000000000000000000001111", "111100000000000000000000"}
+	x := []string{"000000000000000000000000", "110000000000000000000000"}
 	posts := []*domain.Post{}
 	for _, id := range x {
 		userPost, _ := store.filter(filter, id)
