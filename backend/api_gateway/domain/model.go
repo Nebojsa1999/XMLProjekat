@@ -1,6 +1,7 @@
 package domain
 
 import (
+	postPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	userPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 	"time"
 )
@@ -24,4 +25,15 @@ type User struct {
 
 type UserRegistrationRequest struct {
 	User userPb.User
+}
+
+type UserStatusRequest struct {
+	Id        string
+	IsPrivate bool
+	Posts     []*postPb.Post
+}
+
+type GetAllPostsRequest struct {
+	UserIds []string
+	Posts   []*postPb.Post
 }
