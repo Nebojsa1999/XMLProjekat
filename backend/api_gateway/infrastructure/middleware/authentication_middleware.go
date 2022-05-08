@@ -6,13 +6,14 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"net/http"
 	"os"
+	"regexp"
 )
 
 func IsAuthenticated(handler *runtime.ServeMux) http.HandlerFunc {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if isAProtectedRoute(request.Method, request.URL.Path) {
-			if request.Header["Token"] != nil {
-				token, err := jwt.Parse(request.Header["Token"][0], func(token *jwt.Token) (interface{}, error) {
+			if request.Header["Authorization"] != nil {
+				token, err := jwt.Parse(request.Header["Authorization"][0], func(token *jwt.Token) (interface{}, error) {
 					if _, isSigningMethodValid := token.Method.(*jwt.SigningMethodHMAC); !isSigningMethodValid {
 						return nil, fmt.Errorf("Invalid signing method!")
 					}
@@ -52,9 +53,11 @@ func IsAuthenticated(handler *runtime.ServeMux) http.HandlerFunc {
 }
 
 func isAProtectedRoute(method, path string) bool {
+	isPathToPostsOfPublicUser, _ := regexp.MatchString("/user/[0-9a-f]{24}/public", path)
+
 	switch method {
 	case "GET":
-		if path == "/user/{id}/public" {
+		if isPathToPostsOfPublicUser || path == "/post/public" {
 			return false
 		}
 	case "POST":
