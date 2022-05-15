@@ -39,8 +39,12 @@ func (store *UserMongoDBStore) Get(id primitive.ObjectID) (*domain.User, error) 
 
 func (store *UserMongoDBStore) GetByUsername(username string) (*domain.User, error) {
 	filter := bson.M{"username": username}
+	existingUser, err := store.filterOne(filter)
+	if err != nil {
+		return nil, err
+	}
 
-	return store.filterOne(filter)
+	return existingUser, nil
 }
 
 func (store *UserMongoDBStore) GetByUsernameAndPassword(username string, password string) (*domain.User, error) {
@@ -62,11 +66,11 @@ func (store *UserMongoDBStore) GetByEmail(email string) (*domain.User, error) {
 func (store *UserMongoDBStore) RegisterANewUser(user *domain.User) (string, error) {
 	result, err := store.users.InsertOne(context.TODO(), user)
 	if err != nil {
-		return "Error occured while inserting new user into database!", err
+		return "Error occurred while inserting new user into database!", err
 	}
 
 	user.Id = result.InsertedID.(primitive.ObjectID)
-	return "Success: user has been registrated.", nil
+	return "Success: user has been registered.", nil
 }
 
 func (store *UserMongoDBStore) DeleteAll() {
@@ -119,8 +123,11 @@ func (store *UserMongoDBStore) filter(filter interface{}) ([]*domain.User, error
 func (store *UserMongoDBStore) filterOne(filter interface{}) (user *domain.User, err error) {
 	result := store.users.FindOne(context.TODO(), filter)
 	err = result.Decode(&user)
+	if err != nil {
+		return nil, nil
+	}
 
-	return
+	return user, nil
 }
 
 func decode(cursor *mongo.Cursor) (users []*domain.User, err error) {

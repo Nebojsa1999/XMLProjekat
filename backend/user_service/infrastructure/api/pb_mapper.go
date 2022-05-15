@@ -29,8 +29,9 @@ func mapDomainUserToPbUser(user *domain.User) *pb.User {
 }
 
 func mapPbUserToDomainUser(userPb *pb.User) *domain.User {
-	newUser := &domain.User{
-		Id:             primitive.NewObjectID(),
+	id, _ := primitive.ObjectIDFromHex(userPb.Id)
+	user := &domain.User{
+		Id:             id,
 		Username:       userPb.Username,
 		Password:       userPb.Password,
 		IsPrivate:      userPb.IsPrivate,
@@ -46,7 +47,7 @@ func mapPbUserToDomainUser(userPb *pb.User) *domain.User {
 		Interests:      userPb.Interests,
 	}
 
-	return newUser
+	return user
 }
 
 func mapDomainGenderToPbGender(gender domain.Gender) pb.User_Gender {
@@ -75,10 +76,10 @@ func mapDomainCredentialsToPbCredentials(credentials *domain.Credentials) *pb.Cr
 }
 
 func mapPbCredentialsToDomainCredentials(credentialsPb *pb.Credentials) *domain.Credentials {
-	newCredentials := &domain.Credentials{
+	credentials := &domain.Credentials{
 		Username: credentialsPb.Username,
 		Password: credentialsPb.Password,
 	}
 
-	return newCredentials
+	return credentials
 }
