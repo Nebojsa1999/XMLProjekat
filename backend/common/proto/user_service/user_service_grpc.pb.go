@@ -29,6 +29,7 @@ type UserServiceClient interface {
 	IsUserPrivate(ctx context.Context, in *IsPrivateRequest, opts ...grpc.CallOption) (*IsPrivateResponse, error)
 	GetIdsOfAllPublicUsers(ctx context.Context, in *GetIdsOfAllPublicUsersRequest, opts ...grpc.CallOption) (*GetIdsOfAllPublicUsersResponse, error)
 	SearchPublicUsers(ctx context.Context, in *SearchPublicUsersRequest, opts ...grpc.CallOption) (*SearchPublicUsersResponse, error)
+	UpdatePersonalInformation(ctx context.Context, in *UpdatePersonalInformationRequest, opts ...grpc.CallOption) (*UpdatePersonalInformationResponse, error)
 }
 
 type userServiceClient struct {
@@ -102,6 +103,15 @@ func (c *userServiceClient) SearchPublicUsers(ctx context.Context, in *SearchPub
 	return out, nil
 }
 
+func (c *userServiceClient) UpdatePersonalInformation(ctx context.Context, in *UpdatePersonalInformationRequest, opts ...grpc.CallOption) (*UpdatePersonalInformationResponse, error) {
+	out := new(UpdatePersonalInformationResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/UpdatePersonalInformation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -113,6 +123,7 @@ type UserServiceServer interface {
 	IsUserPrivate(context.Context, *IsPrivateRequest) (*IsPrivateResponse, error)
 	GetIdsOfAllPublicUsers(context.Context, *GetIdsOfAllPublicUsersRequest) (*GetIdsOfAllPublicUsersResponse, error)
 	SearchPublicUsers(context.Context, *SearchPublicUsersRequest) (*SearchPublicUsersResponse, error)
+	UpdatePersonalInformation(context.Context, *UpdatePersonalInformationRequest) (*UpdatePersonalInformationResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -140,6 +151,9 @@ func (UnimplementedUserServiceServer) GetIdsOfAllPublicUsers(context.Context, *G
 }
 func (UnimplementedUserServiceServer) SearchPublicUsers(context.Context, *SearchPublicUsersRequest) (*SearchPublicUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchPublicUsers not implemented")
+}
+func (UnimplementedUserServiceServer) UpdatePersonalInformation(context.Context, *UpdatePersonalInformationRequest) (*UpdatePersonalInformationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePersonalInformation not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -280,6 +294,24 @@ func _UserService_SearchPublicUsers_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UpdatePersonalInformation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePersonalInformationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdatePersonalInformation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/UpdatePersonalInformation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdatePersonalInformation(ctx, req.(*UpdatePersonalInformationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -314,6 +346,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SearchPublicUsers",
 			Handler:    _UserService_SearchPublicUsers_Handler,
+		},
+		{
+			MethodName: "UpdatePersonalInformation",
+			Handler:    _UserService_UpdatePersonalInformation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
