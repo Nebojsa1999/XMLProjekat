@@ -116,18 +116,19 @@ message User {
   string firstName = 5;
   string lastName = 6;
   string email = 7;
+  string phone = 8;
   enum Gender {
     Undefined = 0;
     Male = 1;
     Female = 2;
   }
-  Gender gender = 8;
-  google.protobuf.Timestamp dateOfBirth = 9;
-  string biography = 10;
-  string workExperience = 11;
-  string education = 12;
-  string skills = 13;
-  string interests = 14;
+  Gender gender = 9;
+  google.protobuf.Timestamp dateOfBirth = 10;
+  string biography = 11;
+  string workExperience = 12;
+  string education = 13;
+  string skills = 14;
+  string interests = 15;
 }
 
 message Credentials {
