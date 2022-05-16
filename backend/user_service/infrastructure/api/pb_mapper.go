@@ -30,7 +30,13 @@ func mapDomainUserToPbUser(user *domain.User) *pb.User {
 }
 
 func mapPbUserToDomainUser(userPb *pb.User) *domain.User {
-	id, _ := primitive.ObjectIDFromHex(userPb.Id)
+	var id primitive.ObjectID
+	if objectId, err := primitive.ObjectIDFromHex(userPb.Id); err == nil {
+		id = objectId
+	} else {
+		id = primitive.NewObjectID()
+	}
+
 	user := &domain.User{
 		Id:             id,
 		Username:       userPb.Username,

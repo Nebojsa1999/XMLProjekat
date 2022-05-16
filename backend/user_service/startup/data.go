@@ -17,7 +17,7 @@ var users = []*domain.User{
 		Email: "darijan.micic10@gmail.com",
 		Phone: "062/100-6031",
 		Gender: domain.Male,
-		DateOfBirth: getParsedDateOfBirthFrom("1998-07-10"),
+		DateOfBirth: getParsedDateOfBirthFrom("1998-07-10T00:00:00Z"),
 		Biography: "Biografija Darijana Mićića.",
 		WorkExperience: "Bez radnog iskustva.",
 		Education: "Fakultet tehničkih nauka Novi Sad",
@@ -34,7 +34,7 @@ var users = []*domain.User{
 		Email: "nebojsa.bogosavljev@gmail.com",
 		Phone: "064/788-400",
 		Gender: domain.Male,
-		DateOfBirth: getParsedDateOfBirthFrom("1999-09-26"),
+		DateOfBirth: getParsedDateOfBirthFrom("1999-09-26T00:00:00Z"),
 		Biography: "Biografija Nebojše Bogosavljeva.",
 		WorkExperience: "Bez radnog iskustva",
 		Education: "Fakultet tehničkih nauka Novi Sad",
@@ -51,7 +51,7 @@ var users = []*domain.User{
 		Email: "aleksandar.dujin@gmail.com",
 		Phone: "060/132-345",
 		Gender: domain.Male,
-		DateOfBirth: getParsedDateOfBirthFrom("1997-02-03"),
+		DateOfBirth: getParsedDateOfBirthFrom("1997-02-03T00:00:00Z"),
 		Biography: "Biografija Aleksandra Dujina.",
 		WorkExperience: "Bez radnog iskustva.",
 		Education: "Fakultet tehničkih nauka Novi Sad",
@@ -68,7 +68,7 @@ var users = []*domain.User{
 		Email: "marko.trifunovic@gmail.com",
 		Phone: "063/763-6897",
 		Gender: domain.Male,
-		DateOfBirth: getParsedDateOfBirthFrom("1999-11-30"),
+		DateOfBirth: getParsedDateOfBirthFrom("1999-11-30T00:00:00Z"),
 		Biography: "Biografija Marka Trifunovića.",
 		WorkExperience: "Bez radnog iskustva.",
 		Education: "Fakultet tehničkih nauka Novi Sad",
@@ -86,7 +86,7 @@ func getObjectId(id string) primitive.ObjectID {
 }
 
 func getParsedDateOfBirthFrom(dateOfBirthAsString string) time.Time {
-	dateOfBirth, _ := time.Parse("2010-01-30", dateOfBirthAsString)
+	dateOfBirth, _ := time.Parse(time.RFC3339, dateOfBirthAsString)
 
 	return dateOfBirth
 }
