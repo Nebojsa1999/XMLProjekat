@@ -133,3 +133,14 @@ func (handler *UserHandler) SearchPublicUsers(ctx context.Context, request *pb.S
 
 	return response, nil
 }
+
+func (handler *UserHandler) UpdatePersonalInformation(ctx context.Context, request *pb.UpdatePersonalInformationRequest) (*pb.UpdatePersonalInformationResponse, error) {
+	user := mapPbUserToDomainUser(request.User)
+
+	message, err := handler.service.UpdatePersonalInformation(user)
+	response := &pb.UpdatePersonalInformationResponse{
+		Message: message,
+	}
+
+	return response, err
+}

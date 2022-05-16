@@ -109,6 +109,18 @@ func (store *UserMongoDBStore) SearchPublicUsersByLastName(criteria string) ([]*
 	return store.filter(filter)
 }
 
+func (store *UserMongoDBStore) UpdatePersonalInformation(updatedUser *domain.User) (string, error) {
+	filter := bson.M{"_id": updatedUser.Id}
+	update := bson.M{"$set": updatedUser}
+
+	_, err := store.users.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return "Error occurred during update of user's personal information!", err
+	}
+
+	return "Success: user's personal information has been updated.", nil
+}
+
 func (store *UserMongoDBStore) filter(filter interface{}) ([]*domain.User, error) {
 	cursor, err := store.users.Find(context.TODO(), filter)
 	defer cursor.Close(context.TODO())

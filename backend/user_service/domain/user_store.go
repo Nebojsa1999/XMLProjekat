@@ -15,4 +15,5 @@ type UserStore interface {
 	SearchPublicUsersByUsername(criteria string) ([]*User, error)
 	SearchPublicUsersByFirstName(criteria string) ([]*User, error)
 	SearchPublicUsersByLastName(criteria string) ([]*User, error)
+	UpdatePersonalInformation(user *User) (string, error)
 }

@@ -153,3 +153,26 @@ func appendIfMissing(slice []*domain.User, i *domain.User) []*domain.User {
 
 	return append(slice, i)
 }
+
+func (service *UserService) UpdatePersonalInformation(user *domain.User) (string, error) {
+	userInDatabase, _ := service.store.Get(user.Id)
+	if userInDatabase == nil {
+		return "User with given id does not exits.", nil
+	}
+
+	possibleUserWithSameUsername, _ := service.store.GetByUsername(user.Username)
+	if possibleUserWithSameUsername != nil {
+		if possibleUserWithSameUsername.Id != userInDatabase.Id {
+			return "Given username is already taken by another user.", nil
+		}
+	}
+
+	userInDatabase.FirstName = user.FirstName
+	userInDatabase.Email = user.Email
+	userInDatabase.Gender = user.Gender
+	userInDatabase.DateOfBirth = user.DateOfBirth
+	userInDatabase.Username = user.Username
+	userInDatabase.Biography = user.Biography
+
+	return service.store.UpdatePersonalInformation(userInDatabase)
+}
