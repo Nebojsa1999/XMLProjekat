@@ -38,10 +38,10 @@ service UserService{
       body: "criteria"
     };
   }
-  rpc UpdatePersonalInformation(UpdatePersonalInformationRequest) returns(UpdatePersonalInformationResponse) {
+  rpc Update(UpdateRequest) returns(UpdateResponse) {
     option (google.api.http) = {
-      put: "/user/update-personal-information",
-      body: "user"
+      put: "/user/{id}",
+      body: "modifiedUser"
     };
   }
 }
@@ -100,12 +100,14 @@ message SearchPublicUsersResponse {
   repeated User users = 1;
 }
 
-message UpdatePersonalInformationRequest {
-  User user = 1;
+message UpdateRequest {
+  string id = 1;
+  User modifiedUser = 2;
 }
 
-message UpdatePersonalInformationResponse {
+message UpdateResponse {
   string message = 1;
+  User updatedUser = 2;
 }
 
 message User {
