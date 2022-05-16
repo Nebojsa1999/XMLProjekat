@@ -41,7 +41,7 @@ func (handler *PostHandler) GetPostFromUser(ctx context.Context, request *pb.Get
 	return response, nil
 }
 
-func (handler *PostHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
+func (handler *PostHandler) GetAllPosts(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 	posts, err := handler.service.GetAllPosts()
 	if err != nil {
 		return nil, err

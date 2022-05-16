@@ -4,11 +4,13 @@ import (
 	pb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 func mapPost(post *domain.Post) *pb.Post {
 	postPb := &pb.Post{
 		Id:            post.Id.Hex(),
+		OwnerId:       post.OwnerId.Hex(),
 		Content:       post.Content,
 		Image:         post.Image,
 		LikesCount:    post.LikesCount,
@@ -22,7 +24,7 @@ func mapPost(post *domain.Post) *pb.Post {
 			Content: comment.Content,
 		})
 	}
-
+	postPb.PostedAt = post.PostedAt.Time().String()
 	return postPb
 }
 
@@ -48,6 +50,8 @@ func mapPostRequest(postPb *pb.Post) *domain.Post {
 
 		Post.Comments = append(Post.Comments, comment)
 	}
+	t, _ := time.Parse(time.RFC3339, postPb.PostedAt)
+	Post.PostedAt = primitive.NewDateTimeFromTime(t)
 
 	return Post
 }

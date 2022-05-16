@@ -19,8 +19,8 @@ func (service *PostService) GetPostFromUser(id, post_id primitive.ObjectID) (*do
 	return service.store.GetPostFromUser(id, post_id)
 }
 
-func (service *PostService) GetAllPosts() ([]*domain.Post, error) {
-	return service.store.GetAllPosts()
+func (service *PostService) GetAllPosts(postIds []string) ([]*domain.Post, error) {
+	return service.store.GetAllPosts(postIds)
 }
 
 func (service *PostService) CreatePost(id primitive.ObjectID, post *domain.Post) (*domain.Post, error) {
@@ -42,16 +42,16 @@ func (service *PostService) CreateComment(id primitive.ObjectID, post_id primiti
 	return newComment, nil
 }
 
-func (service *PostService) UpdateLikes(likeordislike *domain.LikeOrDislike) (*domain.Post, error) {
-	updatedPost, err := service.store.UpdateLikes(likeordislike)
+func (service *PostService) UpdateLikes(liked_or_disliked_by *domain.LikeOrDislike) (*domain.Post, error) {
+	updatedPost, err := service.store.UpdateLikes(liked_or_disliked_by)
 	if err != nil {
 		return nil, err
 	}
 	return updatedPost, nil
 }
 
-func (service *PostService) UpdateDislikes(likeordislike *domain.LikeOrDislike) (*domain.Post, error) {
-	updatedPost, err := service.store.UpdateDislikes(likeordislike)
+func (service *PostService) UpdateDislikes(liked_or_disliked_by *domain.LikeOrDislike) (*domain.Post, error) {
+	updatedPost, err := service.store.UpdateDislikes(liked_or_disliked_by)
 	if err != nil {
 		return nil, err
 	}
