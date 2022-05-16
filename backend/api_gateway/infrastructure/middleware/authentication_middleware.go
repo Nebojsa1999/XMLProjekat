@@ -7,27 +7,31 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strings"
 )
 
 func IsAuthenticated(handler *runtime.ServeMux) http.HandlerFunc {
-	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+	return func(writer http.ResponseWriter, request *http.Request) {
 		if isAProtectedRoute(request.Method, request.URL.Path) {
-			if request.Header["Authorization"] != nil {
-				token, err := jwt.Parse(request.Header["Authorization"][0], func(token *jwt.Token) (interface{}, error) {
+			authorizationHeader := request.Header["Authorization"]
+			if authorizationHeader != nil {
+				tokenWithoutBearerPrefix := strings.TrimPrefix(authorizationHeader[0], "Bearer ")
+
+				token, err := jwt.Parse(tokenWithoutBearerPrefix, func(token *jwt.Token) (interface{}, error) {
 					if _, isSigningMethodValid := token.Method.(*jwt.SigningMethodHMAC); !isSigningMethodValid {
-						return nil, fmt.Errorf("Invalid signing method!")
+						return nil, fmt.Errorf("invalid signing method")
 					}
 
 					audience := "billing.jwtgo.io"
 					isAudienceValid := token.Claims.(jwt.MapClaims).VerifyAudience(audience, false)
 					if !isAudienceValid {
-						return nil, fmt.Errorf("Invalid audience!")
+						return nil, fmt.Errorf("invalid audience")
 					}
 
 					issuer := "jwtgo.io"
 					isIssuerValid := token.Claims.(jwt.MapClaims).VerifyIssuer(issuer, false)
 					if !isIssuerValid {
-						return nil, fmt.Errorf("Invalid issuer!")
+						return nil, fmt.Errorf("invalid issuer")
 					}
 
 					return []byte(os.Getenv("SECRET_FOR_JWT")), nil
@@ -49,7 +53,7 @@ func IsAuthenticated(handler *runtime.ServeMux) http.HandlerFunc {
 		}
 
 		handler.ServeHTTP(writer, request)
-	})
+	}
 }
 
 func isAProtectedRoute(method, path string) bool {
@@ -66,6 +70,5 @@ func isAProtectedRoute(method, path string) bool {
 		}
 	}
 
-	//return true
-	return false
+	return true
 }
