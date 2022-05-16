@@ -134,12 +134,20 @@ func (handler *UserHandler) SearchPublicUsers(ctx context.Context, request *pb.S
 	return response, nil
 }
 
-func (handler *UserHandler) UpdatePersonalInformation(ctx context.Context, request *pb.UpdatePersonalInformationRequest) (*pb.UpdatePersonalInformationResponse, error) {
-	user := mapPbUserToDomainUser(request.User)
+func (handler *UserHandler) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UpdateResponse, error) {
+	if request.Id != request.ModifiedUser.Id {
+		return &pb.UpdateResponse{
+			Message: "Id in path and id of modified user do not match!",
+			UpdatedUser: nil,
+		}, nil
+	}
 
-	message, err := handler.service.UpdatePersonalInformation(user)
-	response := &pb.UpdatePersonalInformationResponse{
+	modifiedUser := mapPbUserToDomainUser(request.ModifiedUser)
+
+	message, updatedUser, err := handler.service.Update(modifiedUser)
+	response := &pb.UpdateResponse{
 		Message: message,
+		UpdatedUser: mapDomainUserToPbUser(updatedUser),
 	}
 
 	return response, err

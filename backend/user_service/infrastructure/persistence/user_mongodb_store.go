@@ -73,6 +73,18 @@ func (store *UserMongoDBStore) RegisterANewUser(user *domain.User) (string, erro
 	return "Success: user has been registered.", nil
 }
 
+func (store *UserMongoDBStore) Update(updatedUser *domain.User) (string, *domain.User, error) {
+	filter := bson.M{"_id": updatedUser.Id}
+	update := bson.M{"$set": updatedUser}
+
+	_, err := store.users.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return "Error occurred during update of user!", nil, err
+	}
+
+	return "Success: user has been updated.", updatedUser, nil
+}
+
 func (store *UserMongoDBStore) DeleteAll() {
 	store.users.DeleteMany(context.TODO(), bson.D{{}})
 }
@@ -107,18 +119,6 @@ func (store *UserMongoDBStore) SearchPublicUsersByLastName(criteria string) ([]*
 	filter := bson.M{"is_private": false, "last_name": primitive.Regex{Pattern: criteria, Options: "i"}}
 
 	return store.filter(filter)
-}
-
-func (store *UserMongoDBStore) UpdatePersonalInformation(updatedUser *domain.User) (string, error) {
-	filter := bson.M{"_id": updatedUser.Id}
-	update := bson.M{"$set": updatedUser}
-
-	_, err := store.users.UpdateOne(context.TODO(), filter, update)
-	if err != nil {
-		return "Error occurred during update of user's personal information!", err
-	}
-
-	return "Success: user's personal information has been updated.", nil
 }
 
 func (store *UserMongoDBStore) filter(filter interface{}) ([]*domain.User, error) {

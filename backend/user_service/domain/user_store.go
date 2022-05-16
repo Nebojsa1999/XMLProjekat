@@ -9,11 +9,11 @@ type UserStore interface {
 	GetByUsernameAndPassword(username string, password string) (*User, error)
 	GetByEmail(email string) (*User, error)
 	RegisterANewUser(user *User) (string, error)
+	Update(updatedUser *User) (string, *User, error)
 	DeleteAll()
 	IsUserPrivate(id primitive.ObjectID) (bool, error)
 	GetAllPublicUsers() ([]*User, error)
 	SearchPublicUsersByUsername(criteria string) ([]*User, error)
 	SearchPublicUsersByFirstName(criteria string) ([]*User, error)
 	SearchPublicUsersByLastName(criteria string) ([]*User, error)
-	UpdatePersonalInformation(user *User) (string, error)
 }
