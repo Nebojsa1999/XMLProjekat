@@ -12,12 +12,7 @@ service PostingService{
       get: "/user/{id}/post/{post_id}"
     };
   }
-  rpc GetAllPosts(GetAllRequest) returns(GetAllResponse) {
-    option (google.api.http) = {
-      get: "/post"
-    };
-  }
-  rpc GetAllPublicPosts(GetAllPublicPostsRequest) returns(GetAllResponse) {}
+  rpc GetAllPosts(GetAllPublicPostsRequest) returns(GetAllResponse) {}
   rpc GetAllPostsFromUser(GetRequest) returns(GetAllResponse) {
     option (google.api.http) = {
       get: "/user/{id}/post"
@@ -68,7 +63,11 @@ message Post {
   int64 likesCount = 5;
   int64 dislikesCount = 6;
   repeated Comment comments = 7;
-  string link = 8;
+  repeated string link = 8;
+  repeated string WhoLiked = 9;
+  repeated string WhoDisliked = 10;
+  string PostedAt = 11;
+
 }
 
 message GetPostRequest {
@@ -109,10 +108,15 @@ message Comment {
   string content = 2;
 }
 
+message LikeOrDislike{
+  string by_user_id = 1;
+}
+
 
 message LikeOrDislikePostRequest{
   string id = 1;
   string post_id = 2;
   string type = 3;
-  string liked_or_disliked_by = 4;
+  LikeOrDislike liked_or_disliked_by = 4;
 }
+

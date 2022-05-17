@@ -142,7 +142,7 @@ func (handler *PublicPostHandler) getIdsOfAllPublicUsers(getAllPostsRequest *dom
 func (handler *PublicPostHandler) getAllPosts(publicPost *domain.GetAllPostsRequest) error {
 	postingClient := services.NewPostingClient(handler.postingClientAddress)
 
-	postsCollection, err := postingClient.GetAllPublicPosts(context.TODO(), &postingPb.GetAllPublicPostsRequest{PostIds: publicPost.UserIds})
+	postsCollection, err := postingClient.GetAllPosts(context.TODO(), &postingPb.GetAllPublicPostsRequest{PostIds: publicPost.UserIds})
 	if err != nil {
 		return err
 	}
