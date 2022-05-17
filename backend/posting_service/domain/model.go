@@ -11,6 +11,8 @@ type Post struct {
 	DislikesCount int64              `bson:"dislikes"`
 	Comments      []Comment          `bson:"comments"`
 	Link          string             `bson:"link"`
+	WhoLiked      []string           `bson:"liked_by"`
+	WhoDisliked   []string           `bson:"disliked_by"`
 	PostedAt      primitive.DateTime `bson:"posted_at"`
 }
 type Comment struct {

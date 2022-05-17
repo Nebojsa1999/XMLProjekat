@@ -42,7 +42,7 @@ func (handler *PostHandler) GetPostFromUser(ctx context.Context, request *pb.Get
 }
 
 func (handler *PostHandler) GetAllPosts(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
-	posts, err := handler.service.GetAllPosts()
+	posts, err := handler.service.GetAllPosts(request.PostIds)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +119,7 @@ func (handler *PostHandler) InsertLikeOrDislike(ctx context.Context, request *pb
 		return nil, err
 	}
 
-	objectLikedOrDislikedBy, err := primitive.ObjectIDFromHex(request.LikedOrDislikedBy)
+	objectLikedOrDislikedBy, err := primitive.ObjectIDFromHex(request.LikedOrDislikedBy.ByUserId)
 	if err != nil {
 		return nil, err
 	}

@@ -16,6 +16,8 @@ func mapPost(post *domain.Post) *pb.Post {
 		LikesCount:    post.LikesCount,
 		DislikesCount: post.DislikesCount,
 		Link:          post.Link,
+		WhoLiked:      post.WhoLiked,
+		WhoDisliked:   post.WhoDisliked,
 	}
 
 	for _, comment := range post.Comments {
@@ -40,6 +42,8 @@ func mapPostRequest(postPb *pb.Post) *domain.Post {
 		DislikesCount: postPb.DislikesCount,
 		Comments:      make([]domain.Comment, 0),
 		Link:          postPb.Link,
+		WhoLiked:      postPb.WhoLiked,
+		WhoDisliked:   postPb.WhoDisliked,
 	}
 
 	for _, commentPb := range postPb.Comments {
