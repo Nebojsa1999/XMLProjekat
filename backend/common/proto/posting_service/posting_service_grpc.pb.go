@@ -23,8 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PostingServiceClient interface {
 	GetPostFromUser(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*GetResponse, error)
-	GetAllPosts(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
-	GetAllPublicPosts(ctx context.Context, in *GetAllPublicPostsRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
+	GetAllPosts(ctx context.Context, in *GetAllPublicPostsRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	GetAllPostsFromUser(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	CreatePost(ctx context.Context, in *NewPostRequest, opts ...grpc.CallOption) (*NewPostResponse, error)
 	CreateComment(ctx context.Context, in *CommentOnPostRequest, opts ...grpc.CallOption) (*CommentOnPostResponse, error)
@@ -48,18 +47,9 @@ func (c *postingServiceClient) GetPostFromUser(ctx context.Context, in *GetPostR
 	return out, nil
 }
 
-func (c *postingServiceClient) GetAllPosts(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
+func (c *postingServiceClient) GetAllPosts(ctx context.Context, in *GetAllPublicPostsRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
 	out := new(GetAllResponse)
 	err := c.cc.Invoke(ctx, "/posting.PostingService/GetAllPosts", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *postingServiceClient) GetAllPublicPosts(ctx context.Context, in *GetAllPublicPostsRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
-	out := new(GetAllResponse)
-	err := c.cc.Invoke(ctx, "/posting.PostingService/GetAllPublicPosts", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -107,8 +97,7 @@ func (c *postingServiceClient) InsertLikeOrDislike(ctx context.Context, in *Like
 // for forward compatibility
 type PostingServiceServer interface {
 	GetPostFromUser(context.Context, *GetPostRequest) (*GetResponse, error)
-	GetAllPosts(context.Context, *GetAllRequest) (*GetAllResponse, error)
-	GetAllPublicPosts(context.Context, *GetAllPublicPostsRequest) (*GetAllResponse, error)
+	GetAllPosts(context.Context, *GetAllPublicPostsRequest) (*GetAllResponse, error)
 	GetAllPostsFromUser(context.Context, *GetRequest) (*GetAllResponse, error)
 	CreatePost(context.Context, *NewPostRequest) (*NewPostResponse, error)
 	CreateComment(context.Context, *CommentOnPostRequest) (*CommentOnPostResponse, error)
@@ -123,11 +112,8 @@ type UnimplementedPostingServiceServer struct {
 func (UnimplementedPostingServiceServer) GetPostFromUser(context.Context, *GetPostRequest) (*GetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPostFromUser not implemented")
 }
-func (UnimplementedPostingServiceServer) GetAllPosts(context.Context, *GetAllRequest) (*GetAllResponse, error) {
+func (UnimplementedPostingServiceServer) GetAllPosts(context.Context, *GetAllPublicPostsRequest) (*GetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllPosts not implemented")
-}
-func (UnimplementedPostingServiceServer) GetAllPublicPosts(context.Context, *GetAllPublicPostsRequest) (*GetAllResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllPublicPosts not implemented")
 }
 func (UnimplementedPostingServiceServer) GetAllPostsFromUser(context.Context, *GetRequest) (*GetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllPostsFromUser not implemented")
@@ -173,7 +159,7 @@ func _PostingService_GetPostFromUser_Handler(srv interface{}, ctx context.Contex
 }
 
 func _PostingService_GetAllPosts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllRequest)
+	in := new(GetAllPublicPostsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -185,25 +171,7 @@ func _PostingService_GetAllPosts_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: "/posting.PostingService/GetAllPosts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PostingServiceServer).GetAllPosts(ctx, req.(*GetAllRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PostingService_GetAllPublicPosts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllPublicPostsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PostingServiceServer).GetAllPublicPosts(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/posting.PostingService/GetAllPublicPosts",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PostingServiceServer).GetAllPublicPosts(ctx, req.(*GetAllPublicPostsRequest))
+		return srv.(PostingServiceServer).GetAllPosts(ctx, req.(*GetAllPublicPostsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -294,10 +262,6 @@ var PostingService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllPosts",
 			Handler:    _PostingService_GetAllPosts_Handler,
-		},
-		{
-			MethodName: "GetAllPublicPosts",
-			Handler:    _PostingService_GetAllPublicPosts_Handler,
 		},
 		{
 			MethodName: "GetAllPostsFromUser",
