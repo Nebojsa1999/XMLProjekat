@@ -3,6 +3,7 @@ package domain
 import (
 	postPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	userPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
+
 	"time"
 )
 
