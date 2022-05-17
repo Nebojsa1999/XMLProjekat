@@ -61,11 +61,11 @@ func isAProtectedRoute(method, path string) bool {
 
 	switch method {
 	case "GET":
-		if isPathToPostsOfPublicUser || path == "/post/public" || path == "/user/search" {
+		if isPathToPostsOfPublicUser || path == "/post/public" {
 			return false
 		}
 	case "POST":
-		if path == "/user/register" || path == "/user/login" {
+		if path == "/user/register" || path == "/user/login" || path == "/user/search" {
 			return false
 		}
 	}
