@@ -147,7 +147,11 @@ func (handler *UserHandler) Update(ctx context.Context, request *pb.UpdateReques
 	message, updatedUser, err := handler.service.Update(modifiedUser)
 	response := &pb.UpdateResponse{
 		Message: message,
-		UpdatedUser: mapDomainUserToPbUser(updatedUser),
+		UpdatedUser: nil,
+	}
+
+	if updatedUser != nil {
+		response.UpdatedUser = mapDomainUserToPbUser(updatedUser)
 	}
 
 	return response, err
