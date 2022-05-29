@@ -29,12 +29,15 @@ func NewServer(config *cfg.Config) *Server {
 func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
 	userStore := server.initUserStore(mongoClient)
+	companyStore := server.initCompanyStore(mongoClient)
 
 	userService := server.initUserService(userStore)
+	companyService := server.initCompanyService(companyStore)
 
 	userHandler := server.initUserHandler(userService)
+	companyHandler := server.initCompanyHandler(companyService)
 
-	server.startHttpServer(userHandler)
+	server.startHttpServer(userHandler, companyHandler)
 }
 
 func (server *Server) initMongoClient() *mongo.Client {
@@ -63,23 +66,53 @@ func (server *Server) initUserStore(client *mongo.Client) domain.UserStore {
 	return store
 }
 
+func (server *Server) initCompanyStore(client *mongo.Client) domain.CompanyStore {
+	store := persistence.NewCompanyMongoDBStore(client)
+	_, err := store.DeleteAll()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, company := range companies {
+		_, err := store.RegisterANewCompany(company)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	return store
+}
+
 func (server *Server) initUserService(store domain.UserStore) *application.UserService {
 	return application.NewUserService(store)
+}
+
+func (server *Server) initCompanyService(store domain.CompanyStore) *application.CompanyService {
+	return application.NewCompanyService(store)
 }
 
 func (server *Server) initUserHandler(service *application.UserService) *api.UserHandler {
 	return api.NewUserHandler(service)
 }
 
-func (server *Server) startHttpServer(userHandler *api.UserHandler) {
+func (server *Server) initCompanyHandler(service *application.CompanyService) *api.CompanyHandler {
+	return api.NewCompanyHandler(service)
+}
+
+func (server *Server) startHttpServer(userHandler *api.UserHandler, companyHandler *api.CompanyHandler) {
 	router := mux.NewRouter()
 	router.StrictSlash(true)
 
-	router.HandleFunc("/agent-app/user/{id:[0-9a-z]+}", userHandler.Get).Methods("GET")
+	router.HandleFunc("/agent-app/user/{id:[0-9a-f]+}", userHandler.Get).Methods("GET")
 	router.HandleFunc("/agent-app/user", userHandler.GetAll).Methods("GET")
 	router.HandleFunc("/agent-app/user/register", userHandler.RegisterANewUser).Methods("POST")
 	router.HandleFunc("/agent-app/user/login", userHandler.Login).Methods("POST")
-	router.HandleFunc("/agent-app/user/{id:[0-9a-z]+}", userHandler.Update).Methods("PUT")
+	router.HandleFunc("/agent-app/user/{id:[0-9a-f]+}", userHandler.Update).Methods("PUT")
+
+	router.HandleFunc("/agent-app/company/{id:[0-9a-f]+}", companyHandler.Get).Methods("GET")
+	router.HandleFunc("/agent-app/company", companyHandler.GetAll).Methods("GET")
+	router.HandleFunc("/agent-app/company/register", companyHandler.RegisterANewCompany).Methods("POST")
+	router.HandleFunc("/agent-app/company/{id:[0-9a-f]+}", companyHandler.Update).Methods("PUT")
 
 	router.Use(middleware.IsAuthenticated)
 
