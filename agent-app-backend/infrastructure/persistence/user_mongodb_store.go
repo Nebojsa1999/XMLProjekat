@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	DATABASE   = "agent_app_db"
-	COLLECTION = "users"
+	DATABASE        = "agent_app_db"
+	UsersCollection = "users"
 )
 
 type UserMongoDBStore struct {
@@ -18,7 +18,7 @@ type UserMongoDBStore struct {
 }
 
 func NewUserMongoDBStore(client *mongo.Client) domain.UserStore {
-	users := client.Database(DATABASE).Collection(COLLECTION)
+	users := client.Database(DATABASE).Collection(UsersCollection)
 
 	return &UserMongoDBStore{
 		users: users,
@@ -102,7 +102,7 @@ func (store *UserMongoDBStore) filter(filter interface{}) ([]*domain.User, error
 		return nil, err
 	}
 
-	return decode(cursor)
+	return decodeIntoUsers(cursor)
 }
 
 func (store *UserMongoDBStore) filterOne(filter interface{}) (user *domain.User, err error) {
@@ -115,7 +115,7 @@ func (store *UserMongoDBStore) filterOne(filter interface{}) (user *domain.User,
 	return user, nil
 }
 
-func decode(cursor *mongo.Cursor) (users []*domain.User, err error) {
+func decodeIntoUsers(cursor *mongo.Cursor) (users []*domain.User, err error) {
 	for cursor.Next(context.TODO()) {
 		var user domain.User
 		err = cursor.Decode(&user)
