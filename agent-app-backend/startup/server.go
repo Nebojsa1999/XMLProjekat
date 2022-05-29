@@ -73,9 +73,10 @@ func (server *Server) startHttpServer(userHandler *api.UserHandler) {
 	router := mux.NewRouter()
 	router.StrictSlash(true)
 
-	router.HandleFunc("/agent-app/user", userHandler.GetAll).Methods("GET")
-	router.HandleFunc("/agent-app/user", userHandler.RegisterANewUser).Methods("POST")
 	router.HandleFunc("/agent-app/user/{id:[0-9a-z]+}", userHandler.Get).Methods("GET")
+	router.HandleFunc("/agent-app/user", userHandler.GetAll).Methods("GET")
+	router.HandleFunc("/agent-app/user/register", userHandler.RegisterANewUser).Methods("POST")
+	router.HandleFunc("/agent-app/user/login", userHandler.Login).Methods("POST")
 	router.HandleFunc("/agent-app/user/{id:[0-9a-z]+}", userHandler.Update).Methods("PUT")
 
 	httpServer := &http.Server{Addr: fmt.Sprintf(":%s", server.config.Port), Handler: router}
