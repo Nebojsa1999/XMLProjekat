@@ -1,6 +1,7 @@
 package startup
 
 import (
+	"context"
 	"fmt"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/application"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain"
@@ -8,9 +9,9 @@ import (
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/persistence"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/startup/config"
 	"go.mongodb.org/mongo-driver/mongo"
-	"google.golang.org/grpc"
 	"log"
-	"net"
+	"net/http"
+	"time"
 )
 
 type Server struct {
@@ -31,7 +32,7 @@ func (server *Server) Start() {
 
 	userHandler := server.initUserHandler(userService)
 
-	server.startGrpcServer(userHandler)
+	server.startHttpServer(userHandler)
 }
 
 func (server *Server) initMongoClient() *mongo.Client {
@@ -47,7 +48,7 @@ func (server *Server) initUserStore(client *mongo.Client) domain.UserStore {
 	store := persistence.NewUserMongoDBStore(client)
 	_, err := store.DeleteAll()
 	if err != nil {
-		return nil
+		log.Fatal(err)
 	}
 
 	for _, user := range users {
@@ -68,15 +69,34 @@ func (server *Server) initUserHandler(service *application.UserService) *api.Use
 	return api.NewUserHandler(service)
 }
 
-func (server *Server) startGrpcServer(userHandler *api.UserHandler) {
-	listener, err := net.Listen("tcp", fmt.Sprintf(":%s", server.config.Port))
-	if err != nil {
-		log.Fatalf("Failed to listen: %v", err)
+func (server *Server) startHttpServer(userHandler *api.UserHandler) {
+	router := mux.NewRouter()
+	router.StrictSlash(true)
+
+	router.HandleFunc("/agent-app/user", userHandler.GetAll).Methods("GET")
+	router.HandleFunc("/agent-app/user", userHandler.RegisterANewUser).Methods("POST")
+	router.HandleFunc("/agent-app/user/{id:[0-9a-z]+}", userHandler.Get).Methods("GET")
+	router.HandleFunc("/agent-app/user/{id:[0-9a-z]+}", userHandler.Update).Methods("PUT")
+
+	httpServer := &http.Server{Addr: fmt.Sprintf(":%s", server.config.Port), Handler: router}
+	go func() {
+		log.Println("agent_app http server starting")
+
+		if err := httpServer.ListenAndServe(); err != nil {
+			if err != http.ErrServerClosed {
+				log.Fatal(err)
+			}
+		}
+	}()
+
+	log.Println("agent_app http server shutting down...")
+
+	ctx, cancelFunction := context.WithTimeout(context.Background(), 25*time.Second)
+	defer cancelFunction()
+
+	if err := httpServer.Shutdown(ctx); err != nil {
+		log.Fatal(err)
 	}
 
-	grpcServer := grpc.NewServer()
-	user.RegisterUserServiceServer(grpcServer, userHandler)
-	if err := grpcServer.Serve(listener); err != nil {
-		log.Fatalf("Failed to serve: %s", err)
-	}
+	log.Println("agent_app http server stopped")
 }

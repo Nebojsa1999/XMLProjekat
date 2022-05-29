@@ -47,7 +47,7 @@ func (service *UserService) RegisterANewUser(user *domain.User) (string, error) 
 	return service.store.RegisterANewUser(user)
 }
 
-func (service *UserService) Login(credentials *domain.Credentials) (*domain.JWTToken, string, error) {
+func (service *UserService) Login(credentials *domain.Credentials) (*domain.AgentAppToken, string, error) {
 	existingUser, err := service.store.GetByUsername(credentials.Username)
 	if err != nil {
 		return nil, "Error occurred during retrieval of possible user with same username from database.", err
@@ -75,6 +75,7 @@ func (service *UserService) GenerateAgentAppJWTToken(user *domain.User) (*domain
 	claims := jwtToken.Claims.(jwt.MapClaims)
 
 	claims["authorized"] = true
+	claims["id"] = user.Id
 	claims["username"] = user.Username
 	claims["role"] = user.Role
 	claims["exp"] = time.Now().Add(time.Hour).Unix()
@@ -92,12 +93,6 @@ func (service *UserService) Update(modifiedUser *domain.User) (string, *domain.U
 	userInDatabase, _ := service.store.Get(modifiedUser.Id)
 	if userInDatabase == nil {
 		return "User with given id does not exist.", nil, nil
-	}
-
-	if modifiedUser.CompanyDescription != userInDatabase.CompanyDescription {
-		if userInDatabase.Role != domain.COMPANY_OWNER {
-			return "Company description can only be changed by owner.", nil, nil
-		}
 	}
 
 	userInDatabaseWithSameUsername, _ := service.store.GetByUsername(modifiedUser.Username)
@@ -127,11 +122,6 @@ func (service *UserService) Update(modifiedUser *domain.User) (string, *domain.U
 	userInDatabase.Education = modifiedUser.Education
 	userInDatabase.Skills = modifiedUser.Skills
 	userInDatabase.Interests = modifiedUser.Interests
-	userInDatabase.CompanyDescription = modifiedUser.CompanyDescription
 
 	return service.store.Update(userInDatabase)
-}
-
-func checkIfUpdateIsValid() (string, *domain.User, error) {
-	return "", nil, nil
 }
