@@ -5,6 +5,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -55,7 +56,13 @@ func IsAuthenticated(handler http.Handler) http.Handler {
 }
 
 func isAProtectedRoute(method, path string) bool {
+	pathToSingleCompany, _ := regexp.MatchString("/agent-app/company/[0-9a-f]+", path)
+
 	switch method {
+	case "GET":
+		if pathToSingleCompany || path == "/agent-app/company" {
+			return false
+		}
 	case "POST":
 		if path == "/agent-app/user/register" || path == "/agent-app/user/login" {
 			return false
