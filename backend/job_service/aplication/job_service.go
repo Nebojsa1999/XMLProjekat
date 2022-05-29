@@ -1,7 +1,7 @@
 package aplication
 
 import (
-	"github.com/XWS-2022-Tim12/Dislinkt/back/job_service/domain"
+	"github.com/Nebojsa1999/XMLProjekat/backend/job_service/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
