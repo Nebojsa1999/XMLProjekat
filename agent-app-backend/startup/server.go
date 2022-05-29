@@ -6,8 +6,10 @@ import (
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/application"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/api"
+	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/middleware"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/persistence"
-	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/startup/config"
+	cfg "github.com/Nebojsa1999/XMLProjekat/agent-app-backend/startup/config"
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"net/http"
@@ -15,10 +17,10 @@ import (
 )
 
 type Server struct {
-	config *config.Config
+	config *cfg.Config
 }
 
-func NewServer(config *config.Config) *Server {
+func NewServer(config *cfg.Config) *Server {
 	return &Server{
 		config: config,
 	}
@@ -79,7 +81,9 @@ func (server *Server) startHttpServer(userHandler *api.UserHandler) {
 	router.HandleFunc("/agent-app/user/login", userHandler.Login).Methods("POST")
 	router.HandleFunc("/agent-app/user/{id:[0-9a-z]+}", userHandler.Update).Methods("PUT")
 
-	httpServer := &http.Server{Addr: fmt.Sprintf(":%s", server.config.Port), Handler: router}
+	router.Use(middleware.IsAuthenticated)
+
+	httpServer := &http.Server{Addr: fmt.Sprintf("0.0.0.0:%s", server.config.Port), Handler: router}
 	go func() {
 		log.Println("agent_app http server starting")
 

@@ -3,7 +3,7 @@ package application
 import (
 	"fmt"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain"
-	jwt "github.com/dgrijalwa/jwt-go"
+	jwt "github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"os"
 	"time"

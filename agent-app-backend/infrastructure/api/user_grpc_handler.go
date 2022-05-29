@@ -121,6 +121,7 @@ func (handler *UserHandler) RegisterANewUser(writer http.ResponseWriter, request
 		return
 	}
 
+	writer.WriteHeader(http.StatusCreated)
 	renderJSON(writer, message)
 }
 
@@ -158,7 +159,12 @@ func (handler *UserHandler) Update(writer http.ResponseWriter, request *http.Req
 		return
 	}
 
-	if mux.Vars(request)["id"] != modifiedUser.Id {
+	id, _ := mux.Vars(request)["id"]
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	} else if objectId != modifiedUser.Id {
 		http.Error(writer, "Id in path and id of modified user do not match!", http.StatusBadRequest)
 		return
 	}
