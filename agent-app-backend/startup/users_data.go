@@ -2,8 +2,6 @@ package startup
 
 import (
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"time"
 )
 
 var users = []*domain.User{
@@ -75,18 +73,4 @@ var users = []*domain.User{
 		Skills:         "Programer WPF aplikacija.",
 		Interests:      "Video igre.",
 	},
-}
-
-func getObjectId(id string) primitive.ObjectID {
-	if objectId, err := primitive.ObjectIDFromHex(id); err == nil {
-		return objectId
-	}
-
-	return primitive.NewObjectID()
-}
-
-func getParsedDateOfBirthFrom(dateOfBirthAsString string) time.Time {
-	dateOfBirth, _ := time.Parse(time.RFC3339, dateOfBirthAsString)
-
-	return dateOfBirth
 }
