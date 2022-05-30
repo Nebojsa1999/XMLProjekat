@@ -6,10 +6,8 @@ import (
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/application"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/api"
-	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/middleware"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/persistence"
 	cfg "github.com/Nebojsa1999/XMLProjekat/agent-app-backend/startup/config"
-	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"net/http"
@@ -18,6 +16,12 @@ import (
 
 type Server struct {
 	config *cfg.Config
+}
+
+type Handlers struct {
+	UserHandler                       *api.UserHandler
+	CompanyHandler                    *api.CompanyHandler
+	CompanyRegistrationRequestHandler *api.CompanyRegistrationRequestHandler
 }
 
 func NewServer(config *cfg.Config) *Server {
@@ -30,14 +34,21 @@ func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
 	userStore := server.initUserStore(mongoClient)
 	companyStore := server.initCompanyStore(mongoClient)
+	companyRegistrationRequestStore := server.initCompanyRegistrationRequestStore(mongoClient)
 
 	userService := server.initUserService(userStore)
 	companyService := server.initCompanyService(companyStore)
+	companyRegistrationRequestService := server.initCompanyRegistrationRequestService(companyRegistrationRequestStore)
 
 	userHandler := server.initUserHandler(userService)
 	companyHandler := server.initCompanyHandler(companyService)
+	companyRegistrationRequestHandler := server.initCompanyRegistrationRequestHandler(companyRegistrationRequestService)
 
-	server.startHttpServer(userHandler, companyHandler)
+	server.startHttpServer(Handlers{
+		UserHandler:                       userHandler,
+		CompanyHandler:                    companyHandler,
+		CompanyRegistrationRequestHandler: companyRegistrationRequestHandler,
+	})
 }
 
 func (server *Server) initMongoClient() *mongo.Client {
@@ -83,12 +94,33 @@ func (server *Server) initCompanyStore(client *mongo.Client) domain.CompanyStore
 	return store
 }
 
+func (server *Server) initCompanyRegistrationRequestStore(client *mongo.Client) domain.CompanyRegistrationRequestStore {
+	store := persistence.NewCompanyRegistrationRequestMongoDBStore(client)
+	_, err := store.DeleteAll()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, request := range companyRegistrationRequests {
+		_, err := store.CreateCompanyRegistrationRequest(request)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	return store
+}
+
 func (server *Server) initUserService(store domain.UserStore) *application.UserService {
 	return application.NewUserService(store)
 }
 
 func (server *Server) initCompanyService(store domain.CompanyStore) *application.CompanyService {
 	return application.NewCompanyService(store)
+}
+
+func (server *Server) initCompanyRegistrationRequestService(store domain.CompanyRegistrationRequestStore) *application.CompanyRegistrationRequestService {
+	return application.NewCompanyRegistrationRequestService(store)
 }
 
 func (server *Server) initUserHandler(service *application.UserService) *api.UserHandler {
@@ -99,22 +131,12 @@ func (server *Server) initCompanyHandler(service *application.CompanyService) *a
 	return api.NewCompanyHandler(service)
 }
 
-func (server *Server) startHttpServer(userHandler *api.UserHandler, companyHandler *api.CompanyHandler) {
-	router := mux.NewRouter()
-	router.StrictSlash(true)
+func (server *Server) initCompanyRegistrationRequestHandler(service *application.CompanyRegistrationRequestService) *api.CompanyRegistrationRequestHandler {
+	return api.NewCompanyRegistrationRequestHandler(service)
+}
 
-	router.HandleFunc("/agent-app/user/{id:[0-9a-f]+}", userHandler.Get).Methods("GET")
-	router.HandleFunc("/agent-app/user", userHandler.GetAll).Methods("GET")
-	router.HandleFunc("/agent-app/user/register", userHandler.RegisterANewUser).Methods("POST")
-	router.HandleFunc("/agent-app/user/login", userHandler.Login).Methods("POST")
-	router.HandleFunc("/agent-app/user/{id:[0-9a-f]+}", userHandler.Update).Methods("PUT")
-
-	router.HandleFunc("/agent-app/company/{id:[0-9a-f]+}", companyHandler.Get).Methods("GET")
-	router.HandleFunc("/agent-app/company", companyHandler.GetAll).Methods("GET")
-	router.HandleFunc("/agent-app/company/register", companyHandler.RegisterANewCompany).Methods("POST")
-	router.HandleFunc("/agent-app/company/{id:[0-9a-f]+}", companyHandler.Update).Methods("PUT")
-
-	router.Use(middleware.IsAuthenticated)
+func (server *Server) startHttpServer(handlers Handlers) {
+	router := cfg.ConfigureRouter(handlers)
 
 	httpServer := &http.Server{Addr: fmt.Sprintf("0.0.0.0:%s", server.config.Port), Handler: router}
 	go func() {
