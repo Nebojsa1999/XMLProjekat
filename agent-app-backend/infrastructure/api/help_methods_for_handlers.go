@@ -55,6 +55,18 @@ func decodeCompanyFromBody(reader io.Reader) (*domain.Company, error) {
 	return &companyInRequestBody, nil
 }
 
+func decodeCompanyRegistrationRequestFromBody(reader io.Reader) (*domain.CompanyRegistrationRequest, error) {
+	decoder := json.NewDecoder(reader)
+	decoder.DisallowUnknownFields()
+
+	var companyRegistrationRequestInRequestBody domain.CompanyRegistrationRequest
+	if err := decoder.Decode(&companyRegistrationRequestInRequestBody); err != nil {
+		return nil, err
+	}
+
+	return &companyRegistrationRequestInRequestBody, nil
+}
+
 func isContentTypeValid(writer http.ResponseWriter, request *http.Request) bool {
 	validity := true
 
