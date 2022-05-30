@@ -69,6 +69,8 @@ func (service *CompanyRegistrationRequestService) UpdateByOwner(modifiedRequest 
 		}
 	}
 
+	companyRegistrationRequestInDatabase.Status = enums.Pending
+	companyRegistrationRequestInDatabase.ReasonForRejection = ""
 	companyRegistrationRequestInDatabase.Name = modifiedRequest.Name
 	companyRegistrationRequestInDatabase.Address = modifiedRequest.Address
 	companyRegistrationRequestInDatabase.Email = modifiedRequest.Email
@@ -86,9 +88,11 @@ func (service *CompanyRegistrationRequestService) UpdateByAdministrator(modified
 		return message, nil, nil
 	}
 
-	if modifiedRequest.Status == enums.Rejected {
-		if modifiedRequest.ReasonForRejection == "" {
+	if modifiedRequest.ReasonForRejection == "" {
+		if modifiedRequest.Status == enums.Rejected {
 			return "Reason for rejection must be written.", nil, nil
+		} else {
+			return "Registration request is not rejected and therefore cannot have a filled reason.", nil, nil
 		}
 	}
 
