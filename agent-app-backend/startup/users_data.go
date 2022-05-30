@@ -2,19 +2,20 @@ package startup
 
 import (
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain"
+	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain/enums"
 )
 
 var users = []*domain.User{
 	{
 		Id:             getObjectId("123a0cc3a34d25d8567f9f01"),
-		Role:           domain.CommonUser,
+		Role:           enums.CommonUser,
 		Username:       "Darijan98",
 		Password:       "darijan",
 		FirstName:      "Darijan",
 		LastName:       "Mićić",
 		Email:          "darijan.micic10@gmail.com",
 		Phone:          "062/100-6031",
-		Gender:         domain.Male,
+		Gender:         enums.Male,
 		DateOfBirth:    getParsedDateOfBirthFrom("1998-07-10T00:00:00Z"),
 		Biography:      "Biografija Darijana Mićića.",
 		WorkExperience: "Bez radnog iskustva.",
@@ -24,14 +25,14 @@ var users = []*domain.User{
 	},
 	{
 		Id:             getObjectId("123a0cc3a34d25d8567f9f02"),
-		Role:           domain.Administrator,
+		Role:           enums.Administrator,
 		Username:       "Nebojsa99",
 		Password:       "nebojsa",
 		FirstName:      "Nebojša",
 		LastName:       "Bogosavljev",
 		Email:          "nebojsa.bogosavljev@gmail.com",
 		Phone:          "064/788-400",
-		Gender:         domain.Male,
+		Gender:         enums.Male,
 		DateOfBirth:    getParsedDateOfBirthFrom("1999-09-26T00:00:00Z"),
 		Biography:      "Biografija Nebojše Bogosavljeva.",
 		WorkExperience: "Bez radnog iskustva",
@@ -41,14 +42,14 @@ var users = []*domain.User{
 	},
 	{
 		Id:             getObjectId("123a0cc3a34d25d8567f9f03"),
-		Role:           domain.CommonUser,
+		Role:           enums.CommonUser,
 		Username:       "Aleksandar97",
 		Password:       "aleksandar",
 		FirstName:      "Aleksandar",
 		LastName:       "Dujin",
 		Email:          "aleksandar.dujin@gmail.com",
 		Phone:          "060/132-345",
-		Gender:         domain.Male,
+		Gender:         enums.Male,
 		DateOfBirth:    getParsedDateOfBirthFrom("1997-02-03T00:00:00Z"),
 		Biography:      "Biografija Aleksandra Dujina.",
 		WorkExperience: "Bez radnog iskustva.",
@@ -58,14 +59,14 @@ var users = []*domain.User{
 	},
 	{
 		Id:             getObjectId("123a0cc3a34d25d8567f9f04"),
-		Role:           domain.CompanyOwner,
+		Role:           enums.CompanyOwner,
 		Username:       "Marko99",
 		Password:       "marko",
 		FirstName:      "Marko",
 		LastName:       "Trifunović",
 		Email:          "marko.trifunovic@gmail.com",
 		Phone:          "063/763-6897",
-		Gender:         domain.Male,
+		Gender:         enums.Male,
 		DateOfBirth:    getParsedDateOfBirthFrom("1999-11-30T00:00:00Z"),
 		Biography:      "Biografija Marka Trifunovića.",
 		WorkExperience: "Bez radnog iskustva.",

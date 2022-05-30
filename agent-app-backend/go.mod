@@ -4,6 +4,8 @@ go 1.18
 
 replace github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain => ../domain
 
+replace github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain/enums => ../domain/enums
+
 replace github.com/Nebojsa1999/XMLProjekat/agent-app-backend/application => ../application
 
 replace github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/api => ../infrastructure/api
