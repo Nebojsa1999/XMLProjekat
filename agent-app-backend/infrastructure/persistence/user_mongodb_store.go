@@ -33,8 +33,12 @@ func (store *UserMongoDBStore) GetAll() ([]*domain.User, error) {
 
 func (store *UserMongoDBStore) Get(id primitive.ObjectID) (*domain.User, error) {
 	filter := bson.M{"_id": id}
+	existingUser, err := store.filterOne(filter)
+	if err != nil {
+		return nil, err
+	}
 
-	return store.filterOne(filter)
+	return existingUser, nil
 }
 
 func (store *UserMongoDBStore) GetByUsername(username string) (*domain.User, error) {
@@ -59,8 +63,12 @@ func (store *UserMongoDBStore) GetByUsernameAndPassword(username string, passwor
 
 func (store *UserMongoDBStore) GetByEmail(email string) (*domain.User, error) {
 	filter := bson.M{"email": email}
+	existingUser, err := store.filterOne(filter)
+	if err != nil {
+		return nil, err
+	}
 
-	return store.filterOne(filter)
+	return existingUser, nil
 }
 
 func (store *UserMongoDBStore) RegisterANewUser(user *domain.User) (string, error) {
@@ -109,7 +117,7 @@ func (store *UserMongoDBStore) filterOne(filter interface{}) (user *domain.User,
 	result := store.users.FindOne(context.TODO(), filter)
 	err = result.Decode(&user)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 
 	return user, nil
