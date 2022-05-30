@@ -19,6 +19,10 @@ func (service *CompanyService) Get(id primitive.ObjectID) (*domain.Company, erro
 	return service.store.Get(id)
 }
 
+func (service *CompanyService) GetByName(name string) (*domain.Company, error) {
+	return service.store.GetByName(name)
+}
+
 func (service *CompanyService) GetAll() ([]*domain.Company, error) {
 	return service.store.GetAll()
 }

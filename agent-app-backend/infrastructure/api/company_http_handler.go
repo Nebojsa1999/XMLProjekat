@@ -35,6 +35,22 @@ func (handler *CompanyHandler) Get(writer http.ResponseWriter, request *http.Req
 	renderJSON(writer, company)
 }
 
+func (handler *CompanyHandler) GetByName(writer http.ResponseWriter, request *http.Request) {
+	name := mux.Vars(request)["name"]
+	if name == "" {
+		http.Error(writer, "Company name is empty.", http.StatusBadRequest)
+		return
+	}
+
+	company, err := handler.service.GetByName(name)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	renderJSON(writer, company)
+}
+
 func (handler *CompanyHandler) GetAll(writer http.ResponseWriter, request *http.Request) {
 	companies, err := handler.service.GetAll()
 	if err != nil {

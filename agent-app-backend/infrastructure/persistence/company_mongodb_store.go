@@ -32,8 +32,12 @@ func (store *CompanyMongoDBStore) GetAll() ([]*domain.Company, error) {
 
 func (store *CompanyMongoDBStore) Get(id primitive.ObjectID) (*domain.Company, error) {
 	filter := bson.M{"_id": id}
+	existingUser, err := store.filterOne(filter)
+	if err != nil {
+		return nil, err
+	}
 
-	return store.filterOne(filter)
+	return existingUser, nil
 }
 
 func (store *CompanyMongoDBStore) GetByOwnerId(ownerId primitive.ObjectID) (*domain.Company, error) {
@@ -48,8 +52,12 @@ func (store *CompanyMongoDBStore) GetByOwnerId(ownerId primitive.ObjectID) (*dom
 
 func (store *CompanyMongoDBStore) GetByName(name string) (*domain.Company, error) {
 	filter := bson.M{"name": name}
+	existingUser, err := store.filterOne(filter)
+	if err != nil {
+		return nil, err
+	}
 
-	return store.filterOne(filter)
+	return existingUser, nil
 }
 
 func (store *CompanyMongoDBStore) RegisterANewCompany(company *domain.Company) (string, error) {
@@ -98,7 +106,7 @@ func (store *CompanyMongoDBStore) filterOne(filter interface{}) (company *domain
 	result := store.companies.FindOne(context.TODO(), filter)
 	err = result.Decode(&company)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 
 	return company, nil
