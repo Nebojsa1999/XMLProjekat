@@ -7,21 +7,23 @@ import (
 )
 
 type User struct {
-	Id             primitive.ObjectID `json:"id" bson:"_id"`
-	Role           enums.UserRole     `json:"role" bson:"role"`
-	Username       string             `json:"username" bson:"username"`
-	Password       string             `json:"password" bson:"password"`
-	FirstName      string             `json:"firstName" bson:"first_name"`
-	LastName       string             `json:"lastName" bson:"last_name"`
-	Email          string             `json:"email" bson:"email"`
-	Phone          string             `json:"phone" bson:"phone"`
-	Gender         enums.Gender       `json:"gender" bson:"gender"`
-	DateOfBirth    time.Time          `json:"dateOfBirth" bson:"date_of_birth"`
-	Biography      string             `json:"biography" bson:"biography"`
-	WorkExperience string             `json:"workExperience" bson:"work_experience"`
-	Education      string             `json:"education" bson:"education"`
-	Skills         string             `json:"skills" bson:"skills"`
-	Interests      string             `json:"interests" bson:"interests"`
+	Id                     primitive.ObjectID `json:"id" bson:"_id"`
+	Role                   enums.UserRole     `json:"role" bson:"role"`
+	OwnedCompanyId         primitive.ObjectID `json:"ownedCompanyId" bson:"owned_company_id"`
+	IssuedCompanyRequestId primitive.ObjectID `json:"issuedCompanyRequestId" bson:"issued_company_request_id"`
+	Username               string             `json:"username" bson:"username"`
+	Password               string             `json:"password" bson:"password"`
+	FirstName              string             `json:"firstName" bson:"first_name"`
+	LastName               string             `json:"lastName" bson:"last_name"`
+	Email                  string             `json:"email" bson:"email"`
+	Phone                  string             `json:"phone" bson:"phone"`
+	Gender                 enums.Gender       `json:"gender" bson:"gender"`
+	DateOfBirth            time.Time          `json:"dateOfBirth" bson:"date_of_birth"`
+	Biography              string             `json:"biography" bson:"biography"`
+	WorkExperience         string             `json:"workExperience" bson:"work_experience"`
+	Education              string             `json:"education" bson:"education"`
+	Skills                 string             `json:"skills" bson:"skills"`
+	Interests              string             `json:"interests" bson:"interests"`
 }
 
 type Credentials struct {

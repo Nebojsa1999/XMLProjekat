@@ -3,6 +3,7 @@ package application
 import (
 	"fmt"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain"
+	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain/enums"
 	jwt "github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"os"
@@ -32,6 +33,14 @@ func (service *UserService) GetAll() ([]*domain.User, error) {
 }
 
 func (service *UserService) RegisterANewUser(user *domain.User) (string, error) {
+	if user.Role != enums.CommonUser {
+		return "User does not have role \"CommonUser\".", nil
+	}
+
+	if !user.OwnedCompanyId.IsZero() || !user.IssuedCompanyRequestId.IsZero() {
+		return "User does not have empty ids of owned company and issued company registration request.", nil
+	}
+
 	existingUser, _ := service.store.Get(user.Id)
 	user.Id = primitive.NewObjectID()
 	if existingUser != nil {
@@ -78,10 +87,11 @@ func (service *UserService) GenerateAgentAppJWTToken(user *domain.User) (*domain
 	jwtToken := jwt.New(jwt.SigningMethodHS256)
 	claims := jwtToken.Claims.(jwt.MapClaims)
 
-	claims["authorized"] = true
-	claims["id"] = user.Id
+	claims["id"] = user.Id.Hex()
 	claims["username"] = user.Username
 	claims["role"] = user.Role
+	claims["ownedCompanyId"] = user.OwnedCompanyId.Hex()
+	claims["issuedCompanyRequestId"] = user.IssuedCompanyRequestId.Hex()
 	claims["exp"] = time.Now().Add(time.Hour).Unix()
 
 	jwtTokenString, err := jwtToken.SignedString(tokenSigningKey)
