@@ -20,6 +20,58 @@ func (service *CompanyRegistrationRequestService) Get(id primitive.ObjectID) (*d
 	return service.store.Get(id)
 }
 
+func (service *CompanyRegistrationRequestService) GetByName(name string) (*domain.CompanyRegistrationRequest, error) {
+	return service.store.GetByName(name)
+}
+
+func (service *CompanyRegistrationRequestService) GetPendingOnes() ([]*domain.CompanyRegistrationRequest, error) {
+	allRequests, err := service.store.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	var pendingRequests []*domain.CompanyRegistrationRequest
+	for _, request := range allRequests {
+		if request.Status == enums.Pending {
+			pendingRequests = append(pendingRequests, request)
+		}
+	}
+
+	return pendingRequests, nil
+}
+
+func (service *CompanyRegistrationRequestService) GetAcceptedOnes() ([]*domain.CompanyRegistrationRequest, error) {
+	allRequests, err := service.store.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	var acceptedRequests []*domain.CompanyRegistrationRequest
+	for _, request := range allRequests {
+		if request.Status == enums.Accepted {
+			acceptedRequests = append(acceptedRequests, request)
+		}
+	}
+
+	return acceptedRequests, nil
+}
+
+func (service *CompanyRegistrationRequestService) GetRejectedOnes() ([]*domain.CompanyRegistrationRequest, error) {
+	allRequests, err := service.store.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	var rejectedRequests []*domain.CompanyRegistrationRequest
+	for _, request := range allRequests {
+		if request.Status == enums.Rejected {
+			rejectedRequests = append(rejectedRequests, request)
+		}
+	}
+
+	return rejectedRequests, nil
+}
+
 func (service *CompanyRegistrationRequestService) GetAll() ([]*domain.CompanyRegistrationRequest, error) {
 	return service.store.GetAll()
 }

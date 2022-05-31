@@ -34,6 +34,14 @@ func ConfigureRouter(handlers startup.Handlers) *mux.Router {
 
 	router.HandleFunc("/agent-app/company-registration-request/{id:[0-9a-f]+}",
 		handlers.CompanyRegistrationRequestHandler.Get).Methods("GET")
+	router.HandleFunc("/agent-app/company-registration-request/{name}",
+		handlers.CompanyRegistrationRequestHandler.GetByName).Methods("GET")
+	router.HandleFunc("/agent-app/company-registration-request/pending",
+		handlers.CompanyRegistrationRequestHandler.GetPendingOnes).Methods("GET")
+	router.HandleFunc("/agent-app/company-registration-request/accepted",
+		handlers.CompanyRegistrationRequestHandler.GetAcceptedOnes).Methods("GET")
+	router.HandleFunc("/agent-app/company-registration-request/rejected",
+		handlers.CompanyRegistrationRequestHandler.GetRejectedOnes).Methods("GET")
 	router.HandleFunc("/agent-app/company-registration-request",
 		handlers.CompanyRegistrationRequestHandler.GetAll).Methods("GET")
 	router.HandleFunc("/agent-app/company-registration-request",
