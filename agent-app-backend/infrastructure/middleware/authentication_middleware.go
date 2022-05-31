@@ -82,7 +82,6 @@ func IsAuthenticated(handler http.Handler) http.Handler {
 
 func isAProtectedRoute(method, path string) bool {
 	pathToSingleCompanyById, _ := regexp.MatchString("/agent-app/company/[0-9a-f]+", path)
-	pathToSingleCompanyByName, _ := regexp.MatchString("/agent-app/company/[a-z]+", path)
 	pathToAllCompanies := "/agent-app/company"
 
 	pathToUserRegistration := "/agent-app/user/register"
@@ -90,7 +89,7 @@ func isAProtectedRoute(method, path string) bool {
 
 	switch method {
 	case "GET":
-		if pathToSingleCompanyById || pathToSingleCompanyByName || path == pathToAllCompanies {
+		if pathToSingleCompanyById || path == pathToAllCompanies {
 			return false
 		}
 	case "POST":
