@@ -17,7 +17,7 @@ export class LoginPageComponent implements OnInit {
   form: any;
   isSubmitted: boolean = false;
 
-  token: string = '';
+  agentAppToken: string = '';
 
   constructor(private authService: AuthService, private formBuilder: FormBuilder, 
     private router: Router) { }
@@ -43,8 +43,8 @@ export class LoginPageComponent implements OnInit {
       data => {
         console.log('Login response: ', data);
 
-        localStorage.setItem('agentAppToken', data.accessToken);
-        let tokenInfo = this.getDecodedAccessToken(data.accessToken);
+        localStorage.setItem('agentAppToken', data.token);
+        let tokenInfo = this.getDecodedAccessToken(data.token);
 
         localStorage.setItem('id', tokenInfo.id);
         localStorage.setItem('username', tokenInfo.username);

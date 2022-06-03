@@ -1,7 +1,11 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { JwtHelperService } from '@auth0/angular-jwt';
+
+import { AuthService } from './services/auth/auth.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,12 +34,13 @@ const MaterialComponents = [
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     MaterialComponents
   ],
-  providers: [],
+  providers: [JwtHelperService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
