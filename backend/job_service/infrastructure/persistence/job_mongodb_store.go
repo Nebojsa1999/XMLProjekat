@@ -1,7 +1,11 @@
-package persistance
+package persistence
 
 import (
 	"context"
+	"github.com/Nebojsa1999/XMLProjekat/backend/job_service/domain"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"strings"
 	"time"
 )
@@ -28,7 +32,7 @@ func (store *JobMongoDBStore) Get(id primitive.ObjectID) (*domain.Job, error) {
 }
 
 func (store *JobMongoDBStore) SearchByUser(id primitive.ObjectID) ([]*domain.Job, error) {
-	filter := bson.M{"userId": id}
+	filter := bson.M{"user_id": id}
 	return store.filter(filter)
 }
 
@@ -75,7 +79,7 @@ func (store *JobMongoDBStore) SearchByRequirements(content string) ([]*domain.Jo
 
 func (store *JobMongoDBStore) Insert(job *domain.Job) (string, error) {
 	job.Id = primitive.NewObjectID()
-	job.CreationDay = time.Now()
+	job.CreatedAt = time.Now()
 	jobInDatabase, err := store.Get(job.Id)
 	if jobInDatabase != nil {
 		return "id exists", nil

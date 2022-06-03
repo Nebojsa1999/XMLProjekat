@@ -1,8 +1,10 @@
-package persistance
+package persistence
 
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func GetClient(host, port string) (*mongo.Client, error) {

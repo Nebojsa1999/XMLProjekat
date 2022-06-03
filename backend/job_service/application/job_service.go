@@ -1,4 +1,4 @@
-package aplication
+package application
 
 import (
 	"github.com/Nebojsa1999/XMLProjekat/backend/job_service/domain"
