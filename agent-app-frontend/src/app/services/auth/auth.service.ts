@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   isARegisteredUser(): boolean {
-    const role = localStorage.getItem('role');
+    var role = localStorage.getItem('role');
 
     if (role != undefined && role != null) {
       return true;
