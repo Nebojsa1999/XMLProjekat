@@ -1,6 +1,11 @@
 package api
 
-import "context"
+import (
+	"context"
+	pb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/job_service"
+	"github.com/Nebojsa1999/XMLProjekat/backend/job_service/application"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type JobHandler struct {
 	pb.UnimplementedJobServiceServer

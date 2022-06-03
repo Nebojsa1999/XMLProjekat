@@ -2,7 +2,12 @@ package startup
 
 import (
 	"fmt"
-
+	job "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/job_service"
+	"github.com/Nebojsa1999/XMLProjekat/backend/job_service/application"
+	"github.com/Nebojsa1999/XMLProjekat/backend/job_service/domain"
+	"github.com/Nebojsa1999/XMLProjekat/backend/job_service/infrastructure/api"
+	"github.com/Nebojsa1999/XMLProjekat/backend/job_service/infrastructure/persistence"
+	cfg "github.com/Nebojsa1999/XMLProjekat/backend/job_service/startup/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 	"log"
@@ -10,10 +15,10 @@ import (
 )
 
 type Server struct {
-	config *config.Config
+	config *cfg.Config
 }
 
-func NewServer(config *config.Config) *Server {
+func NewServer(config *cfg.Config) *Server {
 	return &Server{
 		config: config,
 	}
@@ -25,9 +30,9 @@ func (server *Server) Start() {
 
 	jobService := server.initJobService(jobStore)
 
-	jobHandler := server.initPostHandler(jobService)
+	jobHandler := server.initJobHandler(jobService)
 
-	server.startGrpcServer(postHandler)
+	server.startGrpcServer(jobHandler)
 }
 
 func (server *Server) initMongoClient() *mongo.Client {
@@ -64,7 +69,7 @@ func (server *Server) startGrpcServer(jobHandler *api.JobHandler) {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
-	ps.RegisterJobServiceServer(grpcServer, jobHandler)
+	job.RegisterJobServiceServer(grpcServer, jobHandler)
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
