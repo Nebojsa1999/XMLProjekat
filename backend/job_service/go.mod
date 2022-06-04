@@ -19,6 +19,7 @@ replace github.com/Nebojsa1999/XMLProjekat/backend/job_service/startup/config =>
 replace github.com/Nebojsa1999/XMLProjekat/backend/job_service/startup => ../job_service/startup
 
 require (
+	github.com/Nebojsa1999/XMLProjekat/backend/common v1.0.0
 	go.mongodb.org/mongo-driver v1.9.1
 	google.golang.org/grpc v1.47.0
 )

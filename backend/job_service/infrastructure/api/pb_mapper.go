@@ -5,7 +5,6 @@ import (
 	"github.com/Nebojsa1999/XMLProjekat/backend/job_service/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"time"
 )
 
 func mapJob(job *domain.Job) *pb.Job {
