@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+option go_package = "github.com/Nebojsa1999/XMLProjekat/backend/common/connection";
+
+package connection;
+
+import "google/api/annotations.proto";
+
+
+service ConnectionService{
+  rpc Get(GetRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      get: "/connection/{userId}"
+    };
+  }
+  rpc CreateConnection(CreateConnectionRequest) returns(CreateConnectionResponse) {
+    option (google.api.http) = {
+      post: "/connection"
+      body: "connection"
+    };
+  }
+  rpc UpdateConnection(UpdateConnectionRequest) returns(UpdateConnectionResponse) {
+    option (google.api.http) = {
+      patch: "/connection/{id}"
+    };
+  }
+  rpc DeleteConnection(DeleteConnectionRequest) returns(DeleteConnectionResponse) {
+    option (google.api.http) = {
+      delete: "/connection/{id}"
+    };
+  }
+}
+
+message GetRequest {
+  string userId = 1;
+}
+
+message GetResponse {
+  repeated Connection connections = 1;
+}
+
+message CreateConnectionRequest {
+  Connection connection = 1;
+}
+
+message CreateConnectionResponse {
+  Connection connection = 1;
+}
+
+message DeleteConnectionRequest {
+  string id = 1;
+}
+
+message DeleteConnectionResponse {
+}
+
+message UpdateConnectionRequest {
+  string id = 1;
+}
+
+message UpdateConnectionResponse {
+  Connection connection = 1;
+}
+
+message Connection {
+  string id = 1;
+  string userAId = 2;
+  string userBId = 3;
+}
