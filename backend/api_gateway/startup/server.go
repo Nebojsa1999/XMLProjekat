@@ -3,16 +3,18 @@ package startup
 import (
 	"context"
 	"fmt"
+	"log"
+	"net/http"
+
 	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/infrastructure/api"
 	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/infrastructure/middleware"
 	cfg "github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/startup/config"
+	connectionGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/connection_service"
 	postingGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	userGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"log"
-	"net/http"
 )
 
 type Server struct {
@@ -46,17 +48,27 @@ func (server *Server) initHandlers() {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
+
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.ConnectionHost, server.config.ConnectionPort)
+	err = connectionGw.RegisterConnectionServiceHandlerFromEndpoint(context.TODO(), server.mux, connectionEndpoint, opts)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 }
 
 func (server *Server) initCustomHandlers() {
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	postingEndpoint := fmt.Sprintf("%s:%s", server.config.PostingHost, server.config.PostingPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.ConnectionHost, server.config.ConnectionPort)
 
 	registerHandler := api.NewRegisterHandler(userEndpoint)
 	registerHandler.Init(server.mux)
 
 	publicPostHandler := api.NewPublicPostHandler(userEndpoint, postingEndpoint)
 	publicPostHandler.Init(server.mux)
+
+	connectionHandler := api.NewConnectionHandler(postingEndpoint, connectionEndpoint)
+	connectionHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {

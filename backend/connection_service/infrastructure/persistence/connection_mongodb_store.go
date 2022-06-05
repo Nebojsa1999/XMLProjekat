@@ -21,18 +21,18 @@ type ConnectionMongoDBStore struct {
 }
 
 func NewConnectionMongoDBStore(client *mongo.Client) domain.ConnectionStore {
-	connections := client.Database(DATABASE).Collection(COLLECTION1)
-	privacy := client.Database(DATABASE).Collection(COLLECTION2)
+	dbConnection := client.Database(DATABASE).Collection(COLLECTION1)
+	dbPrivacy := client.Database(DATABASE).Collection(COLLECTION2)
 	return &ConnectionMongoDBStore{
-		connections: connections,
-		privacy:     privacy,
+		dbConnection: dbConnection,
+		dbPrivacy:    dbPrivacy,
 	}
 }
 
 func (store *ConnectionMongoDBStore) Get(userId primitive.ObjectID) ([]*domain.Connection, error) {
 	filter := bson.M{"$or": []bson.M{{"userAId": userId},
 		{"userBId": userId}}}
-	return store.filter(filter, id.Hex())
+	return store.filter(filter)
 }
 
 func (store *ConnectionMongoDBStore) CreateConnection(connection *domain.Connection) (*domain.Connection, error) {
@@ -66,8 +66,8 @@ func (store *ConnectionMongoDBStore) DeleteAll() error {
 }
 
 func (store *ConnectionMongoDBStore) DeleteConnection(id primitive.ObjectID) error {
-	filter := bson.M{"id": Id}
-	_, err = store.dbConnection.DeleteOne(context.TODO(), filter)
+	filter := bson.M{"id": id}
+	_, err := store.dbConnection.DeleteOne(context.TODO(), filter)
 	if err != nil {
 		return err
 	}
@@ -93,9 +93,13 @@ func (store *ConnectionMongoDBStore) UpdateConnection(id string) (*domain.Connec
 }
 
 func (store *ConnectionMongoDBStore) filter(filter interface{}) ([]*domain.Connection, error) {
-	connections := store.dbConnection.Collection(COLLECTION1 + id)
-	cursor, err := connections.Find(context.TODO(), filter)
-	defer cursor.Close(context.TODO())
+	cursor, err := store.dbConnection.Find(context.TODO(), filter)
+	defer func(cursor *mongo.Cursor, ctx context.Context) {
+		err := cursor.Close(ctx)
+		if err != nil {
+			return
+		}
+	}(cursor, context.TODO())
 
 	if err != nil {
 		return nil, err

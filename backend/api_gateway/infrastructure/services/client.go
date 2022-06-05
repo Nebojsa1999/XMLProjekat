@@ -1,11 +1,13 @@
 package services
 
 import (
+	"log"
+
+	connectionPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/connection_service"
 	postingPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	userPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"log"
 )
 
 func NewUserClient(address string) userPb.UserServiceClient {
@@ -24,6 +26,15 @@ func NewPostingClient(address string) postingPb.PostingServiceClient {
 	}
 
 	return postingPb.NewPostingServiceClient(conn)
+}
+
+func NewConnectionClient(address string) connectionPb.ConnectionServiceClient {
+	conn, err := getConnection(address)
+	if err != nil {
+		log.Fatalf("Failed to start gRPC connection to Connection service: %v", err)
+	}
+
+	return connectionPb.NewConnectionServiceClient(conn)
 }
 
 func getConnection(address string) (*grpc.ClientConn, error) {

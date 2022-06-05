@@ -51,13 +51,13 @@ func (server *Server) initConnectionStore(client *mongo.Client) domain.Connectio
 		return nil
 	}
 	for _, p := range privacy {
-		_, err := store.CreatePrivacy(p)
+		_, err := store.CreateProfilePrivacy(p)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
 	for _, c := range connections {
-		_, err := store.Create(c)
+		_, err := store.CreateConnection(c)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -70,7 +70,7 @@ func (server *Server) initConnectionService(store domain.ConnectionStore) *appli
 }
 
 func (server *Server) initConnectionHandler(service *application.ConnectionService) *api.ConnectionHandler {
-	return api.NewConnectionHandler(service, postClient)
+	return api.NewConnectionHandler(service)
 }
 
 func (server *Server) startGrpcServer(connectionHandler *api.ConnectionHandler) {
