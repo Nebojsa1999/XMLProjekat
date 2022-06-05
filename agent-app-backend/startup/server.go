@@ -18,12 +18,6 @@ type Server struct {
 	config *cfg.Config
 }
 
-type Handlers struct {
-	UserHandler                       *api.UserHandler
-	CompanyHandler                    *api.CompanyHandler
-	CompanyRegistrationRequestHandler *api.CompanyRegistrationRequestHandler
-}
-
 func NewServer(config *cfg.Config) *Server {
 	return &Server{
 		config: config,
@@ -44,7 +38,7 @@ func (server *Server) Start() {
 	companyHandler := server.initCompanyHandler(companyService)
 	companyRegistrationRequestHandler := server.initCompanyRegistrationRequestHandler(companyRegistrationRequestService)
 
-	server.startHttpServer(Handlers{
+	server.startHttpServer(cfg.Handlers{
 		UserHandler:                       userHandler,
 		CompanyHandler:                    companyHandler,
 		CompanyRegistrationRequestHandler: companyRegistrationRequestHandler,
@@ -135,7 +129,7 @@ func (server *Server) initCompanyRegistrationRequestHandler(service *application
 	return api.NewCompanyRegistrationRequestHandler(service)
 }
 
-func (server *Server) startHttpServer(handlers Handlers) {
+func (server *Server) startHttpServer(handlers cfg.Handlers) {
 	router := cfg.ConfigureRouter(handlers)
 
 	httpServer := &http.Server{Addr: fmt.Sprintf("0.0.0.0:%s", server.config.Port), Handler: router}
