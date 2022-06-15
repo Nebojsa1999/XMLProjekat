@@ -38,3 +38,12 @@ type GetAllPostsRequest struct {
 	UserIds []string
 	Posts   []*postPb.Post
 }
+
+type Job struct {
+	Id           string
+	UserId       string
+	CreatedAt    time.Time
+	Position     string
+	Description  string
+	Requirements string
+}
