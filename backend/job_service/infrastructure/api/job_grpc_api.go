@@ -120,18 +120,18 @@ func (handler *JobHandler) SearchByRequirements(ctx context.Context, request *pb
 
 func (handler *JobHandler) Add(ctx context.Context, request *pb.AddRequest) (*pb.AddResponse, error) {
 	job := mapNewJob(request.Job)
-	successs, err := handler.service.Add(job)
+	success, err := handler.service.Add(job)
 	response := &pb.AddResponse{
-		Success: successs,
+		Success: success,
 	}
 	return response, err
 }
 
 func (handler *JobHandler) Edit(ctx context.Context, request *pb.EditRequest) (*pb.EditResponse, error) {
 	job := mapChangesOfJob(request.Job)
-	successs, err := handler.service.Edit(job)
+	success, err := handler.service.Edit(job)
 	response := &pb.EditResponse{
-		Success: successs,
+		Success: success,
 	}
 	return response, err
 }

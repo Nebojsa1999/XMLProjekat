@@ -29,6 +29,7 @@ type JobServiceClient interface {
 	SearchByPosition(ctx context.Context, in *SearchByPositionRequest, opts ...grpc.CallOption) (*SearchByPositionResponse, error)
 	SearchByRequirements(ctx context.Context, in *SearchByRequirementsRequest, opts ...grpc.CallOption) (*SearchByRequirementsResponse, error)
 	Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*AddResponse, error)
+	Edit(ctx context.Context, in *EditRequest, opts ...grpc.CallOption) (*EditResponse, error)
 }
 
 type jobServiceClient struct {
@@ -102,6 +103,15 @@ func (c *jobServiceClient) Add(ctx context.Context, in *AddRequest, opts ...grpc
 	return out, nil
 }
 
+func (c *jobServiceClient) Edit(ctx context.Context, in *EditRequest, opts ...grpc.CallOption) (*EditResponse, error) {
+	out := new(EditResponse)
+	err := c.cc.Invoke(ctx, "/job.JobService/Edit", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // JobServiceServer is the server API for JobService service.
 // All implementations must embed UnimplementedJobServiceServer
 // for forward compatibility
@@ -113,6 +123,7 @@ type JobServiceServer interface {
 	SearchByPosition(context.Context, *SearchByPositionRequest) (*SearchByPositionResponse, error)
 	SearchByRequirements(context.Context, *SearchByRequirementsRequest) (*SearchByRequirementsResponse, error)
 	Add(context.Context, *AddRequest) (*AddResponse, error)
+	Edit(context.Context, *EditRequest) (*EditResponse, error)
 	mustEmbedUnimplementedJobServiceServer()
 }
 
@@ -140,6 +151,9 @@ func (UnimplementedJobServiceServer) SearchByRequirements(context.Context, *Sear
 }
 func (UnimplementedJobServiceServer) Add(context.Context, *AddRequest) (*AddResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
+}
+func (UnimplementedJobServiceServer) Edit(context.Context, *EditRequest) (*EditResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Edit not implemented")
 }
 func (UnimplementedJobServiceServer) mustEmbedUnimplementedJobServiceServer() {}
 
@@ -280,6 +294,24 @@ func _JobService_Add_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _JobService_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EditRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServiceServer).Edit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.JobService/Edit",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServiceServer).Edit(ctx, req.(*EditRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // JobService_ServiceDesc is the grpc.ServiceDesc for JobService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -314,6 +346,10 @@ var JobService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Add",
 			Handler:    _JobService_Add_Handler,
+		},
+		{
+			MethodName: "Edit",
+			Handler:    _JobService_Edit_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
