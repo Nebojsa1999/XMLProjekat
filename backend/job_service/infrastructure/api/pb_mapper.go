@@ -41,3 +41,18 @@ func mapNewJob(jobPb *pb.Job) *domain.Job {
 
 	return job
 }
+
+func mapChangesOfJob(jobPb *pb.Job) *domain.Job {
+	id, _ := primitive.ObjectIDFromHex(jobPb.Id)
+	userId, _ := primitive.ObjectIDFromHex(jobPb.UserId)
+
+	job := &domain.Job{
+		Id:           id,
+		UserId:       userId,
+		CreatedAt:    jobPb.CreatedAt.AsTime(),
+		Requirements: jobPb.Requirements,
+		Description:  jobPb.Description,
+		Position:     jobPb.Position,
+	}
+	return job
+}

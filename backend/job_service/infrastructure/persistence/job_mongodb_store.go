@@ -130,3 +130,27 @@ func RemoveIndex(s []string, index int) []string {
 	ret = append(ret, s[:index]...)
 	return append(ret, s[index+1:]...)
 }
+
+func (store *JobMongoDBStore) Edit(job *domain.Job) (string, error) {
+	jobFromDatabase, err := store.Get(job.Id)
+	if jobFromDatabase == nil {
+		return "job doesn't exist", nil
+	}
+	jobFromDatabase.UserId = job.UserId
+	jobFromDatabase.CreatedAt = job.CreatedAt
+	jobFromDatabase.Requirements = job.Requirements
+	jobFromDatabase.Description = job.Description
+	jobFromDatabase.Position = job.Position
+
+	filter := bson.M{"_id": job.Id}
+	update := bson.M{
+		"$set": jobFromDatabase,
+	}
+	_, err = store.jobs.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return "error while updating", err
+	}
+
+	return "success", nil
+
+}

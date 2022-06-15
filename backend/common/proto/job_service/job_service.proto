@@ -44,6 +44,12 @@ service JobService{
       body: "job"
     };
   }
+  rpc Edit(EditRequest) returns(EditResponse) {
+    option (google.api.http) = {
+      put: "/job/editJob"
+      body: "job"
+    };
+  }
 }
 
 message GetRequest {
@@ -98,6 +104,14 @@ message AddRequest {
 }
 
 message AddResponse {
+  string success = 1;
+}
+
+message EditRequest {
+  Job job = 1;
+}
+
+message EditResponse {
   string success = 1;
 }
 
