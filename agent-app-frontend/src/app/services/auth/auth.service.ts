@@ -10,7 +10,7 @@ import { Credentials } from 'src/app/models/credentials';
   providedIn: 'root'
 })
 export class AuthService {
-  private loginURL = 'http://localhost:8081/agent-app/user/login';
+  private loginURL = 'http://localhost:8001/agent-app/user/login';
 
   private agentAppToken = null;
 

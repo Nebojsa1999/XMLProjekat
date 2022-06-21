@@ -14,7 +14,10 @@ export class TokenInterceptor implements HttpInterceptor {
         if (this.authService.getAuthStatus()) {
             req = req.clone({
                 setHeaders: {
-                    Authorization: 'Bearer ${this.authService.getAgentAppToken()}'
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': 'http://localhost:4200',
+                    'Authorization': 'Bearer ${this.authService.getAgentAppToken()}',
+                    'Content-Type': 'application/json'
                 }
             });
         }
