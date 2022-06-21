@@ -47,8 +47,10 @@ export class AuthService {
   hasAgentAppTokenExpired(): boolean {
     var agentAppToken = localStorage.getItem('agentAppToken');
 
-    if (this.jwtHelper.isTokenExpired(agentAppToken || '{}')) {
-      return true;
+    if (agentAppToken != null) {
+      if (this.jwtHelper.isTokenExpired(agentAppToken || '{}')) {
+        return true;
+      }
     }
 
     return false;
