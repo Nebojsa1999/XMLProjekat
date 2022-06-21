@@ -1,6 +1,7 @@
 package services
 
 import (
+	job "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/job_service"
 	postingPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	userPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 	"google.golang.org/grpc"
@@ -24,6 +25,13 @@ func NewPostingClient(address string) postingPb.PostingServiceClient {
 	}
 
 	return postingPb.NewPostingServiceClient(conn)
+}
+func NewJobClient(address string) job.JobServiceClient {
+	conn, err := getConnection(address)
+	if err != nil {
+		log.Fatalf("Failed to start gRPC connection to Post service: %v", err)
+	}
+	return job.NewJobServiceClient(conn)
 }
 
 func getConnection(address string) (*grpc.ClientConn, error) {

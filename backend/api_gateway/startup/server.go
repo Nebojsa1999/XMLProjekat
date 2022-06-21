@@ -6,6 +6,7 @@ import (
 	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/infrastructure/api"
 	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/infrastructure/middleware"
 	cfg "github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/startup/config"
+	jobGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/job_service"
 	postingGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	userGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -45,6 +46,12 @@ func (server *Server) initHandlers() {
 	err = postingGw.RegisterPostingServiceHandlerFromEndpoint(context.TODO(), server.mux, postingEndpoint, opts)
 	if err != nil {
 		log.Fatalf(err.Error())
+	}
+
+	jobEndpoint := fmt.Sprintf("%s:%s", server.config.JobHost, server.config.JobPort)
+	err = jobGw.RegisterJobServiceHandlerFromEndpoint(context.TODO(), server.mux, jobEndpoint, opts)
+	if err != nil {
+		panic(err)
 	}
 }
 
