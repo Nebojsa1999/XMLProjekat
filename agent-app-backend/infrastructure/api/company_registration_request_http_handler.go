@@ -20,6 +20,8 @@ func NewCompanyRegistrationRequestHandler(service *application.CompanyRegistrati
 }
 
 func (handler *CompanyRegistrationRequestHandler) Get(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	id, _ := mux.Vars(request)["id"]
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -37,6 +39,8 @@ func (handler *CompanyRegistrationRequestHandler) Get(writer http.ResponseWriter
 }
 
 func (handler *CompanyRegistrationRequestHandler) GetPendingOnes(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	pendingCompanyRegistrationRequests, err := handler.service.GetPendingOnes()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -47,6 +51,8 @@ func (handler *CompanyRegistrationRequestHandler) GetPendingOnes(writer http.Res
 }
 
 func (handler *CompanyRegistrationRequestHandler) GetAcceptedOnes(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	acceptedCompanyRegistrationRequests, err := handler.service.GetAcceptedOnes()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -57,6 +63,8 @@ func (handler *CompanyRegistrationRequestHandler) GetAcceptedOnes(writer http.Re
 }
 
 func (handler *CompanyRegistrationRequestHandler) GetRejectedOnes(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	rejectedCompanyRegistrationRequests, err := handler.service.GetRejectedOnes()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -67,6 +75,8 @@ func (handler *CompanyRegistrationRequestHandler) GetRejectedOnes(writer http.Re
 }
 
 func (handler *CompanyRegistrationRequestHandler) GetAll(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	companyRegistrationRequests, err := handler.service.GetAll()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -77,6 +87,8 @@ func (handler *CompanyRegistrationRequestHandler) GetAll(writer http.ResponseWri
 }
 
 func (handler *CompanyRegistrationRequestHandler) CreateCompanyRegistrationRequest(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	if !isContentTypeValid(writer, request) {
 		return
 	}
@@ -125,6 +137,8 @@ func updateCompanyRegistrationRequestMethodBasis(writer http.ResponseWriter, req
 }
 
 func (handler *CompanyRegistrationRequestHandler) UpdateByOwner(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	modifiedRequest := updateCompanyRegistrationRequestMethodBasis(writer, request)
 	if modifiedRequest == nil {
 		return
@@ -143,6 +157,8 @@ func (handler *CompanyRegistrationRequestHandler) UpdateByOwner(writer http.Resp
 }
 
 func (handler *CompanyRegistrationRequestHandler) UpdateByAdministrator(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	modifiedRequest := updateCompanyRegistrationRequestMethodBasis(writer, request)
 	if modifiedRequest == nil {
 		return

@@ -8,6 +8,10 @@ import (
 	"net/http"
 )
 
+func enableCors(writer *http.ResponseWriter) {
+	(*writer).Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+}
+
 func renderJSON(writer http.ResponseWriter, data interface{}) {
 	marshalledData, err := json.Marshal(data)
 	if err != nil {
