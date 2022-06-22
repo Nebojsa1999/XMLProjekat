@@ -1,0 +1,21 @@
+.matListDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-left: 25vw;
+    margin-right: 25vw;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    z-index: 0;
+}
+
+mat-list {
+    text-align: center;
+    min-width: 100%;
+}
+
+span {
+    min-width: 10px;
+    max-width: 10px;
+}

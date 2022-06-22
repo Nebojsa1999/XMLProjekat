@@ -19,6 +19,8 @@ func NewUserHandler(service *application.UserService) *UserHandler {
 }
 
 func (handler *UserHandler) Get(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	id, _ := mux.Vars(request)["id"]
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -36,6 +38,8 @@ func (handler *UserHandler) Get(writer http.ResponseWriter, request *http.Reques
 }
 
 func (handler *UserHandler) GetAll(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	users, err := handler.service.GetAll()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -46,6 +50,8 @@ func (handler *UserHandler) GetAll(writer http.ResponseWriter, request *http.Req
 }
 
 func (handler *UserHandler) RegisterANewUser(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	if !isContentTypeValid(writer, request) {
 		return
 	}
@@ -70,6 +76,8 @@ func (handler *UserHandler) RegisterANewUser(writer http.ResponseWriter, request
 }
 
 func (handler *UserHandler) Login(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	if !isContentTypeValid(writer, request) {
 		return
 	}
@@ -93,6 +101,8 @@ func (handler *UserHandler) Login(writer http.ResponseWriter, request *http.Requ
 }
 
 func (handler *UserHandler) Update(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	if !isContentTypeValid(writer, request) {
 		return
 	}

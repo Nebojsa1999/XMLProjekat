@@ -12,7 +12,7 @@ import (
 
 type AuthorizationDeterminingData struct {
 	UserId                 string
-	UserRole               enums.UserRole
+	UserRole               string
 	OwnedCompanyId         string
 	IssuedCompanyRequestId string
 	Method                 string
@@ -54,7 +54,7 @@ func IsAuthenticated(handler http.Handler) http.Handler {
 				if token.Valid {
 					authorizationDeterminingData := AuthorizationDeterminingData{
 						UserId:                 token.Claims.(jwt.MapClaims)["id"].(string),
-						UserRole:               token.Claims.(jwt.MapClaims)["role"].(enums.UserRole),
+						UserRole:               token.Claims.(jwt.MapClaims)["role"].(string),
 						OwnedCompanyId:         token.Claims.(jwt.MapClaims)["ownedCompanyId"].(string),
 						IssuedCompanyRequestId: token.Claims.(jwt.MapClaims)["issuedCompanyRequestId"].(string),
 						Method:                 request.Method,

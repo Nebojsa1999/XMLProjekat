@@ -19,6 +19,8 @@ func NewCompanyHandler(service *application.CompanyService) *CompanyHandler {
 }
 
 func (handler *CompanyHandler) Get(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	id, _ := mux.Vars(request)["id"]
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -36,6 +38,8 @@ func (handler *CompanyHandler) Get(writer http.ResponseWriter, request *http.Req
 }
 
 func (handler *CompanyHandler) GetAll(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	companies, err := handler.service.GetAll()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -46,6 +50,8 @@ func (handler *CompanyHandler) GetAll(writer http.ResponseWriter, request *http.
 }
 
 func (handler *CompanyHandler) RegisterANewCompany(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	if !isContentTypeValid(writer, request) {
 		return
 	}
@@ -70,6 +76,8 @@ func (handler *CompanyHandler) RegisterANewCompany(writer http.ResponseWriter, r
 }
 
 func (handler *CompanyHandler) Update(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
 	if !isContentTypeValid(writer, request) {
 		return
 	}

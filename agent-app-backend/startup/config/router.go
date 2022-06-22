@@ -1,12 +1,18 @@
 package config
 
 import (
+	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/api"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/middleware"
-	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/startup"
 	"github.com/gorilla/mux"
 )
 
-func ConfigureRouter(handlers startup.Handlers) *mux.Router {
+type Handlers struct {
+	UserHandler                       *api.UserHandler
+	CompanyHandler                    *api.CompanyHandler
+	CompanyRegistrationRequestHandler *api.CompanyRegistrationRequestHandler
+}
+
+func ConfigureRouter(handlers Handlers) *mux.Router {
 	router := mux.NewRouter()
 	router.StrictSlash(true)
 

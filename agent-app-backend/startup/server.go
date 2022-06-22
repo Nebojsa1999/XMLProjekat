@@ -8,20 +8,18 @@ import (
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/api"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/persistence"
 	cfg "github.com/Nebojsa1999/XMLProjekat/agent-app-backend/startup/config"
+	"github.com/rs/cors"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
 type Server struct {
 	config *cfg.Config
-}
-
-type Handlers struct {
-	UserHandler                       *api.UserHandler
-	CompanyHandler                    *api.CompanyHandler
-	CompanyRegistrationRequestHandler *api.CompanyRegistrationRequestHandler
 }
 
 func NewServer(config *cfg.Config) *Server {
@@ -44,7 +42,7 @@ func (server *Server) Start() {
 	companyHandler := server.initCompanyHandler(companyService)
 	companyRegistrationRequestHandler := server.initCompanyRegistrationRequestHandler(companyRegistrationRequestService)
 
-	server.startHttpServer(Handlers{
+	server.startHttpServer(cfg.Handlers{
 		UserHandler:                       userHandler,
 		CompanyHandler:                    companyHandler,
 		CompanyRegistrationRequestHandler: companyRegistrationRequestHandler,
@@ -135,19 +133,33 @@ func (server *Server) initCompanyRegistrationRequestHandler(service *application
 	return api.NewCompanyRegistrationRequestHandler(service)
 }
 
-func (server *Server) startHttpServer(handlers Handlers) {
+func (server *Server) startHttpServer(handlers cfg.Handlers) {
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+
 	router := cfg.ConfigureRouter(handlers)
 
-	httpServer := &http.Server{Addr: fmt.Sprintf("0.0.0.0:%s", server.config.Port), Handler: router}
+	corsSpecification := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:4200"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowCredentials: true,
+	})
+	handler := corsSpecification.Handler(router)
+
+	httpServer := &http.Server{Addr: fmt.Sprintf("0.0.0.0:%s", server.config.Port), Handler: handler}
 	go func() {
 		log.Println("agent_app http server starting")
 
 		if err := httpServer.ListenAndServe(); err != nil {
 			if err != http.ErrServerClosed {
 				log.Fatal(err)
+			} else {
+				log.Println("agent_app http server was closed due to error")
 			}
 		}
 	}()
+
+	<-quit
 
 	log.Println("agent_app http server shutting down...")
 
