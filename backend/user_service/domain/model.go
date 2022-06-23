@@ -38,3 +38,7 @@ type Credentials struct {
 type JWTToken struct {
 	Token string `json:"token"`
 }
+
+type JobOffersAPIToken struct {
+	Token string `json:"token"`
+}

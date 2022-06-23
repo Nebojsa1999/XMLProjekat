@@ -156,3 +156,21 @@ func (handler *UserHandler) Update(ctx context.Context, request *pb.UpdateReques
 
 	return response, err
 }
+
+func (handler *UserHandler) GenerateJobOffersAPIToken(ctx context.Context, request *pb.GenerateJobOffersAPITokenRequest) (*pb.GenerateJobOffersAPITokenResponse, error) {
+	userId, err := primitive.ObjectIDFromHex(request.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	jobOffersAPIToken, err := handler.service.GenerateJobOffersAPIToken(userId)
+	response := &pb.GenerateJobOffersAPITokenResponse{
+		Token: "",
+	}
+
+	if jobOffersAPIToken != nil {
+		response.Token = jobOffersAPIToken.Token
+	}
+
+	return response, err
+}

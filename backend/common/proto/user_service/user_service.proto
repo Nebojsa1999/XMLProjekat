@@ -44,6 +44,11 @@ service UserService{
       body: "modifiedUser"
     };
   }
+  rpc GenerateJobOffersAPIToken(GenerateJobOffersAPITokenRequest) returns(GenerateJobOffersAPITokenResponse) {
+    option (google.api.http) = {
+      get: "/user/{userId}/generate-job-offers-api-token"
+    };
+  }
 }
 
 message GetRequest {
@@ -108,6 +113,14 @@ message UpdateRequest {
 message UpdateResponse {
   string message = 1;
   User updatedUser = 2;
+}
+
+message GenerateJobOffersAPITokenRequest {
+  string userId = 1;
+}
+
+message GenerateJobOffersAPITokenResponse {
+  string token = 1;
 }
 
 message User {

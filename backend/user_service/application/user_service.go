@@ -191,3 +191,25 @@ func (service *UserService) Update(modifiedUser *domain.User) (string, *domain.U
 
 	return service.store.Update(userInDatabase)
 }
+
+func (service *UserService) GenerateJobOffersAPIToken(userId primitive.ObjectID) (*domain.JobOffersAPIToken, error) {
+	user, err := service.Get(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	var tokenSigningKey = []byte(os.Getenv("SECRET_FOR_JOB_OFFERS_API_TOKEN"))
+	jobOffersAPIToken := jwt.New(jwt.SigningMethodHS256)
+	claims := jobOffersAPIToken.Claims.(jwt.MapClaims)
+
+	claims["dislinktUserId"] = user.Id
+	claims["exp"] = 0
+
+	jobOffersAPITokenString, err := jobOffersAPIToken.SignedString(tokenSigningKey)
+	if err != nil {
+		err = fmt.Errorf("Error occurred during signing of token: %s", err.Error())
+		return nil, err
+	}
+
+	return &domain.JobOffersAPIToken{Token: jobOffersAPITokenString}, nil
+}
