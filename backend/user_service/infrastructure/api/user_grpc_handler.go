@@ -163,9 +163,10 @@ func (handler *UserHandler) GenerateJobOffersAPIToken(ctx context.Context, reque
 		return nil, err
 	}
 
-	jobOffersAPIToken, err := handler.service.GenerateJobOffersAPIToken(userId)
+	message, jobOffersAPIToken, err := handler.service.GenerateJobOffersAPIToken(userId)
 	response := &pb.GenerateJobOffersAPITokenResponse{
 		Token: "",
+		Message: message,
 	}
 
 	if jobOffersAPIToken != nil {

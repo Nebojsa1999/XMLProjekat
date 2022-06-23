@@ -121,6 +121,7 @@ message GenerateJobOffersAPITokenRequest {
 
 message GenerateJobOffersAPITokenResponse {
   string token = 1;
+  string message = 2;
 }
 
 message User {
@@ -144,6 +145,7 @@ message User {
   string education = 13;
   string skills = 14;
   string interests = 15;
+  string jobOffersAPIToken = 16;
 }
 
 message Credentials {
