@@ -140,8 +140,15 @@ func (server *Server) startHttpServer(handlers cfg.Handlers) {
 	router := cfg.ConfigureRouter(handlers)
 
 	corsSpecification := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:4200"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+			http.MethodHead},
+		AllowedHeaders:   []string{"*"},
 		AllowCredentials: true,
 	})
 	handler := corsSpecification.Handler(router)
