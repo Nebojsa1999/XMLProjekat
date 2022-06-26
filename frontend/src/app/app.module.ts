@@ -20,6 +20,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { PostsComponent } from './components/posts/posts.component';
 import { JobsComponent } from './components/jobs/jobs.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ProfilesComponent } from './components/profiles/profiles.component';
 
 
 @NgModule({
@@ -30,6 +32,7 @@ import { JobsComponent } from './components/jobs/jobs.component';
     RegistrationComponent,
     PostsComponent,
     JobsComponent,
+    ProfilesComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,6 +49,7 @@ import { JobsComponent } from './components/jobs/jobs.component';
     MatSelectModule,
     MatMenuModule,
     MatDividerModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

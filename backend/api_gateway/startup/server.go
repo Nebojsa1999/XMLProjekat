@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/infrastructure/api"
-	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/infrastructure/middleware"
 	cfg "github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/startup/config"
 	jobGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/job_service"
 	postingGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	userGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/rs/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -67,5 +67,18 @@ func (server *Server) initCustomHandlers() {
 }
 
 func (server *Server) Start() {
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), middleware.IsAuthenticated(server.mux)))
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+			http.MethodHead},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: true,
+	})
+	handler := c.Handler(server.mux)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), handler))
 }
