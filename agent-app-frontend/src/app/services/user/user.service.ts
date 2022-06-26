@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, tap} from 'rxjs/operators';
 
 import { User } from 'src/app/models/user';
@@ -23,6 +23,6 @@ export class UserService {
   private handleError(err: HttpErrorResponse) {
     console.log(err.message);
 
-    return Observable.throw(err.message);
+    return throwError(err);
   }
 }
