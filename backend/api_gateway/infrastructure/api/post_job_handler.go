@@ -6,9 +6,11 @@ import (
 	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/domain"
 	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/infrastructure/services"
 	jobPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/job_service"
+	postingPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	userPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"log"
 	"net/http"
 	"os"
@@ -70,13 +72,11 @@ func (handler *PostJobHandler) PostAJobOffer(writer http.ResponseWriter, request
 		return
 	}
 
-	/*
-	err = handler.createPostWithJobOffer(postJobOfferRequest.Job)
+	err = handler.createPostWithJobOffer(postJobOfferRequest.Job, userId)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	*/
 
 	writer.WriteHeader(http.StatusCreated)
 	renderJSON(writer, "")
@@ -139,6 +139,34 @@ func (handler *PostJobHandler) createJob(jobProtobufObject *jobPb.Job) error {
 		return err
 	} else if addResponse.Success != "success" {
 		return fmt.Errorf("database already contains job with given id")
+	}
+
+	return nil
+}
+
+func (handler *PostJobHandler) createPostWithJobOffer(jobProtobufObject *jobPb.Job, userId string) error {
+	postingClient := services.NewPostingClient(handler.postingClientAddress)
+
+	postWithJobOffer := postingPb.Post{
+		Id:            "",
+		OwnerId:       userId,
+		Content:       "Nova ponuda za posao:",
+		Image:         "",
+		LikesCount:    0,
+		DislikesCount: 0,
+		Comments:      nil,
+		Link:          []string{"http://localhost:8001/agent-app/job/" + jobProtobufObject.Id},
+		WhoLiked:      nil,
+		WhoDisliked:   nil,
+		PostedAt:      timestamppb.Now().String(),
+	}
+
+	_, err := postingClient.CreatePost(context.TODO(), &postingPb.NewPostRequest{
+		Id:   userId,
+		Post: &postWithJobOffer,
+	})
+	if err != nil {
+		return err
 	}
 
 	return nil
