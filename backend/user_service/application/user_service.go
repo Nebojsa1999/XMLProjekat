@@ -211,7 +211,7 @@ func (service *UserService) GenerateJobOffersAPIToken(userId primitive.ObjectID)
 	jobOffersAPIToken := jwt.New(jwt.SigningMethodHS256)
 	claims := jobOffersAPIToken.Claims.(jwt.MapClaims)
 
-	claims["dislinktUserId"] = user.Id
+	claims["dislinktUserId"] = user.Id.Hex()
 	claims["exp"] = 0
 
 	jobOffersAPITokenString, err := jobOffersAPIToken.SignedString(tokenSigningKey)
