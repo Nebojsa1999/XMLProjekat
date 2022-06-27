@@ -28,6 +28,10 @@ func (service *UserService) GetAll() ([]*domain.User, error) {
 	return service.store.GetAll()
 }
 
+func (service *UserService) GetAllPublicUsers() ([]*domain.User, error) {
+	return service.store.GetAllPublicUsers()
+}
+
 func (service *UserService) RegisterANewUser(user *domain.User) (string, error) {
 	existingUser, _ := service.store.Get(user.Id)
 	user.Id = primitive.NewObjectID()
@@ -62,7 +66,7 @@ func (service *UserService) Login(credentials *domain.Credentials) (*domain.JWTT
 		return nil, "Password is incorrect.", nil
 	}
 
-	jwtToken, err := service.GenerateJWTToken(credentials.Username)
+	jwtToken, err := service.GenerateJWTToken(existingUser)
 	if err != nil {
 		return nil, "Error occurred during generating JWT token, login failed!", err
 	}
@@ -70,13 +74,14 @@ func (service *UserService) Login(credentials *domain.Credentials) (*domain.JWTT
 	return jwtToken, "Success: user has been logged in.", nil
 }
 
-func (service *UserService) GenerateJWTToken(username string) (*domain.JWTToken, error) {
+func (service *UserService) GenerateJWTToken(user *domain.User) (*domain.JWTToken, error) {
 	var tokenSigningKey = []byte(os.Getenv("SECRET_FOR_JWT"))
 	jwtToken := jwt.New(jwt.SigningMethodHS256)
 	claims := jwtToken.Claims.(jwt.MapClaims)
 
 	claims["authorized"] = true
-	claims["username"] = username
+	claims["id"] = user.Id.Hex()
+	claims["username"] = user.Username
 	claims["exp"] = time.Now().Add(time.Hour).Unix()
 
 	jwtTokenString, err := jwtToken.SignedString(tokenSigningKey)

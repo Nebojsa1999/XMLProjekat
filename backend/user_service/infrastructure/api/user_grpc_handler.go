@@ -55,6 +55,23 @@ func (handler *UserHandler) GetAll(ctx context.Context, request *pb.GetAllReques
 	return response, nil
 }
 
+func (handler *UserHandler) GetAllPublicUsers(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
+	users, err := handler.service.GetAllPublicUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &pb.GetAllResponse{
+		Users: []*pb.User{},
+	}
+	for _, user := range users {
+		current := mapDomainUserToPbUser(user)
+		response.Users = append(response.Users, current)
+	}
+
+	return response, nil
+}
+
 func (handler *UserHandler) RegisterANewUser(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	newUser := mapPbUserToDomainUser(request.User)
 
@@ -71,7 +88,7 @@ func (handler *UserHandler) Login(ctx context.Context, request *pb.LoginRequest)
 
 	jwtToken, message, err := handler.service.Login(userCredentials)
 	response := &pb.LoginResponse{
-		Token: "",
+		Token:   "",
 		Message: message,
 	}
 
@@ -137,7 +154,7 @@ func (handler *UserHandler) SearchPublicUsers(ctx context.Context, request *pb.S
 func (handler *UserHandler) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UpdateResponse, error) {
 	if request.Id != request.ModifiedUser.Id {
 		return &pb.UpdateResponse{
-			Message: "Id in path and id of modified user do not match!",
+			Message:     "Id in path and id of modified user do not match!",
 			UpdatedUser: nil,
 		}, nil
 	}
@@ -146,7 +163,7 @@ func (handler *UserHandler) Update(ctx context.Context, request *pb.UpdateReques
 
 	message, updatedUser, err := handler.service.Update(modifiedUser)
 	response := &pb.UpdateResponse{
-		Message: message,
+		Message:     message,
 		UpdatedUser: nil,
 	}
 

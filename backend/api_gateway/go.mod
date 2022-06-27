@@ -8,6 +8,7 @@ require (
 	github.com/Nebojsa1999/XMLProjekat/backend/common v1.0.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
+	github.com/rs/cors v1.8.2
 	google.golang.org/grpc v1.46.0
 	google.golang.org/protobuf v1.28.0
 )
