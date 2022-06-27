@@ -23,8 +23,11 @@ export class ProfilesComponent implements OnInit {
   getPublicProfiles(): void {
     this._profileService.getPublicProfiles().subscribe(
       response => {
-        this.profiles = response;
-        this.results = response.length;
+        this.profiles = response.users;
+        console.log(this.profiles);
+        this.results = response.users.length;
+        console.log(response.length);
+        console.log(typeof(this.profiles))
       }
     )
   }

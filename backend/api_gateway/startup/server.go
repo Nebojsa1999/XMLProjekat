@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/infrastructure/api"
+	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/infrastructure/middleware"
 	cfg "github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/startup/config"
 	jobGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/job_service"
 	postingGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
@@ -79,6 +80,6 @@ func (server *Server) Start() {
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: true,
 	})
-	handler := c.Handler(server.mux)
+	handler := c.Handler(middleware.IsAuthenticated(server.mux))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), handler))
 }

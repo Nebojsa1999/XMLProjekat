@@ -28,6 +28,10 @@ func (service *UserService) GetAll() ([]*domain.User, error) {
 	return service.store.GetAll()
 }
 
+func (service *UserService) GetAllPublicUsers() ([]*domain.User, error) {
+	return service.store.GetAllPublicUsers()
+}
+
 func (service *UserService) RegisterANewUser(user *domain.User) (string, error) {
 	existingUser, _ := service.store.Get(user.Id)
 	user.Id = primitive.NewObjectID()

@@ -13,7 +13,7 @@ export class ProfileService {
   constructor(private _http: HttpClient) { }
 
   getPublicProfiles(): Observable<any> {
-    return this._http.get<any>(this.applicationURL + "/user");
+    return this._http.get<any>(this.applicationURL + "/user/public");
   }
 
   searchProfiles(param: string): Observable<any> {
