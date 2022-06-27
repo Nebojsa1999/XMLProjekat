@@ -2,22 +2,22 @@
 
     <span style="margin-left: 1%; margin-right: 5%; ">Dislinked</span>
 
-    <button  mat-button class="example-icon" aria-label="Example icon-button with menu icon" >
+    <button *ngIf="isAuthenticated" mat-button class="example-icon" aria-label="Example icon-button with menu icon" >
         Home
     </button>
-    <button mat-button [matMenuTriggerFor]="network">Network</button>
+    <button *ngIf="isAuthenticated" mat-button [matMenuTriggerFor]="network">Network</button>
     <mat-menu #network="matMenu">
         <button mat-menu-item style="padding-inline: 12%;" > All Profiles</button>
         <button mat-menu-item style="padding-inline: 12%;" > Connections</button>
         <button mat-menu-item style="padding-inline: 12%;" > Requests</button>
     </mat-menu>
-    <button  mat-button [routerLink]="['/jobs']" >Jobs</button>
-    <button  mat-button >My profile</button>
+    <button *ngIf="isAuthenticated"  mat-button [routerLink]="['/jobs']" >Jobs</button>
+    <button *ngIf="isAuthenticated" mat-button >My profile</button>
     
-    <button mat-button [routerLink]="['/profiles']">Profiles</button>
+    <button *ngIf="!isAuthenticated" mat-button [routerLink]="['/profiles']">Profiles</button>
     <span class="example-spacer"></span>
-    <button mat-button >Sign Out</button>
+    <button mat-button *ngIf="isAuthenticated" (click)="signOut()">Sign Out</button>
     
-    <button  mat-stroked-button color="primary" >Register</button>
-    <button  mat-stroked-button  color="primary" [routerLink]="['/login']">Sign In</button>
+    <button  *ngIf="!isAuthenticated"  mat-stroked-button  color="primary" >Register</button>
+    <button  *ngIf="!isAuthenticated" mat-stroked-button  color="primary" [routerLink]="['/login']">Sign In</button>
 </mat-toolbar>

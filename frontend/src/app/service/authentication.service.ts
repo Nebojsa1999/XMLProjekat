@@ -26,8 +26,12 @@ export class AuthenticationService {
   }
 
   logOut() {
-    this.dislinktAppToken = null;
 
+    localStorage.removeItem('dislinktAppToken');
+    localStorage.removeItem('id');
+    localStorage.removeItem('username');
+    localStorage.removeItem('exp');
+    this.dislinktAppToken = null;
     this.router.navigate(['/login']);
   }
 
