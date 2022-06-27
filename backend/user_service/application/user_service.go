@@ -81,7 +81,7 @@ func (service *UserService) GenerateJWTToken(username string) (*domain.JWTToken,
 
 	jwtTokenString, err := jwtToken.SignedString(tokenSigningKey)
 	if err != nil {
-		err = fmt.Errorf("Error occurred during signing of token: %s", err.Error())
+		err = fmt.Errorf("error occurred during signing of token: %s", err.Error())
 		return nil, err
 	}
 
@@ -160,6 +160,10 @@ func (service *UserService) Update(modifiedUser *domain.User) (string, *domain.U
 		return "User with given id does not exist.", nil, nil
 	}
 
+	if userInDatabase.JobOffersAPIToken != "" && modifiedUser.JobOffersAPIToken != userInDatabase.JobOffersAPIToken {
+		return "You have already created a job offers API token.", nil, nil
+	}
+
 	userInDatabaseWithSameUsername, _ := service.store.GetByUsername(modifiedUser.Username)
 	if userInDatabaseWithSameUsername != nil {
 		if userInDatabaseWithSameUsername.Id != userInDatabase.Id {
@@ -188,6 +192,39 @@ func (service *UserService) Update(modifiedUser *domain.User) (string, *domain.U
 	userInDatabase.Education = modifiedUser.Education
 	userInDatabase.Skills = modifiedUser.Skills
 	userInDatabase.Interests = modifiedUser.Interests
+	userInDatabase.JobOffersAPIToken = modifiedUser.JobOffersAPIToken
 
 	return service.store.Update(userInDatabase)
+}
+
+func (service *UserService) GenerateJobOffersAPIToken(userId primitive.ObjectID) (string, *domain.JobOffersAPIToken, error) {
+	user, err := service.Get(userId)
+	if user == nil {
+		return "User with given id does not exist.", nil, err
+	}
+
+	if user.JobOffersAPIToken != "" {
+		return "You have already created a job offers API token.", nil, nil
+	}
+
+	var tokenSigningKey = []byte(os.Getenv("SECRET_FOR_JOB_OFFERS_API_TOKEN"))
+	jobOffersAPIToken := jwt.New(jwt.SigningMethodHS256)
+	claims := jobOffersAPIToken.Claims.(jwt.MapClaims)
+
+	claims["dislinktUserId"] = user.Id.Hex()
+	claims["exp"] = 0
+
+	jobOffersAPITokenString, err := jobOffersAPIToken.SignedString(tokenSigningKey)
+	if err != nil {
+		err = fmt.Errorf("error occurred during signing of token: %s", err.Error())
+		return "Error occurred during generating API token!", nil, err
+	}
+
+	user.JobOffersAPIToken = jobOffersAPITokenString
+	message, updatedUser, err := service.Update(user)
+	if updatedUser == nil {
+		return message, nil, err
+	}
+
+	return message, &domain.JobOffersAPIToken{Token: jobOffersAPITokenString}, err
 }

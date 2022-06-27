@@ -8,20 +8,21 @@ import (
 )
 
 type User struct {
-	Id             string
-	Username       string
-	Password       string
-	IsPrivate      bool
-	FirstName      string
-	LastName       string
-	Email          string
-	Gender         string
-	DateOfBirth    time.Time
-	Biography      string
-	WorkExperience string
-	Education      string
-	Skills         string
-	Interests      string
+	Id                string
+	Username          string
+	Password          string
+	IsPrivate         bool
+	FirstName         string
+	LastName          string
+	Email             string
+	Gender            string
+	DateOfBirth       time.Time
+	Biography         string
+	WorkExperience    string
+	Education         string
+	Skills            string
+	Interests         string
+	JobOffersAPIToken string
 }
 
 type UserRegistrationRequest struct {
@@ -46,4 +47,14 @@ type Job struct {
 	Position     string
 	Description  string
 	Requirements string
+}
+
+type PostJobOfferRequest struct {
+	JobOffersAPIToken string
+	Job               *Job
+}
+
+type JobOffersAPITokenStatusRequest struct {
+	UserId            string
+	HasGeneratedToken bool
 }

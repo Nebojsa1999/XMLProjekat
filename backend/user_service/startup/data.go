@@ -23,6 +23,7 @@ var users = []*domain.User{
 		Education: "Fakultet tehničkih nauka Novi Sad",
 		Skills: "Veb programiranje.",
 		Interests: "Video igre.",
+		JobOffersAPIToken: "",
 	},
 	{
 		Id: getObjectId("623b0cc3a34d25d8567f9f83"),
@@ -40,6 +41,7 @@ var users = []*domain.User{
 		Education: "Fakultet tehničkih nauka Novi Sad",
 		Skills: "Programer WPF aplikacija.",
 		Interests: "Video igre.",
+		JobOffersAPIToken: "",
 	},
 	{
 		Id: getObjectId("623b0cc3a34d25d8567f9f84"),
@@ -57,6 +59,7 @@ var users = []*domain.User{
 		Education: "Fakultet tehničkih nauka Novi Sad",
 		Skills: "Veb programiranje.",
 		Interests: "Video igre.",
+		JobOffersAPIToken: "",
 	},
 	{
 		Id: getObjectId("623b0cc3a34d25d8567f9f85"),
@@ -74,6 +77,7 @@ var users = []*domain.User{
 		Education: "Fakultet tehničkih nauka Novi Sad",
 		Skills: "Programer WPF aplikacija.",
 		Interests: "Video igre.",
+		JobOffersAPIToken: "",
 	},
 }
 
