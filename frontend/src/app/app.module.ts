@@ -14,14 +14,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { PostsComponent } from './components/posts/posts.component';
 import { JobsComponent } from './components/jobs/jobs.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ProfilesComponent } from './components/profiles/profiles.component';
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { AuthenticationService } from './service/authentication.service';
+import { ProfileService } from './service/profile-service/profile.service';
+import { TokenInterceptor } from './interceptor/token-interceptor';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 
 @NgModule({
@@ -33,6 +40,7 @@ import { ProfilesComponent } from './components/profiles/profiles.component';
     PostsComponent,
     JobsComponent,
     ProfilesComponent,
+   
   ],
   imports: [
     BrowserModule,
@@ -48,10 +56,27 @@ import { ProfilesComponent } from './components/profiles/profiles.component';
     MatIconModule,
     MatSelectModule,
     MatMenuModule,
+    MatProgressSpinnerModule,
     MatDividerModule,
     HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+
   ],
-  providers: [],
+  providers: [
+    {
+      provide: JWT_OPTIONS,
+      useValue: JWT_OPTIONS
+    },
+    JwtHelperService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    AuthenticationService,
+    ProfileService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

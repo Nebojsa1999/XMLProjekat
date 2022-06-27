@@ -1,1 +1,34 @@
-<p>login works!</p>
+
+<div class="matCardDiv">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Prijava na dislinkt aplikaciju</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form #loginForm="ngForm" (ngSubmit)="submitCredentials()" *ngIf="!isSubmitted" 
+                [formGroup]="form">
+                <mat-form-field>
+                    <mat-label>Korisničko ime: </mat-label>
+                    <input matInput type="text" required formControlName="username">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Lozinka: </mat-label>
+                    <input matInput type="password" required formControlName="password">
+                </mat-form-field>
+                <div class="buttonDiv">
+                    <button [disabled]="!loginForm.form.valid" color="accent" mat-raised-button 
+                        type="submit">Prijavi se</button>
+                </div>
+            </form>
+        </mat-card-content>
+        <mat-card-actions>
+            <div class="buttonDiv">
+                <button [disabled]="isSubmitted" color="primary" mat-raised-button mat-button 
+                    routerLink="/">Početna stranica</button>
+            </div>
+        </mat-card-actions>
+        <div class="spinnerDiv">
+            <mat-spinner *ngIf="isSubmitted" mode="indeterminate"></mat-spinner>
+        </div>
+    </mat-card>
+</div>
