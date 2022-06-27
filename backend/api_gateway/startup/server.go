@@ -51,19 +51,23 @@ func (server *Server) initHandlers() {
 	jobEndpoint := fmt.Sprintf("%s:%s", server.config.JobHost, server.config.JobPort)
 	err = jobGw.RegisterJobServiceHandlerFromEndpoint(context.TODO(), server.mux, jobEndpoint, opts)
 	if err != nil {
-		panic(err)
+		log.Fatalf(err.Error())
 	}
 }
 
 func (server *Server) initCustomHandlers() {
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	postingEndpoint := fmt.Sprintf("%s:%s", server.config.PostingHost, server.config.PostingPort)
+	jobEndpoint := fmt.Sprintf("%s:%s", server.config.JobHost, server.config.JobPort)
 
 	registerHandler := api.NewRegisterHandler(userEndpoint)
 	registerHandler.Init(server.mux)
 
 	publicPostHandler := api.NewPublicPostHandler(userEndpoint, postingEndpoint)
 	publicPostHandler.Init(server.mux)
+
+	postJobHandler := api.NewPostJobHandler(userEndpoint, jobEndpoint, postingEndpoint)
+	postJobHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {

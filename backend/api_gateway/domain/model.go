@@ -1,7 +1,6 @@
 package domain
 
 import (
-	jobPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/job_service"
 	postPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	userPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 
@@ -52,7 +51,7 @@ type Job struct {
 
 type PostJobOfferRequest struct {
 	JobOffersAPIToken string
-	Job               *jobPb.Job
+	Job               *Job
 }
 
 type JobOffersAPITokenStatusRequest struct {

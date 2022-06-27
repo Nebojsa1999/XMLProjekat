@@ -131,10 +131,19 @@ func (handler *PostJobHandler) hasUserGeneratedJobOffersAPIToken(jobOffersAPITok
 	return nil
 }
 
-func (handler *PostJobHandler) createJob(jobProtobufObject *jobPb.Job) error {
+func (handler *PostJobHandler) createJob(job *domain.Job) error {
 	jobClient := services.NewJobClient(handler.jobClientAddress)
 
-	addResponse, err := jobClient.Add(context.TODO(), &jobPb.AddRequest{Job: jobProtobufObject})
+	jobProtobufObject := jobPb.Job{
+		Id:           job.Id,
+		UserId:       job.UserId,
+		CreatedAt:    timestamppb.New(job.CreatedAt),
+		Position:     job.Position,
+		Description:  job.Description,
+		Requirements: job.Requirements,
+	}
+
+	addResponse, err := jobClient.Add(context.TODO(), &jobPb.AddRequest{Job: &jobProtobufObject})
 	if err != nil {
 		return err
 	} else if addResponse.Success != "success" {
@@ -144,7 +153,7 @@ func (handler *PostJobHandler) createJob(jobProtobufObject *jobPb.Job) error {
 	return nil
 }
 
-func (handler *PostJobHandler) createPostWithJobOffer(jobProtobufObject *jobPb.Job, userId string) error {
+func (handler *PostJobHandler) createPostWithJobOffer(job *domain.Job, userId string) error {
 	postingClient := services.NewPostingClient(handler.postingClientAddress)
 
 	postWithJobOffer := postingPb.Post{
@@ -155,7 +164,7 @@ func (handler *PostJobHandler) createPostWithJobOffer(jobProtobufObject *jobPb.J
 		LikesCount:    0,
 		DislikesCount: 0,
 		Comments:      nil,
-		Link:          []string{"http://localhost:8001/agent-app/job/" + jobProtobufObject.Id},
+		Link:          []string{"http://localhost:8001/agent-app/job/" + job.Id},
 		WhoLiked:      nil,
 		WhoDisliked:   nil,
 		PostedAt:      timestamppb.Now().String(),
