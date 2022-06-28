@@ -46,10 +46,10 @@ export class UserProfileComponent implements OnInit {
     this.userService.getUserWith(id).subscribe(
       data => {
         console.log('User data: ' + data);
-        this.user = data;
+        this.user = data.user;
       },
       error => {
-        console.log('Error on getUserById!', error)
+        console.log('Error on "getUserById"!', error)
       }
     );
   }
