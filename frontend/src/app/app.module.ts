@@ -28,6 +28,7 @@ import { AuthenticationService } from './service/authentication.service';
 import { ProfileService } from './service/profile-service/profile.service';
 import { TokenInterceptor } from './interceptor/token-interceptor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProfileComponent } from './components/profile/profile.component';
 
 
 
@@ -40,6 +41,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     PostsComponent,
     JobsComponent,
     ProfilesComponent,
+    ProfileComponent,
    
   ],
   imports: [

@@ -65,5 +65,9 @@ export class ProfilesComponent implements OnInit {
     this.getPublicProfiles();
   }
 
+  viewFullProfile(id: string): void {
+    this._router.navigate(['profile/' + id])
+  }
+
 
 }

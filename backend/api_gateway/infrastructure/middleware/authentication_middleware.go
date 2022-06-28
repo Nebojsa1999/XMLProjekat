@@ -58,10 +58,11 @@ func IsAuthenticated(handler *runtime.ServeMux) http.HandlerFunc {
 
 func isAProtectedRoute(method, path string) bool {
 	isPathToPostsOfPublicUser, _ := regexp.MatchString("/user/[0-9a-f]{24}/public", path)
+	isPathToUserProfile, _ := regexp.MatchString("/user/[0-9a-f]{24}", path)
 
 	switch method {
 	case "GET":
-		if isPathToPostsOfPublicUser || path == "/post/public" || path == "/user/public" {
+		if isPathToPostsOfPublicUser || path == "/post/public" || path == "/user/public" || isPathToUserProfile {
 			return false
 		}
 	case "POST":

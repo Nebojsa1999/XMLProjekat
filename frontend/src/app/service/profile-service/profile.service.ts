@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { User } from 'src/app/model/user';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -18,5 +19,13 @@ export class ProfileService {
 
   searchProfiles(param: string): Observable<any> {
     return this._http.post<any>(this.applicationURL + "/user/search",JSON.stringify(param));
+  }
+
+  getProfile(id: string): Observable<any> {
+    return this._http.get<any>(this.applicationURL + "/user/" + id);
+  }
+
+  updateProfile(id: string, updatedProfile: User): Observable<any> {
+    return this._http.put<any>(this.applicationURL + "/user/" + id, updatedProfile);
   }
 }
