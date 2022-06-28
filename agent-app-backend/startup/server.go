@@ -3,6 +3,13 @@ package startup
 import (
 	"context"
 	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/application"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain"
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/infrastructure/api"
@@ -10,12 +17,6 @@ import (
 	cfg "github.com/Nebojsa1999/XMLProjekat/agent-app-backend/startup/config"
 	"github.com/rs/cors"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
 type Server struct {
@@ -140,8 +141,8 @@ func (server *Server) startHttpServer(handlers cfg.Handlers) {
 	router := cfg.ConfigureRouter(handlers)
 
 	corsSpecification := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:4200"},
-		AllowedMethods:   []string{
+		AllowedOrigins: []string{"http://localhost:4200"},
+		AllowedMethods: []string{
 			http.MethodGet,
 			http.MethodPost,
 			http.MethodPut,
