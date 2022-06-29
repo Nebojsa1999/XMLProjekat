@@ -91,10 +91,18 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.profile = this.userForm.value;
-    console.log(this.profile);
-    this._profileService.updateProfile(this.id,this.profile);
-    console.log(this.id);
+    this.profile=this.userForm.value;
+
+    this._profileService.updateProfile(this.id,this.profile).subscribe(
+      response => {
+        console.log("updateResponse: ", response);
+        this.profile = response.user;
+
+      },
+      error => {
+        console.log("error on profile update",error);
+      }
+    )
 
   }
 

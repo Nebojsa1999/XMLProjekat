@@ -26,6 +26,6 @@ export class ProfileService {
   }
 
   updateProfile(id: string, updatedProfile: User): Observable<any> {
-    return this._http.put<any>(this.applicationURL + "/user/" + id, updatedProfile);
+    return this._http.put<any>(this.applicationURL + "/user/" + id, JSON.stringify(updatedProfile));
   }
 }
