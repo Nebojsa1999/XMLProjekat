@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit {
         email: ["", [Validators.required]],
         phone: ["", [Validators.required]],
         gender: ["", [Validators.required]],
-        dateOfBirth: ["", [Validators.required]],
+        dateOfBirth: [new Date(), [Validators.required]],
         biography: ["", [Validators.required]],
         workExperience: ["", [Validators.required]],
         education: ["", [Validators.required]],
@@ -92,10 +92,10 @@ export class ProfileComponent implements OnInit {
 
   onSubmit(): void {
     this.profile=this.userForm.value;
-
+    this.profile.id=this._route.snapshot.url[1].path;
+    console.log(this.id);
     this._profileService.updateProfile(this.id,this.profile).subscribe(
       response => {
-        console.log("updateResponse: ", response);
         this.profile = response.user;
 
       },

@@ -2,17 +2,17 @@
 
     <span style="margin-left: 1%; margin-right: 5%; ">Dislinked</span>
 
-    <button *ngIf="isAuthenticated" mat-button class="example-icon" aria-label="Example icon-button with menu icon" >
+    <button *ngIf="isAuthenticated" mat-button class="example-icon" aria-label="Example icon-button with menu icon" [routerLink]="['/posts']">
         Home
     </button>
     <button *ngIf="isAuthenticated" mat-button [matMenuTriggerFor]="network">Network</button>
     <mat-menu #network="matMenu">
-        <button mat-menu-item style="padding-inline: 12%;" > All Profiles</button>
-        <button mat-menu-item style="padding-inline: 12%;" > Connections</button>
-        <button mat-menu-item style="padding-inline: 12%;" > Requests</button>
+        <button mat-menu-item style="padding-inline: 12%;" [routerLink]="['/profiles']"> All Profiles</button>
+        <button mat-menu-item style="padding-inline: 12%;" [routerLink]="['/connections']" > Connections</button>
+        <button mat-menu-item style="padding-inline: 12%;" [routerLink]="['/requests']"> Requests</button>
     </mat-menu>
     <button *ngIf="isAuthenticated"  mat-button [routerLink]="['/jobs']" >Jobs</button>
-    <button *ngIf="isAuthenticated" mat-button >My profile</button>
+    <button *ngIf="isAuthenticated" mat-button (click)="openProfile()" >My profile</button>
     
     <button *ngIf="!isAuthenticated" mat-button [routerLink]="['/profiles']">Profiles</button>
     <span class="example-spacer"></span>

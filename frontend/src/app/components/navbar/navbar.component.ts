@@ -37,4 +37,11 @@ export class NavbarComponent implements OnInit {
     console.log(this.isAuthenticated);
   }
 
+  openProfile(): void {
+    this._router.navigate(['profile/' + localStorage.getItem("id")]);
+    setTimeout(() => {
+      window.location.reload();
+    }, 200);
+  }
+
 }

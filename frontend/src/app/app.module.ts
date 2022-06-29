@@ -29,6 +29,7 @@ import { ProfileService } from './service/profile-service/profile.service';
 import { TokenInterceptor } from './interceptor/token-interceptor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from './components/profile/profile.component';
+import { AddJobComponent } from './modal/add-job/add-job.component';
 
 
 
@@ -42,6 +43,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     JobsComponent,
     ProfilesComponent,
     ProfileComponent,
+    AddJobComponent,
    
   ],
   imports: [

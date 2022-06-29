@@ -12,6 +12,7 @@ export class AuthenticationService {
   private loginURL = 'http://localhost:8000/user/login';
 
   private dislinktAppToken = null;
+  private accessToken = localStorage.getItem('dislinktAppToken');
 
   constructor(private jwtHelper: JwtHelperService, private httpClient: HttpClient, 
     private router: Router) { }
@@ -37,6 +38,13 @@ export class AuthenticationService {
 
   getDislinktAppToken() {
     return localStorage.getItem('dislinktAppToken');
+  }
+  getToken() {
+    return this.accessToken;
+  }
+
+  isLoggedIn() {
+    return this.accessToken !== undefined && this.accessToken !== null;
   }
 
   isDislinktAppTokenPresent(): boolean {

@@ -40,12 +40,17 @@ export class LoginComponent implements OnInit {
       data => {
         console.log('Login response: ', data);
 
-        localStorage.setItem('dislinktAppToken', data.token);
+        
+        localStorage.dislinktAppToken=data.token;
+       // localStorage.setItem('dislinktAppToken', data.token);
         let tokenInfo = this.getDecodedAccessToken(data.token);
-
-        localStorage.setItem('id', tokenInfo.id);
-        localStorage.setItem('username', tokenInfo.username);
-        localStorage.setItem('exp', tokenInfo.exp);
+        localStorage.id=tokenInfo.id;
+        localStorage.username=tokenInfo.username;
+        localStorage.exp=tokenInfo.exp;
+        
+       // localStorage.setItem('id', tokenInfo.id);
+      //  localStorage.setItem('username', tokenInfo.username);
+        //localStorage.setItem('exp', tokenInfo.exp);
 
         this.router.navigateByUrl('/').then(() => { window.location.reload(); });
       },

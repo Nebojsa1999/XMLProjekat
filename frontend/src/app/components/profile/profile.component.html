@@ -1,7 +1,5 @@
 <div style="margin-inline: 20%; margin-top: 2%;">
     <div class="profiles-container">
-        <div class="row">
-            <div class="col-6">
             <div>
                 <h1>
                     {{profile.firstName}} {{profile.lastName}} <button mat-button color="primary" *ngIf="isProfileOwner" >Connect with JobLab account</button>
@@ -131,11 +129,16 @@
                 </form>
 
               </div>
-            </div>
-            <div class="col-6">
+          
+                <br>
                 <h3>Posts:</h3>
                 <div class="profiles-container flex-container" style=" width:100%; padding: 2%; padding-inline: 3%;">
-                
+                    <div style="width:70%">
+                        <button mat-stroked-button color="primary" [routerLink]="['/feed']"
+                            style=" margin-inline:5%;padding-inline: 5%; margin-top:1%" *ngIf="isAuthenticated">Show All Posts
+                        </button>
+                    </div>
+                    <hr color="#c5c5c5" size="1" class="line">
                     <div class="flex-container" style=" width:100%;" *ngFor="let post of posts">
                     
                     <div class="feed-input-container" >
@@ -148,13 +151,16 @@
                         <h6>Content:</h6>
                         <p class="post-text" [innerHTML]="post.content"></p> 
                         
+                        <img style="width: 300px; " src="../../../assets/images/{{post.image}}"/><br><br>
                         <span class="post-info likes">{{post.likesCount}} Likes</span>
                         <span class="post-info likes">{{post.dislikesCount}} Dislikes</span>
+                        <span class="">{{post.postedAt}}</span>
                     </div>
+                    <br>
                 </div>
 
 
-            </div>
+            
 
             
             
