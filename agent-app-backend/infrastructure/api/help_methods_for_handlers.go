@@ -2,10 +2,11 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain"
 	"io"
 	"mime"
 	"net/http"
+
+	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain"
 )
 
 func enableCors(writer *http.ResponseWriter) {
@@ -57,6 +58,54 @@ func decodeCompanyFromBody(reader io.Reader) (*domain.Company, error) {
 	}
 
 	return &companyInRequestBody, nil
+}
+
+func decodeJobFromBody(reader io.Reader) (*domain.Job, error) {
+	decoder := json.NewDecoder(reader)
+	decoder.DisallowUnknownFields()
+
+	var jobInRequestBody domain.Job
+	if err := decoder.Decode(&jobInRequestBody); err != nil {
+		return nil, err
+	}
+
+	return &jobInRequestBody, nil
+}
+
+func decodeCommentFromBody(reader io.Reader) (*domain.Comment, error) {
+	decoder := json.NewDecoder(reader)
+	decoder.DisallowUnknownFields()
+
+	var commentInRequestBody domain.Comment
+	if err := decoder.Decode(&commentInRequestBody); err != nil {
+		return nil, err
+	}
+
+	return &commentInRequestBody, nil
+}
+
+func decodeWageFromBody(reader io.Reader) (*domain.Wage, error) {
+	decoder := json.NewDecoder(reader)
+	decoder.DisallowUnknownFields()
+
+	var wageInRequestBody domain.Wage
+	if err := decoder.Decode(&wageInRequestBody); err != nil {
+		return nil, err
+	}
+
+	return &wageInRequestBody, nil
+}
+
+func decodeInterviewFromBody(reader io.Reader) (*domain.Interview, error) {
+	decoder := json.NewDecoder(reader)
+	decoder.DisallowUnknownFields()
+
+	var interviewInRequestBody domain.Interview
+	if err := decoder.Decode(&interviewInRequestBody); err != nil {
+		return nil, err
+	}
+
+	return &interviewInRequestBody, nil
 }
 
 func decodeCompanyRegistrationRequestFromBody(reader io.Reader) (*domain.CompanyRegistrationRequest, error) {

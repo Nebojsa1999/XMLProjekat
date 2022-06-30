@@ -1,9 +1,10 @@
 package domain
 
 import (
+	"time"
+
 	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain/enums"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"time"
 )
 
 type User struct {
@@ -59,4 +60,47 @@ type CompanyRegistrationRequest struct {
 	AreaOfWork         string                                 `json:"areaOfWork" bson:"area_of_work"`
 	Description        string                                 `json:"description" bson:"description"`
 	WorkCulture        string                                 `json:"workCulture" bson:"work_culture"`
+}
+
+type Job struct {
+	Id           primitive.ObjectID `json:"id" bson:"_id"`
+	UserId       primitive.ObjectID `json:"userId" bson:"user_id"`
+	CreatedAt    time.Time          `json:"createdAt" bson:"created_at"`
+	Position     string             `json:"position" bson:"position"`
+	Description  string             `json:"description" bson:"description"`
+	Requirements string             `json:"requirements" bson:"requirements"`
+	Comments     []Comment          `json:"comments" bson:"comments"`
+	Wages        []Wage             `json:"wages" bson:"wages"`
+	Interviews   []Interview        `json:"interviews" bson:"interviews"`
+}
+
+type Wage struct {
+	Id              primitive.ObjectID    `json:"id" bson:"_id"`
+	UserId          primitive.ObjectID    `json:"userId" bson:"user_id"`
+	JobId           primitive.ObjectID    `json:"jobId" bson:job_id`
+	Position        enums.Position        `json:"poition" bson:"position"`
+	Engagement      enums.Engagement      `json:"engagement" bson:"engagement"`
+	ExperienceLevel enums.ExperienceLevel `json:"experience_level" bson:"experience_level"`
+	NetoWage        string                `json:"netoWage" bson:"neto_wage"`
+}
+
+type Interview struct {
+	Id                 primitive.ObjectID `json:"id" bson:"_id"`
+	UserId             primitive.ObjectID `json:"userId" bson:"user_id"`
+	JobId              primitive.ObjectID `json:"jobId" bson:job_id`
+	Position           enums.Position     `json:"poition" bson:"position"`
+	Title              string             `json:"title" bson:"title"`
+	YearOfInterview    string             `json:"yearOfInterview" bson:"year_of_interview"`
+	HRInterview        string             `json:"hrInterview" bson:"hr_interview"`
+	TechnicalInterview string             `json:"technicalInterview" bson:"technical_interview"`
+}
+
+type Comment struct {
+	Id              primitive.ObjectID    `json:"id" bson:"_id"`
+	UserId          primitive.ObjectID    `json:"userId" bson:"user_id"`
+	JobId           primitive.ObjectID    `json:"jobId" bson:job_id`
+	Position        enums.Position        `json:"poition" bson:"position"`
+	Engagement      enums.Engagement      `json:"engagement" bson:"engagement"`
+	ExperienceLevel enums.ExperienceLevel `json:"experience_level" bson:"experience_level"`
+	Content         string                `json:"content" bson:"content"`
 }

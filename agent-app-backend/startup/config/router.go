@@ -10,6 +10,10 @@ type Handlers struct {
 	UserHandler                       *api.UserHandler
 	CompanyHandler                    *api.CompanyHandler
 	CompanyRegistrationRequestHandler *api.CompanyRegistrationRequestHandler
+	JobHandler                        *api.JobHandler
+	CommentHandler                    *api.CommentHandler
+	WageHandler                       *api.WageHandler
+	InterviewHandler                  *api.InterviewHandler
 }
 
 func ConfigureRouter(handlers Handlers) *mux.Router {
@@ -52,6 +56,42 @@ func ConfigureRouter(handlers Handlers) *mux.Router {
 		handlers.CompanyRegistrationRequestHandler.UpdateByOwner).Methods("PUT")
 	router.HandleFunc("/agent-app/company-registration-request/{id:[0-9a-f]+}/update-by-administrator",
 		handlers.CompanyRegistrationRequestHandler.UpdateByAdministrator).Methods("PUT")
+
+	router.HandleFunc("/agent-app/job/{id:[0-9a-f]+}",
+		handlers.JobHandler.Get).Methods("GET")
+	router.HandleFunc("/agent-app/job",
+		handlers.JobHandler.GetAll).Methods("GET")
+	router.HandleFunc("/agent-app/job/create",
+		handlers.JobHandler.CreateNewJob).Methods("POST")
+	router.HandleFunc("/agent-app/job/{id:[0-9a-f]+}",
+		handlers.JobHandler.Update).Methods("PUT")
+
+	router.HandleFunc("/agent-app/job/comment/{id:[0-9a-f]+}",
+		handlers.CommentHandler.Get).Methods("GET")
+	router.HandleFunc("/agent-app/job/comment",
+		handlers.CommentHandler.GetAll).Methods("GET")
+	router.HandleFunc("/agent-app/job/comment/create",
+		handlers.CommentHandler.CreateNewComment).Methods("POST")
+	router.HandleFunc("/agent-app/job/comment/{id:[0-9a-f]+}",
+		handlers.CommentHandler.Update).Methods("PUT")
+
+	router.HandleFunc("/agent-app/job/wage/{id:[0-9a-f]+}",
+		handlers.WageHandler.Get).Methods("GET")
+	router.HandleFunc("/agent-app/job/wage",
+		handlers.WageHandler.GetAll).Methods("GET")
+	router.HandleFunc("/agent-app/job/wage/create",
+		handlers.WageHandler.CreateNewWage).Methods("POST")
+	router.HandleFunc("/agent-app/job/wage/{id:[0-9a-f]+}",
+		handlers.WageHandler.Update).Methods("PUT")
+
+	router.HandleFunc("/agent-app/job/interview/{id:[0-9a-f]+}",
+		handlers.InterviewHandler.Get).Methods("GET")
+	router.HandleFunc("/agent-app/job/interview",
+		handlers.InterviewHandler.GetAll).Methods("GET")
+	router.HandleFunc("/agent-app/job/interview/create",
+		handlers.InterviewHandler.CreateNewInterview).Methods("POST")
+	router.HandleFunc("/agent-app/job/interview/{id:[0-9a-f]+}",
+		handlers.InterviewHandler.Update).Methods("PUT")
 
 	router.Use(middleware.IsAuthenticated)
 
