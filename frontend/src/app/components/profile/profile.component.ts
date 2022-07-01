@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { JobTokenDialogComponent } from 'src/app/modal/job-token-dialog/job-token-dialog.component';
 import { Post } from 'src/app/model/post';
 import { User } from 'src/app/model/user';
 import { AuthenticationService } from 'src/app/service/authentication.service';
@@ -39,7 +41,7 @@ export class ProfileComponent implements OnInit {
 
   posts: Post[] = [];
 
-  constructor(private fb: FormBuilder,private _route: ActivatedRoute,private authservice: AuthenticationService,
+  constructor(public matDialog: MatDialog,private fb: FormBuilder,private _route: ActivatedRoute,private authservice: AuthenticationService,
     private _profileService: ProfileService,private postService:PostService) { 
       this.userForm = this.fb.group({
         username: ["", [Validators.required]],
@@ -113,6 +115,16 @@ export class ProfileComponent implements OnInit {
         console.log(this.posts);
       }
     )
+  }
+
+  generateTokenDialog():void{
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.id = "add-interests-modal";
+    dialogConfig.height = "32%";
+    dialogConfig.width = "22%";
+    //dialogConfig.data = { userId: this.id }
+    const modalDialog = this.matDialog.open(JobTokenDialogComponent, dialogConfig);
   }
 
 }

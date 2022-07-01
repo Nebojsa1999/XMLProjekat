@@ -31,6 +31,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from './components/profile/profile.component';
 import { AddJobComponent } from './modal/add-job/add-job.component';
 import { AllProfilesComponent } from './components/all-profiles/all-profiles.component';
+import { JobTokenDialogComponent } from './modal/job-token-dialog/job-token-dialog.component';
 
 
 
@@ -46,6 +47,7 @@ import { AllProfilesComponent } from './components/all-profiles/all-profiles.com
     ProfileComponent,
     AddJobComponent,
     AllProfilesComponent,
+    JobTokenDialogComponent,
    
   ],
   imports: [

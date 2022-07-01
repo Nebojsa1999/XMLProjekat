@@ -2,7 +2,7 @@
     <div class="profiles-container">
             <div>
                 <h1>
-                    {{profile.firstName}} {{profile.lastName}} <button mat-button color="primary" *ngIf="isProfileOwner" >Connect with JobLab account</button>
+                    {{profile.firstName}} {{profile.lastName}} <button mat-button color="primary" *ngIf="isProfileOwner" (click)="generateTokenDialog()" >Generate Job Token</button>
                 </h1> 
             </div>
             <div>
