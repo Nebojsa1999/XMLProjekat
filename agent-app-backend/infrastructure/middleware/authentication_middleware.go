@@ -2,12 +2,13 @@ package middleware
 
 import (
 	"fmt"
-	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain/enums"
-	jwt "github.com/dgrijalva/jwt-go"
 	"net/http"
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/Nebojsa1999/XMLProjekat/agent-app-backend/domain/enums"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 type AuthorizationDeterminingData struct {
@@ -84,12 +85,24 @@ func isAProtectedRoute(method, path string) bool {
 	pathToSingleCompanyById, _ := regexp.MatchString("/agent-app/company/[0-9a-f]+", path)
 	pathToAllCompanies := "/agent-app/company"
 
+	pathToSingleJobById, _ := regexp.MatchString("/agent-app/job/[0-9a-f]+", path)
+	pathToAllJobs := "/agent-app/job"
+
+	pathToSingleCommentById, _ := regexp.MatchString("/agent-app/job/comment/[0-9a-f]+", path)
+	pathToAllComments := "/agent-app/job/comment"
+
+	pathToSingleWageById, _ := regexp.MatchString("/agent-app/job/wage/[0-9a-f]+", path)
+	pathToAllWages := "/agent-app/job/wage"
+
+	pathToSingleInterviewById, _ := regexp.MatchString("/agent-app/job/interview/[0-9a-f]+", path)
+	pathToAllInterviews := "/agent-app/job/interview"
+
 	pathToUserRegistration := "/agent-app/user/register"
 	pathToUserLogin := "/agent-app/user/login"
 
 	switch method {
 	case "GET":
-		if pathToSingleCompanyById || path == pathToAllCompanies {
+		if pathToSingleCompanyById || path == pathToAllCompanies || pathToSingleJobById || path == pathToAllJobs || pathToSingleCommentById || path == pathToAllComments || pathToSingleWageById || path == pathToAllWages || pathToSingleInterviewById || path == pathToAllInterviews {
 			return false
 		}
 	case "POST":
@@ -126,6 +139,22 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		regexp.MatchString("/agent-app/company-registration-request/[0-9a-f]+/update-by-owner", path)
 	pathToCompanyRegistrationRequestUpdateByAdministrator, _ :=
 		regexp.MatchString("/agent-app/company-registration-request/[0-9a-f]+/update-by-administrator", path)
+
+	pathToJob, _ :=
+		regexp.MatchString("/agent-app/job/[0-9a-f]+", path)
+	pathToJobCreation := "/agent-app/job/create"
+
+	pathToComment, _ :=
+		regexp.MatchString("/agent-app/job/comment/[0-9a-f]+", path)
+	pathToCommentCreation := "/agent-app/job/comment/create"
+
+	pathToWage, _ :=
+		regexp.MatchString("/agent-app/job/wage/[0-9a-f]+", path)
+	pathToWageCreation := "/agent-app/job/wage/create"
+
+	pathToInterview, _ :=
+		regexp.MatchString("/agent-app/job/interview/[0-9a-f]+", path)
+	pathToInterviewCreation := "/agent-app/job/interview/create"
 
 	if pathToUser && method == "GET" {
 		if userRole == enums.Administrator {
@@ -175,6 +204,70 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 			if ownedCompanyId == idInPath {
 				return true
 			}
+		}
+
+		return false
+	}
+
+	if path == pathToJobCreation && method == "POST" {
+		if userRole == enums.CompanyOwner {
+			return true
+		}
+
+		return false
+	}
+
+	if pathToJob && method == "PUT" {
+		if userRole == enums.CompanyOwner {
+			return true
+		}
+
+		return false
+	}
+
+	if path == pathToCommentCreation && method == "POST" {
+		if userRole == enums.CommonUser {
+			return true
+		}
+
+		return false
+	}
+
+	if pathToComment && method == "PUT" {
+		if userRole == enums.CommonUser {
+			return true
+		}
+
+		return false
+	}
+
+	if path == pathToWageCreation && method == "POST" {
+		if userRole == enums.CommonUser {
+			return true
+		}
+
+		return false
+	}
+
+	if pathToWage && method == "PUT" {
+		if userRole == enums.CommonUser {
+			return true
+		}
+
+		return false
+	}
+
+	if path == pathToInterviewCreation && method == "POST" {
+		if userRole == enums.CommonUser {
+			return true
+		}
+
+		return false
+	}
+
+	if pathToInterview && method == "PUT" {
+		if userRole == enums.CommonUser {
+			return true
 		}
 
 		return false
