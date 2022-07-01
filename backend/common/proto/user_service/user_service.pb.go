@@ -22,25 +22,74 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type User_Role int32
+
+const (
+	User_UndefinedRole User_Role = 0
+	User_CommonUser    User_Role = 1
+	User_Administrator User_Role = 2
+)
+
+// Enum value maps for User_Role.
+var (
+	User_Role_name = map[int32]string{
+		0: "UndefinedRole",
+		1: "CommonUser",
+		2: "Administrator",
+	}
+	User_Role_value = map[string]int32{
+		"UndefinedRole": 0,
+		"CommonUser":    1,
+		"Administrator": 2,
+	}
+)
+
+func (x User_Role) Enum() *User_Role {
+	p := new(User_Role)
+	*p = x
+	return p
+}
+
+func (x User_Role) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (User_Role) Descriptor() protoreflect.EnumDescriptor {
+	return file_user_service_user_service_proto_enumTypes[0].Descriptor()
+}
+
+func (User_Role) Type() protoreflect.EnumType {
+	return &file_user_service_user_service_proto_enumTypes[0]
+}
+
+func (x User_Role) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use User_Role.Descriptor instead.
+func (User_Role) EnumDescriptor() ([]byte, []int) {
+	return file_user_service_user_service_proto_rawDescGZIP(), []int{18, 0}
+}
+
 type User_Gender int32
 
 const (
-	User_Undefined User_Gender = 0
-	User_Male      User_Gender = 1
-	User_Female    User_Gender = 2
+	User_UndefinedGender User_Gender = 0
+	User_Male            User_Gender = 1
+	User_Female          User_Gender = 2
 )
 
 // Enum value maps for User_Gender.
 var (
 	User_Gender_name = map[int32]string{
-		0: "Undefined",
+		0: "UndefinedGender",
 		1: "Male",
 		2: "Female",
 	}
 	User_Gender_value = map[string]int32{
-		"Undefined": 0,
-		"Male":      1,
-		"Female":    2,
+		"UndefinedGender": 0,
+		"Male":            1,
+		"Female":          2,
 	}
 )
 
@@ -55,11 +104,11 @@ func (x User_Gender) String() string {
 }
 
 func (User_Gender) Descriptor() protoreflect.EnumDescriptor {
-	return file_user_service_user_service_proto_enumTypes[0].Descriptor()
+	return file_user_service_user_service_proto_enumTypes[1].Descriptor()
 }
 
 func (User_Gender) Type() protoreflect.EnumType {
-	return &file_user_service_user_service_proto_enumTypes[0]
+	return &file_user_service_user_service_proto_enumTypes[1]
 }
 
 func (x User_Gender) Number() protoreflect.EnumNumber {
@@ -68,7 +117,7 @@ func (x User_Gender) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use User_Gender.Descriptor instead.
 func (User_Gender) EnumDescriptor() ([]byte, []int) {
-	return file_user_service_user_service_proto_rawDescGZIP(), []int{18, 0}
+	return file_user_service_user_service_proto_rawDescGZIP(), []int{18, 1}
 }
 
 type GetRequest struct {
@@ -937,21 +986,22 @@ type User struct {
 	unknownFields protoimpl.UnknownFields
 
 	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username          string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Password          string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
-	IsPrivate         bool                   `protobuf:"varint,4,opt,name=isPrivate,proto3" json:"isPrivate,omitempty"`
-	FirstName         string                 `protobuf:"bytes,5,opt,name=firstName,proto3" json:"firstName,omitempty"`
-	LastName          string                 `protobuf:"bytes,6,opt,name=lastName,proto3" json:"lastName,omitempty"`
-	Email             string                 `protobuf:"bytes,7,opt,name=email,proto3" json:"email,omitempty"`
-	Phone             string                 `protobuf:"bytes,8,opt,name=phone,proto3" json:"phone,omitempty"`
-	Gender            User_Gender            `protobuf:"varint,9,opt,name=gender,proto3,enum=user.User_Gender" json:"gender,omitempty"`
-	DateOfBirth       *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=dateOfBirth,proto3" json:"dateOfBirth,omitempty"`
-	Biography         string                 `protobuf:"bytes,11,opt,name=biography,proto3" json:"biography,omitempty"`
-	WorkExperience    string                 `protobuf:"bytes,12,opt,name=workExperience,proto3" json:"workExperience,omitempty"`
-	Education         string                 `protobuf:"bytes,13,opt,name=education,proto3" json:"education,omitempty"`
-	Skills            string                 `protobuf:"bytes,14,opt,name=skills,proto3" json:"skills,omitempty"`
-	Interests         string                 `protobuf:"bytes,15,opt,name=interests,proto3" json:"interests,omitempty"`
-	JobOffersAPIToken string                 `protobuf:"bytes,16,opt,name=jobOffersAPIToken,proto3" json:"jobOffersAPIToken,omitempty"`
+	Role              User_Role              `protobuf:"varint,2,opt,name=role,proto3,enum=user.User_Role" json:"role,omitempty"`
+	Username          string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
+	Password          string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
+	IsPrivate         bool                   `protobuf:"varint,5,opt,name=isPrivate,proto3" json:"isPrivate,omitempty"`
+	FirstName         string                 `protobuf:"bytes,6,opt,name=firstName,proto3" json:"firstName,omitempty"`
+	LastName          string                 `protobuf:"bytes,7,opt,name=lastName,proto3" json:"lastName,omitempty"`
+	Email             string                 `protobuf:"bytes,8,opt,name=email,proto3" json:"email,omitempty"`
+	Phone             string                 `protobuf:"bytes,9,opt,name=phone,proto3" json:"phone,omitempty"`
+	Gender            User_Gender            `protobuf:"varint,10,opt,name=gender,proto3,enum=user.User_Gender" json:"gender,omitempty"`
+	DateOfBirth       *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=dateOfBirth,proto3" json:"dateOfBirth,omitempty"`
+	Biography         string                 `protobuf:"bytes,12,opt,name=biography,proto3" json:"biography,omitempty"`
+	WorkExperience    string                 `protobuf:"bytes,13,opt,name=workExperience,proto3" json:"workExperience,omitempty"`
+	Education         string                 `protobuf:"bytes,14,opt,name=education,proto3" json:"education,omitempty"`
+	Skills            string                 `protobuf:"bytes,15,opt,name=skills,proto3" json:"skills,omitempty"`
+	Interests         string                 `protobuf:"bytes,16,opt,name=interests,proto3" json:"interests,omitempty"`
+	JobOffersAPIToken string                 `protobuf:"bytes,17,opt,name=jobOffersAPIToken,proto3" json:"jobOffersAPIToken,omitempty"`
 }
 
 func (x *User) Reset() {
@@ -991,6 +1041,13 @@ func (x *User) GetId() string {
 		return x.Id
 	}
 	return ""
+}
+
+func (x *User) GetRole() User_Role {
+	if x != nil {
+		return x.Role
+	}
+	return User_UndefinedRole
 }
 
 func (x *User) GetUsername() string {
@@ -1046,7 +1103,7 @@ func (x *User) GetGender() User_Gender {
 	if x != nil {
 		return x.Gender
 	}
-	return User_Undefined
+	return User_UndefinedGender
 }
 
 func (x *User) GetDateOfBirth() *timestamppb.Timestamp {
@@ -1223,7 +1280,7 @@ var file_user_service_user_service_proto_rawDesc = []byte{
 	0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f,
 	0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e,
 	0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0xb2, 0x04, 0x0a, 0x04, 0x55,
+	0x09, 0x52, 0x07, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x9b, 0x05, 0x0a, 0x04, 0x55,
 	0x73, 0x65, 0x72, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x02, 0x69, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x12,
@@ -1342,31 +1399,32 @@ func file_user_service_user_service_proto_rawDescGZIP() []byte {
 	return file_user_service_user_service_proto_rawDescData
 }
 
-var file_user_service_user_service_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_user_service_user_service_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_user_service_user_service_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_user_service_user_service_proto_goTypes = []interface{}{
-	(User_Gender)(0),                          // 0: user.User.Gender
-	(*GetRequest)(nil),                        // 1: user.GetRequest
-	(*GetResponse)(nil),                       // 2: user.GetResponse
-	(*GetAllRequest)(nil),                     // 3: user.GetAllRequest
-	(*GetAllResponse)(nil),                    // 4: user.GetAllResponse
-	(*RegisterRequest)(nil),                   // 5: user.RegisterRequest
-	(*RegisterResponse)(nil),                  // 6: user.RegisterResponse
-	(*LoginRequest)(nil),                      // 7: user.LoginRequest
-	(*LoginResponse)(nil),                     // 8: user.LoginResponse
-	(*IsPrivateRequest)(nil),                  // 9: user.IsPrivateRequest
-	(*IsPrivateResponse)(nil),                 // 10: user.IsPrivateResponse
-	(*GetIdsOfAllPublicUsersRequest)(nil),     // 11: user.GetIdsOfAllPublicUsersRequest
-	(*GetIdsOfAllPublicUsersResponse)(nil),    // 12: user.GetIdsOfAllPublicUsersResponse
-	(*SearchPublicUsersRequest)(nil),          // 13: user.SearchPublicUsersRequest
-	(*SearchPublicUsersResponse)(nil),         // 14: user.SearchPublicUsersResponse
-	(*UpdateRequest)(nil),                     // 15: user.UpdateRequest
-	(*UpdateResponse)(nil),                    // 16: user.UpdateResponse
-	(*GenerateJobOffersAPITokenRequest)(nil),  // 17: user.GenerateJobOffersAPITokenRequest
-	(*GenerateJobOffersAPITokenResponse)(nil), // 18: user.GenerateJobOffersAPITokenResponse
-	(*User)(nil),                              // 19: user.User
-	(*Credentials)(nil),                       // 20: user.Credentials
-	(*timestamppb.Timestamp)(nil),             // 21: google.protobuf.Timestamp
+	(User_Role)(0),                            // 0: user.User.Role
+	(User_Gender)(0),                          // 1: user.User.Gender
+	(*GetRequest)(nil),                        // 2: user.GetRequest
+	(*GetResponse)(nil),                       // 3: user.GetResponse
+	(*GetAllRequest)(nil),                     // 4: user.GetAllRequest
+	(*GetAllResponse)(nil),                    // 5: user.GetAllResponse
+	(*RegisterRequest)(nil),                   // 6: user.RegisterRequest
+	(*RegisterResponse)(nil),                  // 7: user.RegisterResponse
+	(*LoginRequest)(nil),                      // 8: user.LoginRequest
+	(*LoginResponse)(nil),                     // 9: user.LoginResponse
+	(*IsPrivateRequest)(nil),                  // 10: user.IsPrivateRequest
+	(*IsPrivateResponse)(nil),                 // 11: user.IsPrivateResponse
+	(*GetIdsOfAllPublicUsersRequest)(nil),     // 12: user.GetIdsOfAllPublicUsersRequest
+	(*GetIdsOfAllPublicUsersResponse)(nil),    // 13: user.GetIdsOfAllPublicUsersResponse
+	(*SearchPublicUsersRequest)(nil),          // 14: user.SearchPublicUsersRequest
+	(*SearchPublicUsersResponse)(nil),         // 15: user.SearchPublicUsersResponse
+	(*UpdateRequest)(nil),                     // 16: user.UpdateRequest
+	(*UpdateResponse)(nil),                    // 17: user.UpdateResponse
+	(*GenerateJobOffersAPITokenRequest)(nil),  // 18: user.GenerateJobOffersAPITokenRequest
+	(*GenerateJobOffersAPITokenResponse)(nil), // 19: user.GenerateJobOffersAPITokenResponse
+	(*User)(nil),                              // 20: user.User
+	(*Credentials)(nil),                       // 21: user.Credentials
+	(*timestamppb.Timestamp)(nil),             // 22: google.protobuf.Timestamp
 }
 var file_user_service_user_service_proto_depIdxs = []int32{
 	19, // 0: user.GetResponse.user:type_name -> user.User
@@ -1657,7 +1715,7 @@ func file_user_service_user_service_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_user_service_user_service_proto_rawDesc,
-			NumEnums:      1,
+			NumEnums:      2,
 			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   1,

@@ -2,12 +2,13 @@ package application
 
 import (
 	"fmt"
-	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/domain"
-	jwt "github.com/dgrijalva/jwt-go"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/domain"
+	jwt "github.com/dgrijalva/jwt-go"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserService struct {
@@ -79,9 +80,9 @@ func (service *UserService) GenerateJWTToken(user *domain.User) (*domain.JWTToke
 	jwtToken := jwt.New(jwt.SigningMethodHS256)
 	claims := jwtToken.Claims.(jwt.MapClaims)
 
-	claims["authorized"] = true
 	claims["id"] = user.Id.Hex()
 	claims["username"] = user.Username
+	claims["role"] = user.Role
 	claims["exp"] = time.Now().Add(time.Hour).Unix()
 
 	jwtTokenString, err := jwtToken.SignedString(tokenSigningKey)
