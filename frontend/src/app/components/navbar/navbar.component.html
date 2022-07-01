@@ -7,7 +7,7 @@
     </button>
     <button *ngIf="isAuthenticated" mat-button [matMenuTriggerFor]="network">Network</button>
     <mat-menu #network="matMenu">
-        <button mat-menu-item style="padding-inline: 12%;" [routerLink]="['/profiles']"> All Profiles</button>
+        <button mat-menu-item style="padding-inline: 12%;" [routerLink]="['/allprofiles']"> All Profiles</button>
         <button mat-menu-item style="padding-inline: 12%;" [routerLink]="['/connections']" > Connections</button>
         <button mat-menu-item style="padding-inline: 12%;" [routerLink]="['/requests']"> Requests</button>
     </mat-menu>

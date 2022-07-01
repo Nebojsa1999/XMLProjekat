@@ -21,7 +21,8 @@ export class JobsComponent implements OnInit {
       response => {
         this.jobs = response.jobs;
         console.log(this.jobs);
-        this.allJobs = response;
+        this.allJobs = response.jobs;
+        console.log(this.allJobs);
       }
     )
   }
@@ -30,8 +31,8 @@ export class JobsComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.id = "add-comment-modal";
-    dialogConfig.height = "550px";
-    dialogConfig.width = "32%";
+    dialogConfig.height = "450px";
+    dialogConfig.width = "35%";
     const modalDialog = this.matDialog.open(AddJobComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       location.reload()

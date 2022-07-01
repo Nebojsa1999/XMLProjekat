@@ -17,6 +17,10 @@ export class ProfileService {
     return this._http.get<any>(this.applicationURL + "/user/public");
   }
 
+  getAllProfiles(): Observable<any> {
+    return this._http.get<any>(this.applicationURL + "/user");
+  }
+
   searchProfiles(param: string): Observable<any> {
     return this._http.post<any>(this.applicationURL + "/user/search",JSON.stringify(param));
   }

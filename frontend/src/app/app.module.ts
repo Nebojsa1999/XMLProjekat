@@ -30,6 +30,7 @@ import { TokenInterceptor } from './interceptor/token-interceptor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from './components/profile/profile.component';
 import { AddJobComponent } from './modal/add-job/add-job.component';
+import { AllProfilesComponent } from './components/all-profiles/all-profiles.component';
 
 
 
@@ -44,6 +45,7 @@ import { AddJobComponent } from './modal/add-job/add-job.component';
     ProfilesComponent,
     ProfileComponent,
     AddJobComponent,
+    AllProfilesComponent,
    
   ],
   imports: [
