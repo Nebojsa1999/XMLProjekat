@@ -30,8 +30,16 @@ service UserService{
       body: "credentials"
     };
   }
-  rpc IsUserPrivate(IsPrivateRequest) returns(IsPrivateResponse) {}
-  rpc GetIdsOfAllPublicUsers(GetIdsOfAllPublicUsersRequest) returns(GetIdsOfAllPublicUsersResponse) {}
+  rpc IsUserPrivate(IsPrivateRequest) returns(IsPrivateResponse) {
+    option (google.api.http) = {
+      get: "/user/{id}/is-private"
+    };
+  }
+  rpc GetIdsOfAllPublicUsers(GetIdsOfAllPublicUsersRequest) returns(GetIdsOfAllPublicUsersResponse) {
+    option (google.api.http) = {
+      get: "/user/ids-of-all-public-users"
+    };
+  }
   rpc SearchPublicUsers(SearchPublicUsersRequest) returns(SearchPublicUsersResponse) {
     option (google.api.http) = {
       post: "/user/search",
