@@ -10,6 +10,7 @@ import (
 func mapDomainUserToPbUser(user *domain.User) *pb.User {
 	userPb := &pb.User{
 		Id:                user.Id.Hex(),
+		Role:              mapDomainRoleToPbRole(user.Role),
 		Username:          user.Username,
 		Password:          user.Password,
 		IsPrivate:         user.IsPrivate,
@@ -40,6 +41,7 @@ func mapPbUserToDomainUser(userPb *pb.User) *domain.User {
 
 	user := &domain.User{
 		Id:                id,
+		Role:              mapPbRoleToDomainRole(userPb.Role),
 		Username:          userPb.Username,
 		Password:          userPb.Password,
 		IsPrivate:         userPb.IsPrivate,
@@ -58,6 +60,22 @@ func mapPbUserToDomainUser(userPb *pb.User) *domain.User {
 	}
 
 	return user
+}
+
+func mapDomainRoleToPbRole(role domain.Role) pb.User_Role {
+	if role == domain.CommonUser {
+		return pb.User_CommonUser
+	} else {
+		return pb.User_Administrator
+	}
+}
+
+func mapPbRoleToDomainRole(role pb.User_Role) domain.Role {
+	if role == pb.User_CommonUser {
+		return domain.CommonUser
+	} else {
+		return domain.Administrator
+	}
 }
 
 func mapDomainGenderToPbGender(gender domain.Gender) pb.User_Gender {

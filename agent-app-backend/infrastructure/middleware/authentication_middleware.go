@@ -48,7 +48,7 @@ func IsAuthenticated(handler http.Handler) http.Handler {
 				})
 
 				if err != nil {
-					fmt.Fprintf(writer, err.Error())
+					http.Error(writer, err.Error(), http.StatusExpectationFailed)
 					return
 				}
 
@@ -63,8 +63,7 @@ func IsAuthenticated(handler http.Handler) http.Handler {
 					}
 
 					if !isUserAuthorizedToAccessRoute(authorizationDeterminingData) {
-						//writer.WriteHeader(http.StatusForbidden)
-						fmt.Fprintf(writer, "You are not authorized to access this functionality!")
+						http.Error(writer, "You are not authorized to access this functionality!", http.StatusUnauthorized)
 						return
 					}
 
@@ -72,7 +71,7 @@ func IsAuthenticated(handler http.Handler) http.Handler {
 					return
 				}
 			} else {
-				fmt.Fprintf(writer, "Authorization token has not been provided!")
+				http.Error(writer, "Authorization token has not been provided!", http.StatusForbidden)
 				return
 			}
 		}
@@ -156,7 +155,7 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		regexp.MatchString("/agent-app/job/interview/[0-9a-f]+", path)
 	pathToInterviewCreation := "/agent-app/job/interview/create"
 
-	if pathToUser && method == "GET" {
+	if pathToUser && method == http.MethodGet {
 		if userRole == enums.Administrator {
 			return true
 		}
@@ -169,7 +168,7 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		return false
 	}
 
-	if path == pathToAllUsers && method == "GET" {
+	if path == pathToAllUsers && method == http.MethodGet {
 		if userRole == enums.Administrator {
 			return true
 		}
@@ -177,7 +176,7 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		return false
 	}
 
-	if pathToUser && method == "PUT" {
+	if pathToUser && method == http.MethodPut {
 		if userRole == enums.Administrator {
 			return true
 		}
@@ -190,7 +189,7 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		return false
 	}
 
-	if path == pathToCompanyRegistration && method == "POST" {
+	if path == pathToCompanyRegistration && method == http.MethodPost {
 		if userRole == enums.Administrator {
 			return true
 		}
@@ -198,7 +197,7 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		return false
 	}
 
-	if pathToCompany && method == "PUT" {
+	if pathToCompany && method == http.MethodPut {
 		if userRole == enums.CompanyOwner {
 			idInPath := strings.TrimPrefix(path, "/agent-app/company/")
 			if ownedCompanyId == idInPath {
@@ -276,7 +275,7 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 	if (pathToCompanyRegistrationRequest || path == pathToPendingCompanyRegistrationRequests ||
 		path == pathToAcceptedCompanyRegistrationRequests ||
 		path == pathToRejectedCompanyRegistrationRequests ||
-		path == pathToAllCompanyRegistrationRequests) && method == "GET" {
+		path == pathToAllCompanyRegistrationRequests) && method == http.MethodGet {
 		if userRole == enums.Administrator {
 			return true
 		}
@@ -284,7 +283,7 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		return false
 	}
 
-	if path == pathToAllCompanyRegistrationRequests && method == "POST" {
+	if path == pathToAllCompanyRegistrationRequests && method == http.MethodPost {
 		if userRole == enums.CommonUser {
 			return true
 		}
@@ -292,7 +291,7 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		return false
 	}
 
-	if pathToCompanyRegistrationRequestUpdateByOwner && method == "PUT" {
+	if pathToCompanyRegistrationRequestUpdateByOwner && method == http.MethodPut {
 		if userRole == enums.CompanyOwner {
 			idInPath := strings.TrimPrefix(path, "/agent-app/company-registration-request/")
 			if issuedCompanyRequestId == idInPath {
@@ -303,7 +302,7 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		return false
 	}
 
-	if pathToCompanyRegistrationRequestUpdateByAdministrator && method == "PUT" {
+	if pathToCompanyRegistrationRequestUpdateByAdministrator && method == http.MethodPut {
 		if userRole == enums.Administrator {
 			return true
 		}

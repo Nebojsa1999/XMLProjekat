@@ -5,15 +5,23 @@ import (
 	"time"
 )
 
+type Role string
+const (
+	UndefinedRole Role = ""
+	CommonUser         = "CommonUser"
+	Administrator      = "Administrator"
+)
+
 type Gender string
 const (
-	Undefined Gender = ""
-	Male = "Male"
-	Female = "Female"
+	UndefinedGender Gender = ""
+	Male                   = "Male"
+	Female                 = "Female"
 )
 
 type User struct {
 	Id                primitive.ObjectID `json:"id" bson:"_id"`
+	Role              Role               `json:"role" bson:"role"`
 	Username          string             `json:"username" bson:"username"`
 	Password          string             `json:"password" bson:"password"`
 	IsPrivate         bool               `json:"is_private" bson:"is_private"`
