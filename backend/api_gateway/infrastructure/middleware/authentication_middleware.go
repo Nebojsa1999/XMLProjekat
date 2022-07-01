@@ -10,6 +10,20 @@ import (
 	"strings"
 )
 
+type Role string
+const (
+	UndefinedRole Role = ""
+	CommonUser         = "CommonUser"
+	Administrator      = "Administrator"
+)
+
+type AuthorizationDeterminingData struct {
+	UserId                 string
+	UserRole               string
+	Method                 string
+	Path                   string
+}
+
 func IsAuthenticated(handler *runtime.ServeMux) http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		if isAProtectedRoute(request.Method, request.URL.Path) {
@@ -38,16 +52,28 @@ func IsAuthenticated(handler *runtime.ServeMux) http.HandlerFunc {
 				})
 
 				if err != nil {
-					fmt.Fprintf(writer, err.Error())
+					http.Error(writer, err.Error(), http.StatusExpectationFailed)
 					return
 				}
 
 				if token.Valid {
+					authorizationDeterminingData := AuthorizationDeterminingData{
+						UserId:                 token.Claims.(jwt.MapClaims)["id"].(string),
+						UserRole:               token.Claims.(jwt.MapClaims)["role"].(string),
+						Method:                 request.Method,
+						Path:                   request.URL.Path,
+					}
+
+					if !isUserAuthorizedToAccessRoute(authorizationDeterminingData) {
+						http.Error(writer, "You are not authorized to access this functionality!", http.StatusUnauthorized)
+						return
+					}
+
 					handler.ServeHTTP(writer, request)
 					return
 				}
 			} else {
-				fmt.Fprintf(writer, "Authorization token has not been provided!")
+				http.Error(writer, "Authorization token has not been provided!", http.StatusForbidden)
 				return
 			}
 		}
@@ -71,4 +97,135 @@ func isAProtectedRoute(method, path string) bool {
 	}
 
 	return true
+}
+
+func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDeterminingData) bool {
+	userId := authorizationDeterminingData.UserId
+	userRole := authorizationDeterminingData.UserRole
+	method := authorizationDeterminingData.Method
+	path := authorizationDeterminingData.Path
+
+	pathToJob, _ := regexp.MatchString("/job/[0-9a-f]+", path)
+	pathToAllJobs := "/job/jobs"
+	pathToJobAdding := "/job"
+	pathToSearchOfJobsByUser, _ := regexp.MatchString("/job/searchByUser/[0-9a-f]+", path)
+	pathToSearchOfJobsByDescription, _ :=
+		regexp.MatchString("/job/searchByDescription/[0-9a-f]+", path)
+	pathToSearchOfJobsByPosition, _ :=
+		regexp.MatchString("/job/searchByPosition/[0-9a-f]+", path)
+	pathToSearchOfJobsByRequirements, _ :=
+		regexp.MatchString("/job/searchByRequirements/[0-9a-f]+", path)
+	pathToJobEdit := "/job/editJob"
+
+	pathToPostFromUser, _ := regexp.MatchString("/user/[0-9a-f]+/post/[0-9a-f]+", path)
+	pathToAllPostsFromUser, _ := regexp.MatchString("/user/[0-9a-f]+/post", path)
+	pathToCommentsOfPost, _ := regexp.MatchString("/user/[0-9a-f]+/post/[0-9a-f]+/comment", path)
+	pathToLikeOrDislikeOfPost, _ :=
+		regexp.MatchString("/user/[0-9a-f]+/post/[0-9a-f]+/liked_or_disliked_by/(dis)?like", path)
+
+	pathToUser, _ := regexp.MatchString("/user/[0-9a-f]+", path)
+	pathToAllUsers := "/user"
+	pathToCheckOfPrivacyOfUser, _ := regexp.MatchString("/user/[0-9a-f]+/is-private", path)
+	pathToIdsOfAllPublicUsers := "/user/ids-of-all-public-users"
+	pathToGenerationOfJobOffersAPIToken, _ :=
+		regexp.MatchString("/user/[0-9a-f]+/generate-job-offers-api-token", path)
+
+	if pathToJob && method == http.MethodGet {
+		return true
+	}
+
+	if path == pathToAllJobs && method == http.MethodGet {
+		if userRole == Administrator {
+			return true
+		}
+
+		return false
+	}
+
+	if path == pathToJobAdding && method == http.MethodPost {
+		if userRole == CommonUser {
+			return true
+		}
+
+		return false
+	}
+
+	if (pathToSearchOfJobsByUser || pathToSearchOfJobsByDescription || pathToSearchOfJobsByPosition ||
+		pathToSearchOfJobsByRequirements) && method == http.MethodGet {
+		return true
+	}
+
+	if path == pathToJobEdit && method == http.MethodPut {
+		if userRole == Administrator {
+			return true
+		}
+
+		return false
+	}
+
+	if pathToPostFromUser && method == http.MethodGet {
+		return true
+	}
+
+	if pathToAllPostsFromUser && method == http.MethodGet {
+		return true
+	}
+
+	if pathToAllPostsFromUser && method == http.MethodPost {
+		userIdInPath := strings.TrimPrefix(path, "/user/")
+		userIdInPath = strings.TrimSuffix(userIdInPath, "/post")
+
+		if userId == userIdInPath {
+			return true
+		}
+
+		return false
+	}
+
+	if pathToCommentsOfPost && method == http.MethodGet {
+		return true
+	}
+
+	if pathToCommentsOfPost && method == http.MethodPost {
+		return true
+	}
+
+	if pathToLikeOrDislikeOfPost && method == http.MethodPut {
+		return true
+	}
+
+	if pathToUser && method == http.MethodGet {
+		return true
+	}
+
+	if pathToUser && method == http.MethodPut {
+		if userRole == Administrator {
+			return true
+		}
+
+		idInPath := strings.TrimPrefix(path, "/user/")
+		if userId == idInPath {
+			return true
+		}
+
+		return false
+	}
+
+	if path == pathToAllUsers && method == http.MethodGet {
+		return true
+	}
+
+	if pathToCheckOfPrivacyOfUser && method == http.MethodGet {
+		return true
+	}
+
+	if path == pathToIdsOfAllPublicUsers && method == http.MethodGet {
+		return true
+	}
+
+	if pathToGenerationOfJobOffersAPIToken && method == http.MethodGet {
+		return true
+	}
+
+	return false
 }
