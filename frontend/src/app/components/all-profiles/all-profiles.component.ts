@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from 'src/app/model/user';
 import { AuthenticationService } from 'src/app/service/authentication.service';
+import { ConnectionService } from 'src/app/service/connection-service/connection.service';
 import { ProfileService } from 'src/app/service/profile-service/profile.service';
+import { ConnectionDTO } from '../dto/connection.dto';
 
 @Component({
   selector: 'app-all-profiles',
@@ -16,9 +18,16 @@ export class AllProfilesComponent implements OnInit {
   public searchText: string = "";
   isAuthenticated = false;
   private id: any;
+  isProfileOwner = false; 
+
+  private connectionDTO: ConnectionDTO = {
+    issuerId : "",
+    subjectId : "",
+    isApproved : false,
+  }
 
   constructor(private _profileService: ProfileService,private authservice: AuthenticationService,
-    public _router: Router,) { }
+    public _router: Router, private _connectionService: ConnectionService) { }
 
   ngOnInit(): void {
     this.getAllProfiles();
@@ -69,4 +78,25 @@ export class AllProfilesComponent implements OnInit {
   viewFullProfile(id: string): void {
     this._router.navigate(['profile/' + id])
   }
+
+  connect(subjectId: string, isPrivate: boolean): void {
+    this.connectionDTO.issuerId = this.id;
+    this.connectionDTO.subjectId = subjectId;
+    if (isPrivate) {
+      this.connectionDTO.isApproved=false;
+      this._connectionService.makeConnection(this.connectionDTO).subscribe(
+        response => {
+          console.log(response);
+        }
+      )
+    } else {
+      this.connectionDTO.isApproved=true;
+      this._connectionService.makeConnection(this.connectionDTO).subscribe(
+        response => {
+          console.log(response);
+        }
+      )
+    }
+  }
+
 }

@@ -32,4 +32,8 @@ export class ProfileService {
   updateProfile(id: string, updatedProfile: User): Observable<any> {
     return this._http.put<any>(this.applicationURL + "/user/" + id, JSON.stringify(updatedProfile));
   }
+
+  isUserPrivate(id:string) : Observable<any>{
+    return this._http.get<any>(this.applicationURL + "/user/" + id + "/is-private");
+  }
 }

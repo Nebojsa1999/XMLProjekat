@@ -47,6 +47,7 @@ export class LoginComponent implements OnInit {
         localStorage.id=tokenInfo.id;
         localStorage.username=tokenInfo.username;
         localStorage.exp=tokenInfo.exp;
+        localStorage.role=tokenInfo.role;
         
        // localStorage.setItem('id', tokenInfo.id);
       //  localStorage.setItem('username', tokenInfo.username);

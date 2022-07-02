@@ -26,8 +26,8 @@
                
             </div>
             <div class="flex-item-right">
-                <button mat-flat-button color="primary"  (click)="viewFullProfile(profile.id)" style="margin: 2%;" > View full profile </button>
-                <button mat-stroked-button color="primary" *ngIf="isAuthenticated " style="margin: 2%;" >Connect </button>
+                <button mat-flat-button color="primary"  (click)="viewFullProfile(profile.id)" style="margin: 2%;" *ngIf="!profile.isPrivate"> View full profile </button>
+                <button mat-stroked-button color="primary" *ngIf="isAuthenticated " style="margin: 2%;"  (click)="connect(profile.id, profile.isPrivate)"  >Connect </button>
             </div>
             <hr color="#c5c5c5" size="1" style="width: 97%;">
         </div>

@@ -16,6 +16,7 @@ export class ProfilesComponent implements OnInit {
   isAuthenticated = false;
   private id: any;
 
+
   constructor(private _profileService: ProfileService,private authservice: AuthenticationService,
     public _router: Router,) { }
 
@@ -39,10 +40,10 @@ export class ProfilesComponent implements OnInit {
     this._profileService.getPublicProfiles().subscribe(
       response => {
         this.profiles = response.users;
-        console.log(this.profiles);
+     //   console.log(this.profiles);
         this.results = response.users.length;
-        console.log(response.length);
-        console.log(typeof(this.profiles))
+    //    console.log(response.length);
+    //    console.log(typeof(this.profiles))
       }
     )
   }
@@ -68,6 +69,7 @@ export class ProfilesComponent implements OnInit {
   viewFullProfile(id: string): void {
     this._router.navigate(['profile/' + id])
   }
+
 
 
 }

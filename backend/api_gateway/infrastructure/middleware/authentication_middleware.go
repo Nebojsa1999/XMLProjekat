@@ -11,6 +11,7 @@ import (
 )
 
 type Role string
+
 const (
 	UndefinedRole Role = ""
 	CommonUser         = "CommonUser"
@@ -18,10 +19,10 @@ const (
 )
 
 type AuthorizationDeterminingData struct {
-	UserId                 string
-	UserRole               string
-	Method                 string
-	Path                   string
+	UserId   string
+	UserRole string
+	Method   string
+	Path     string
 }
 
 func IsAuthenticated(handler *runtime.ServeMux) http.HandlerFunc {
@@ -58,10 +59,10 @@ func IsAuthenticated(handler *runtime.ServeMux) http.HandlerFunc {
 
 				if token.Valid {
 					authorizationDeterminingData := AuthorizationDeterminingData{
-						UserId:                 token.Claims.(jwt.MapClaims)["id"].(string),
-						UserRole:               token.Claims.(jwt.MapClaims)["role"].(string),
-						Method:                 request.Method,
-						Path:                   request.URL.Path,
+						UserId:   token.Claims.(jwt.MapClaims)["id"].(string),
+						UserRole: token.Claims.(jwt.MapClaims)["role"].(string),
+						Method:   request.Method,
+						Path:     request.URL.Path,
 					}
 
 					if !isUserAuthorizedToAccessRoute(authorizationDeterminingData) {
@@ -85,14 +86,16 @@ func IsAuthenticated(handler *runtime.ServeMux) http.HandlerFunc {
 func isAProtectedRoute(method, path string) bool {
 	isPathToPostsOfPublicUser, _ := regexp.MatchString("/user/[0-9a-f]{24}/public", path)
 	isPathToUserProfile, _ := regexp.MatchString("/user/[0-9a-f]{24}", path)
-
+	pathToJob, _ := regexp.MatchString("/job/[0-9a-f]+", path)
+	pathToAllJobs := "/job/jobs"
+	pathToJobAdding := "/job"
 	switch method {
 	case "GET":
-		if isPathToPostsOfPublicUser || path == "/post/public" || path == "/user/public" || isPathToUserProfile {
+		if isPathToPostsOfPublicUser || path == "/post/public" || path == "/user/public" || isPathToUserProfile || pathToJob || path == pathToAllJobs {
 			return false
 		}
 	case "POST":
-		if path == "/user/register" || path == "/user/login" || path == "/user/search" {
+		if path == pathToJobAdding || path == "/user/register" || path == "/user/login" || path == "/user/search" {
 			return false
 		}
 	}
@@ -106,9 +109,6 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 	method := authorizationDeterminingData.Method
 	path := authorizationDeterminingData.Path
 
-	pathToJob, _ := regexp.MatchString("/job/[0-9a-f]+", path)
-	pathToAllJobs := "/job/jobs"
-	pathToJobAdding := "/job"
 	pathToSearchOfJobsByUser, _ := regexp.MatchString("/job/searchByUser/[0-9a-f]+", path)
 	pathToSearchOfJobsByDescription, _ :=
 		regexp.MatchString("/job/searchByDescription/[0-9a-f]+", path)
@@ -130,26 +130,6 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 	pathToIdsOfAllPublicUsers := "/user/ids-of-all-public-users"
 	pathToGenerationOfJobOffersAPIToken, _ :=
 		regexp.MatchString("/user/[0-9a-f]+/generate-job-offers-api-token", path)
-
-	if pathToJob && method == http.MethodGet {
-		return true
-	}
-
-	if path == pathToAllJobs && method == http.MethodGet {
-		if userRole == Administrator {
-			return true
-		}
-
-		return false
-	}
-
-	if path == pathToJobAdding && method == http.MethodPost {
-		if userRole == CommonUser {
-			return true
-		}
-
-		return false
-	}
 
 	if (pathToSearchOfJobsByUser || pathToSearchOfJobsByDescription || pathToSearchOfJobsByPosition ||
 		pathToSearchOfJobsByRequirements) && method == http.MethodGet {

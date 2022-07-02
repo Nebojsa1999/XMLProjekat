@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit {
   private id: any;
   isProfileOwner = false; 
   isAuthenticated = false;
+ 
   profile : User = {
     id:"",
     username:"",
@@ -126,5 +127,8 @@ export class ProfileComponent implements OnInit {
     //dialogConfig.data = { userId: this.id }
     const modalDialog = this.matDialog.open(JobTokenDialogComponent, dialogConfig);
   }
+
+ 
+  
 
 }
