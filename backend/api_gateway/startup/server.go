@@ -6,6 +6,7 @@ import (
 	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/infrastructure/api"
 	"github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/infrastructure/middleware"
 	cfg "github.com/Nebojsa1999/XMLProjekat/backend/api_gateway/startup/config"
+	connectionGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/connection_service"
 	jobGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/job_service"
 	postingGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	userGw "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
@@ -54,12 +55,19 @@ func (server *Server) initHandlers() {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
+
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.ConnectionHost, server.config.ConnectionPort)
+	err = connectionGw.RegisterConnectionServiceHandlerFromEndpoint(context.TODO(), server.mux, connectionEndpoint, opts)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 }
 
 func (server *Server) initCustomHandlers() {
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	postingEndpoint := fmt.Sprintf("%s:%s", server.config.PostingHost, server.config.PostingPort)
 	jobEndpoint := fmt.Sprintf("%s:%s", server.config.JobHost, server.config.JobPort)
+	//connectionEndpoint := fmt.Sprintf("%s:%s", server.config.ConnectionHost, server.config.ConnectionPort)
 
 	registerHandler := api.NewRegisterHandler(userEndpoint)
 	registerHandler.Init(server.mux)
@@ -85,5 +93,6 @@ func (server *Server) Start() {
 		AllowCredentials: true,
 	})
 	handler := c.Handler(middleware.IsAuthenticated(server.mux))
+
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), handler))
 }
