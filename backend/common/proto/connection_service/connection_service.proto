@@ -8,9 +8,24 @@ import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
 service ConnectionService{
-  rpc Get(GetRequest) returns(GetResponse) {
+  rpc GetByUserId(GetRequest) returns(GetResponse) {
     option (google.api.http) = {
       get: "/connection/{userId}"
+    };
+  }
+  rpc GetFollowingByUserId(GetRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      get: "/connection/{userId}/following"
+    };
+  }
+  rpc GetFollowersByUserId(GetRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      get: "/connection/{userId}/followers"
+    };
+  }
+  rpc GetFollowingUsersIds(GetRequest) returns(GetFollowingUsersIdsResponse) {
+    option (google.api.http) = {
+      get: "/connection/{userId}/following-users-ids"
     };
   }
   rpc Create(CreateRequest) returns(CreateResponse) {
@@ -19,14 +34,14 @@ service ConnectionService{
       body: "connection"
     };
   }
+  rpc Update(UpdateRequest) returns(UpdateResponse) {
+    option (google.api.http) = {
+      put: "/connection/{id}"
+    };
+  }
   rpc Delete(DeleteRequest) returns(DeleteResponse) {
     option (google.api.http) = {
       delete: "/connection/{id}"
-    };
-  }
-  rpc Update(UpdateRequest) returns(UpdateResponse) {
-    option (google.api.http) = {
-      patch: "/connection/{id}"
     };
   }
 }
@@ -39,6 +54,10 @@ message GetResponse {
   repeated Connection connections = 1;
 }
 
+message GetFollowingUsersIdsResponse {
+  repeated string ids = 1;
+}
+
 message CreateRequest {
   Connection connection = 1;
 }
@@ -47,19 +66,19 @@ message CreateResponse {
   Connection connection = 1;
 }
 
-message DeleteRequest {
-  string id = 1;
-}
-
-message DeleteResponse {
-}
-
 message UpdateRequest {
   string id = 1;
 }
 
 message UpdateResponse {
   Connection connection = 1;
+}
+
+message DeleteRequest {
+  string id = 1;
+}
+
+message DeleteResponse {
 }
 
 message Connection {

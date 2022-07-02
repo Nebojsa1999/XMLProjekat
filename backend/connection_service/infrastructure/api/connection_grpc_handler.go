@@ -17,7 +17,7 @@ func NewConnectionHandler(service *application.ConnectionService) *ConnectionHan
 	}
 }
 
-func (handler *ConnectionHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
+func (handler *ConnectionHandler) GetByUserId(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
 	connections, err := handler.service.Get(request.UserId)
 	if err != nil {
 		return nil, err
