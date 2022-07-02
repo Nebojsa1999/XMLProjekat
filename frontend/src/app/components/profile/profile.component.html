@@ -1,0 +1,168 @@
+<div style="margin-inline: 20%; margin-top: 2%;">
+    <div class="profiles-container">
+            <div>
+                <h1>
+                    {{profile.firstName}} {{profile.lastName}} <button mat-button color="primary" *ngIf="isProfileOwner" (click)="generateTokenDialog()" >Generate Job Token</button>
+                </h1> 
+            </div>
+            <div>
+                <h3 style="margin-top: 5%; font-size: 18px; font-weight: 400;">Contact Info:</h3>
+                <br>
+                <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                    <div class="form-group row">
+                        <label for="name">Username:</label>
+                        <div >
+                            <input class="form-control" type="text" id="username" placeholder="username"
+                                formControlName="username">
+                            <small *ngIf="userForm.controls['username'].touched && userForm.controls['username'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <label for="name" >Name:</label>
+                        <div>
+                            <input class="form-control" type="text" id="firstName" placeholder="first name"
+                                formControlName="firstName">
+                            <small *ngIf="userForm.controls['firstName'].touched && userForm.controls['firstName'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <label for="name" >Last Name:</label>
+                        <div>
+                            <input class="form-control" type="text" id="lastName" placeholder="last name"
+                                formControlName="lastName">
+                            <small *ngIf="userForm.controls['lastName'].touched && userForm.controls['lastName'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <label for="name" >Email:</label>
+                        <div>
+                            <input class="form-control" type="text" id="email" placeholder="email"
+                                formControlName="email">
+                            <small *ngIf="userForm.controls['email'].touched && userForm.controls['email'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <label for="name" >Phone:</label>
+                        <div >
+                            <input class="form-control" type="text" id="phone" placeholder="phone"
+                                formControlName="phone">
+                            <small *ngIf="userForm.controls['phone'].touched && userForm.controls['phone'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <label for="name" >Gender:</label>
+                        <div >
+                            <input class="form-control" type="text" id="gender" placeholder="gender"
+                                formControlName="gender">
+                            <small *ngIf="userForm.controls['gender'].touched && userForm.controls['gender'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <label for="name">Date of birth:</label>
+                        <div>
+                            <input class="form-control" type="text" id="dateOfBirth" placeholder="dateOfBirth"
+                                formControlName="dateOfBirth">
+                            <small *ngIf="userForm.controls['dateOfBirth'].touched && userForm.controls['dateOfBirth'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <label for="name" >Work experience:</label>
+                        <div >
+                            <input class="form-control" type="text" id="workExperience" placeholder="workExperience"
+                                formControlName="workExperience">
+                            <small *ngIf="userForm.controls['workExperience'].touched && userForm.controls['workExperience'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <label for="name" >Biography:</label>
+                        <div >
+                            <textarea class="form-control" rows="3" id="biography" placeholder="Biography"
+                            formControlName="biography"></textarea>
+                            <small *ngIf="userForm.controls['biography'].touched && userForm.controls['biography'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <label for="name" >Education:</label>
+                        <div >
+                            <textarea class="form-control" rows="3" id="education" placeholder="education"
+                            formControlName="education"></textarea>
+                            <small *ngIf="userForm.controls['education'].touched && userForm.controls['education'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <label for="name">Skills:</label>
+                        <div >
+                            <textarea class="form-control" rows="3" id="skills" placeholder="skills"
+                            formControlName="skills"></textarea>
+                            <small *ngIf="userForm.controls['skills'].touched && userForm.controls['skills'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <label for="name" >Interests:</label>
+                        <div >
+                            <textarea class="form-control" rows="3" id="interests" placeholder="interests"
+                            formControlName="interests"></textarea>
+                            <small *ngIf="userForm.controls['interests'].touched && userForm.controls['interests'].errors?.['required']" class="text-danger">Name is required!</small>          
+                        </div>
+                    </div>
+                    
+                    
+                    
+    
+                    <div class="form-group row float-right" *ngIf="isAuthenticated && checkIfIsOwner(profile.id)">
+                        <div class="col-12">
+                            <button class="btn btn-primary " type="submit"
+                                [disabled]="userForm.invalid" >Save changes</button>
+                        </div>
+                    </div>
+                </form>
+
+              </div>
+          
+                <br>
+                <h3>Posts:</h3>
+                <div class="profiles-container flex-container" style=" width:100%; padding: 2%; padding-inline: 3%;">
+                    <div style="width:70%">
+                        <button mat-stroked-button color="primary" [routerLink]="['/feed']"
+                            style=" margin-inline:5%;padding-inline: 5%; margin-top:1%" *ngIf="isAuthenticated">Show All Posts
+                        </button>
+                    </div>
+                    <hr color="#c5c5c5" size="1" class="line">
+                    <div class="flex-container" style=" width:100%;" *ngFor="let post of posts">
+                    
+                    <div class="feed-input-container" >
+                        <div class="picture-name">
+                            <span class="profile-pic">
+                                <img src="../../../assets/images/profile.jpg" class="profile-picture" />
+                            </span>
+                            <span><h5 class="name-surname">{{profile.firstName}} {{profile.lastName}}</h5></span>
+                        </div> <br> 
+                        <h6>Content:</h6>
+                        <p class="post-text" [innerHTML]="post.content"></p> 
+                        
+                        <img style="width: 300px; " src="../../../assets/images/{{post.image}}"/><br><br>
+                        <span class="post-info likes">{{post.likesCount}} Likes</span>
+                        <span class="post-info likes">{{post.dislikesCount}} Dislikes</span>
+                        <span class="">{{post.postedAt}}</span>
+                    </div>
+                    <br>
+                </div>
+
+
+            
+
+            
+            
+        
+    </div>

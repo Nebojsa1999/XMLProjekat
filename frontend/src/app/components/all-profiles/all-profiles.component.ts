@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProfileService } from 'src/app/service/profile-service/profile.service';
-import { User } from 'src/app/model/user'
+import { User } from 'src/app/model/user';
 import { AuthenticationService } from 'src/app/service/authentication.service';
+import { ProfileService } from 'src/app/service/profile-service/profile.service';
+
 @Component({
-  selector: 'app-profiles',
-  templateUrl: './profiles.component.html',
-  styleUrls: ['./profiles.component.css']
+  selector: 'app-all-profiles',
+  templateUrl: './all-profiles.component.html',
+  styleUrls: ['./all-profiles.component.css']
 })
-export class ProfilesComponent implements OnInit {
+export class AllProfilesComponent implements OnInit {
 
   public profiles: User[] = [];
   public results: number = 0;
@@ -20,7 +21,7 @@ export class ProfilesComponent implements OnInit {
     public _router: Router,) { }
 
   ngOnInit(): void {
-    this.getPublicProfiles();
+    this.getAllProfiles();
     this.isLoggedIn();
     this.id = localStorage.getItem("id");
   }
@@ -35,8 +36,8 @@ export class ProfilesComponent implements OnInit {
   }
 
 
-  getPublicProfiles(): void {
-    this._profileService.getPublicProfiles().subscribe(
+  getAllProfiles(): void {
+    this._profileService.getAllProfiles().subscribe(
       response => {
         this.profiles = response.users;
         console.log(this.profiles);
@@ -49,7 +50,7 @@ export class ProfilesComponent implements OnInit {
 
   searchProfiles(): void {
     if (this.searchText === "") {
-      this.getPublicProfiles();
+      this.getAllProfiles();
     } else {
       this._profileService.searchProfiles(this.searchText).subscribe(
         response => {
@@ -62,12 +63,10 @@ export class ProfilesComponent implements OnInit {
 
   undoSearch(): void {
     this.searchText = "";
-    this.getPublicProfiles();
+    this.getAllProfiles();
   }
 
   viewFullProfile(id: string): void {
     this._router.navigate(['profile/' + id])
   }
-
-
 }
