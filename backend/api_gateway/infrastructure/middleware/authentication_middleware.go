@@ -86,6 +86,9 @@ func IsAuthenticated(handler *runtime.ServeMux) http.HandlerFunc {
 func isAProtectedRoute(method, path string) bool {
 	isPathToPostsOfPublicUser, _ := regexp.MatchString("/user/[0-9a-f]{24}/public", path)
 
+	isPathToConnection, _ := regexp.MatchString("/connection/[0-9a-f]+", path)
+	pathToConnections := "/connection"
+
 	isPathToJob, _ := regexp.MatchString("/job/[0-9a-f]+", path)
 	pathToAllJobs := "/job/jobs"
 	pathToJobAdding := "/job"
@@ -113,21 +116,25 @@ func isAProtectedRoute(method, path string) bool {
 
 	switch method {
 	case http.MethodGet:
-		if isPathToPostsOfPublicUser || path == "/post/public" || path == "/user/public" || isPathToJob ||
+		if isPathToPostsOfPublicUser || isPathToConnection || path == "/post/public" || path == "/user/public" || isPathToJob ||
 			path == pathToAllJobs || isPathToSearchOfJobsByUser || isPathToSearchOfJobsByDescription ||
 			isPathToSearchOfJobsByPosition || isPathToSearchOfJobsByRequirements || isPathToPostFromUser ||
 			isPathToAllPostsFromUser || isPathToCommentsOfPost || isPathToUser || path == pathToAllUsers ||
 			isPathToCheckOfPrivacyOfUser || path == pathToIdsOfAllPublicUsers ||
-			isPathToGenerationOfJobOffersAPIToken{
+			isPathToGenerationOfJobOffersAPIToken {
 			return false
 		}
 	case http.MethodPost:
-		if path == pathToJobAdding || path == "/user/register" || path == "/user/login" ||
-			path == "/user/search" || isPathToCommentsOfPost {
+		if path == pathToConnections || path == pathToJobAdding || path == "/user/register" ||
+			path == "/user/login" || path == "/user/search" || isPathToCommentsOfPost {
 			return false
 		}
 	case http.MethodPut:
-		if path == pathToJobEdit || isPathToLikeOrDislikeOfPost {
+		if isPathToConnection || path == pathToJobEdit || isPathToLikeOrDislikeOfPost {
+			return false
+		}
+	case http.MethodDelete:
+		if isPathToConnection {
 			return false
 		}
 	}
