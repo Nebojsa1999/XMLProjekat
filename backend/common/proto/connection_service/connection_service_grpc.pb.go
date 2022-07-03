@@ -22,10 +22,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConnectionServiceClient interface {
-	GetByUserId(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
-	GetFollowingByUserId(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
-	GetFollowersByUserId(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
-	GetFollowingUsersIds(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetFollowingUsersIdsResponse, error)
+	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
+	GetByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
+	GetFollowingByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
+	GetFollowersByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
+	GetFollowingUsersIds(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetFollowingUsersIdsResponse, error)
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
@@ -39,8 +40,17 @@ func NewConnectionServiceClient(cc grpc.ClientConnInterface) ConnectionServiceCl
 	return &connectionServiceClient{cc}
 }
 
-func (c *connectionServiceClient) GetByUserId(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error) {
+func (c *connectionServiceClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error) {
 	out := new(GetResponse)
+	err := c.cc.Invoke(ctx, "/connection.ConnectionService/Get", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *connectionServiceClient) GetByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error) {
+	out := new(GetMultipleResponse)
 	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetByUserId", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -48,8 +58,8 @@ func (c *connectionServiceClient) GetByUserId(ctx context.Context, in *GetReques
 	return out, nil
 }
 
-func (c *connectionServiceClient) GetFollowingByUserId(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error) {
-	out := new(GetResponse)
+func (c *connectionServiceClient) GetFollowingByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error) {
+	out := new(GetMultipleResponse)
 	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetFollowingByUserId", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -57,8 +67,8 @@ func (c *connectionServiceClient) GetFollowingByUserId(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *connectionServiceClient) GetFollowersByUserId(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error) {
-	out := new(GetResponse)
+func (c *connectionServiceClient) GetFollowersByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error) {
+	out := new(GetMultipleResponse)
 	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetFollowersByUserId", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -66,7 +76,7 @@ func (c *connectionServiceClient) GetFollowersByUserId(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *connectionServiceClient) GetFollowingUsersIds(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetFollowingUsersIdsResponse, error) {
+func (c *connectionServiceClient) GetFollowingUsersIds(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetFollowingUsersIdsResponse, error) {
 	out := new(GetFollowingUsersIdsResponse)
 	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetFollowingUsersIds", in, out, opts...)
 	if err != nil {
@@ -106,10 +116,11 @@ func (c *connectionServiceClient) Delete(ctx context.Context, in *DeleteRequest,
 // All implementations must embed UnimplementedConnectionServiceServer
 // for forward compatibility
 type ConnectionServiceServer interface {
-	GetByUserId(context.Context, *GetRequest) (*GetResponse, error)
-	GetFollowingByUserId(context.Context, *GetRequest) (*GetResponse, error)
-	GetFollowersByUserId(context.Context, *GetRequest) (*GetResponse, error)
-	GetFollowingUsersIds(context.Context, *GetRequest) (*GetFollowingUsersIdsResponse, error)
+	Get(context.Context, *GetRequest) (*GetResponse, error)
+	GetByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error)
+	GetFollowingByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error)
+	GetFollowersByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error)
+	GetFollowingUsersIds(context.Context, *GetByUserIdRequest) (*GetFollowingUsersIdsResponse, error)
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
@@ -120,16 +131,19 @@ type ConnectionServiceServer interface {
 type UnimplementedConnectionServiceServer struct {
 }
 
-func (UnimplementedConnectionServiceServer) GetByUserId(context.Context, *GetRequest) (*GetResponse, error) {
+func (UnimplementedConnectionServiceServer) Get(context.Context, *GetRequest) (*GetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedConnectionServiceServer) GetByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByUserId not implemented")
 }
-func (UnimplementedConnectionServiceServer) GetFollowingByUserId(context.Context, *GetRequest) (*GetResponse, error) {
+func (UnimplementedConnectionServiceServer) GetFollowingByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowingByUserId not implemented")
 }
-func (UnimplementedConnectionServiceServer) GetFollowersByUserId(context.Context, *GetRequest) (*GetResponse, error) {
+func (UnimplementedConnectionServiceServer) GetFollowersByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowersByUserId not implemented")
 }
-func (UnimplementedConnectionServiceServer) GetFollowingUsersIds(context.Context, *GetRequest) (*GetFollowingUsersIdsResponse, error) {
+func (UnimplementedConnectionServiceServer) GetFollowingUsersIds(context.Context, *GetByUserIdRequest) (*GetFollowingUsersIdsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowingUsersIds not implemented")
 }
 func (UnimplementedConnectionServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
@@ -154,8 +168,26 @@ func RegisterConnectionServiceServer(s grpc.ServiceRegistrar, srv ConnectionServ
 	s.RegisterService(&ConnectionService_ServiceDesc, srv)
 }
 
-func _ConnectionService_GetByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ConnectionService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConnectionServiceServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/connection.ConnectionService/Get",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConnectionServiceServer).Get(ctx, req.(*GetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ConnectionService_GetByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByUserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -167,13 +199,13 @@ func _ConnectionService_GetByUserId_Handler(srv interface{}, ctx context.Context
 		FullMethod: "/connection.ConnectionService/GetByUserId",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnectionServiceServer).GetByUserId(ctx, req.(*GetRequest))
+		return srv.(ConnectionServiceServer).GetByUserId(ctx, req.(*GetByUserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ConnectionService_GetFollowingByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRequest)
+	in := new(GetByUserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -185,13 +217,13 @@ func _ConnectionService_GetFollowingByUserId_Handler(srv interface{}, ctx contex
 		FullMethod: "/connection.ConnectionService/GetFollowingByUserId",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnectionServiceServer).GetFollowingByUserId(ctx, req.(*GetRequest))
+		return srv.(ConnectionServiceServer).GetFollowingByUserId(ctx, req.(*GetByUserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ConnectionService_GetFollowersByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRequest)
+	in := new(GetByUserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -203,13 +235,13 @@ func _ConnectionService_GetFollowersByUserId_Handler(srv interface{}, ctx contex
 		FullMethod: "/connection.ConnectionService/GetFollowersByUserId",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnectionServiceServer).GetFollowersByUserId(ctx, req.(*GetRequest))
+		return srv.(ConnectionServiceServer).GetFollowersByUserId(ctx, req.(*GetByUserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ConnectionService_GetFollowingUsersIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRequest)
+	in := new(GetByUserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -221,7 +253,7 @@ func _ConnectionService_GetFollowingUsersIds_Handler(srv interface{}, ctx contex
 		FullMethod: "/connection.ConnectionService/GetFollowingUsersIds",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnectionServiceServer).GetFollowingUsersIds(ctx, req.(*GetRequest))
+		return srv.(ConnectionServiceServer).GetFollowingUsersIds(ctx, req.(*GetByUserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -287,6 +319,10 @@ var ConnectionService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "connection.ConnectionService",
 	HandlerType: (*ConnectionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Get",
+			Handler:    _ConnectionService_Get_Handler,
+		},
 		{
 			MethodName: "GetByUserId",
 			Handler:    _ConnectionService_GetByUserId_Handler,

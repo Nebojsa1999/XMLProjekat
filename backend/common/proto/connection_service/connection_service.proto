@@ -8,22 +8,27 @@ import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
 service ConnectionService{
-  rpc GetByUserId(GetRequest) returns(GetResponse) {
+  rpc Get(GetRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      get: "/connection/{id}"
+    };
+  }
+  rpc GetByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
     option (google.api.http) = {
       get: "/connection/{userId}"
     };
   }
-  rpc GetFollowingByUserId(GetRequest) returns(GetResponse) {
+  rpc GetFollowingByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
     option (google.api.http) = {
       get: "/connection/{userId}/following"
     };
   }
-  rpc GetFollowersByUserId(GetRequest) returns(GetResponse) {
+  rpc GetFollowersByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
     option (google.api.http) = {
       get: "/connection/{userId}/followers"
     };
   }
-  rpc GetFollowingUsersIds(GetRequest) returns(GetFollowingUsersIdsResponse) {
+  rpc GetFollowingUsersIds(GetByUserIdRequest) returns(GetFollowingUsersIdsResponse) {
     option (google.api.http) = {
       get: "/connection/{userId}/following-users-ids"
     };
@@ -47,10 +52,18 @@ service ConnectionService{
 }
 
 message GetRequest {
-  string userId = 1;
+  string id = 1;
 }
 
 message GetResponse {
+  Connection connection = 1;
+}
+
+message GetByUserIdRequest {
+  string userId = 1;
+}
+
+message GetMultipleResponse {
   repeated Connection connections = 1;
 }
 
