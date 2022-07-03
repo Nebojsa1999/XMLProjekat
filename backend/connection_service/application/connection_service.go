@@ -1,6 +1,7 @@
 package application
 
 import (
+	"fmt"
 	"github.com/Nebojsa1999/XMLProjekat/backend/connection_service/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -15,11 +16,29 @@ func NewConnectionService(store domain.ConnectionStore) *ConnectionService {
 	}
 }
 
-func (service *ConnectionService) Get(userId string) ([]*domain.Connection, error) {
-	return service.store.Get(userId)
+func (service *ConnectionService) Get(id primitive.ObjectID) (*domain.Connection, error) {
+	return service.store.Get(id)
+}
+
+func (service *ConnectionService) GetByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	return service.store.GetByUserId(userId)
+}
+
+func (service *ConnectionService) GetFollowingByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	return service.store.GetFollowingByUserId(userId)
+}
+
+func (service *ConnectionService) GetFollowersByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	return service.store.GetFollowersByUserId(userId)
 }
 
 func (service *ConnectionService) Create(connection *domain.Connection) (*domain.Connection, error) {
+	existingConnection, _ := service.store.Get(connection.Id)
+	connection.Id = primitive.NewObjectID()
+	if existingConnection != nil {
+		return nil, fmt.Errorf("connection with the same id already exists")
+	}
+
 	return service.store.Create(connection)
 }
 
@@ -27,8 +46,15 @@ func (service *ConnectionService) Delete(id string) error {
 	return service.store.Delete(id)
 }
 
-func (service *ConnectionService) Update(id string) (*domain.Connection, error) {
-	return service.store.Update(id)
+func (service *ConnectionService) Update(id primitive.ObjectID) (*domain.Connection, error) {
+	connectionInDatabase, _ := service.store.Get(id)
+	if connectionInDatabase == nil {
+		return nil, fmt.Errorf("connection with given id does not exist")
+	}
+
+	connectionInDatabase.IsApproved = !connectionInDatabase.IsApproved
+
+	return service.store.Update(connectionInDatabase)
 }
 
 func (service *ConnectionService) UpdatePrivacy(id primitive.ObjectID) error {
