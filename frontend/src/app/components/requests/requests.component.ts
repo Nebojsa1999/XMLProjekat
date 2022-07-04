@@ -2,17 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/model/user';
 import { ConnectionService } from 'src/app/service/connection-service/connection.service';
 import { ProfileService } from 'src/app/service/profile-service/profile.service';
+import { ConnectionDTO } from '../dto/connection.dto';
 
 @Component({
-  selector: 'app-connections',
-  templateUrl: './connections.component.html',
-  styleUrls: ['./connections.component.css']
+  selector: 'app-requests',
+  templateUrl: './requests.component.html',
+  styleUrls: ['./requests.component.css']
 })
-export class ConnectionsComponent implements OnInit {
+export class RequestsComponent implements OnInit {
   private id: any;
   public connectionsId: string="";
   connections: User[] = [];
   numberOfConnections: number = 0;
+  private requestDTO: ConnectionDTO = {
+    issuerId : "",
+    subjectId : "",
+    isApproved : false
+  }
+
 
   constructor(private _connectionService: ConnectionService,
               private _profileService: ProfileService) { }
@@ -23,13 +30,14 @@ export class ConnectionsComponent implements OnInit {
   }
 
   getConnections(userId: string): void {
-    this._connectionService.getConnections(userId).subscribe(
+    this._connectionService.getConnectionsRequest(userId).subscribe(
       response => {
         console.log(response);
         for(let i = 0;i<response.connections.length;i++){
-          if(response.connections[i].isApproved == true){
+          if(response.connections[i].isApproved == false){
             this.connectionsId = response.connections[i].id;
-            this.getConnectionProfiles(response.connections[i].subjectId);
+            console.log(this.connectionsId)
+            this.getConnectionProfiles(response.connections[i].issuerId);
           }
         }
    
@@ -49,14 +57,24 @@ export class ConnectionsComponent implements OnInit {
       )
     }
 
-  deleteConnection(id:string):void{
-    this._connectionService.deleteConnection(id).subscribe(
-      response=>{
-        console.log("deleted connection");
+    acceptRequest(requestId: string): void {
+      this.requestDTO.isApproved=true;
+      this._connectionService.editRequest(requestId,this.requestDTO).subscribe(
+        response => {
+          console.log(response);
+        }
+      )
+      window.location.reload();
+  }
+
+  declineRequest(requestId: string): void {
+    this.requestDTO.isApproved=false;
+    this._connectionService.editRequest(requestId,this.requestDTO).subscribe(
+      response => {
+        console.log(response);
       }
     )
     window.location.reload();
-  }
-  }
-
+}
+}
 

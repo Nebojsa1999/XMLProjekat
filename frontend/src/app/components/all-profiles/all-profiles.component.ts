@@ -19,6 +19,7 @@ export class AllProfilesComponent implements OnInit {
   isAuthenticated = false;
   private id: any;
   isProfileOwner = false; 
+  // isFollowing = false;
 
   private connectionDTO: ConnectionDTO = {
     issuerId : "",
@@ -33,6 +34,7 @@ export class AllProfilesComponent implements OnInit {
     this.getAllProfiles();
     this.isLoggedIn();
     this.id = localStorage.getItem("id");
+    // this.isFollowingUser(this.id);
   }
   
   isLoggedIn() : void{
@@ -98,5 +100,19 @@ export class AllProfilesComponent implements OnInit {
       )
     }
   }
+
+  // isFollowingUser(userId: string): void {
+  //   this._connectionService.getConnections(userId).subscribe(
+  //     response => {
+  //       console.log(response);
+  //       for(let i = 0;i<response.connections.length;i++){
+  //         if(response.connections[i].isApproved == true){
+  //           this.isFollowing=true;
+  //           console.log(this.isFollowing)
+  //         }
+  //       } 
+  //     }
+  //   )
+  // }
 
 }

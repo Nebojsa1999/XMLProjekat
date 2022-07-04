@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
       //  localStorage.setItem('username', tokenInfo.username);
         //localStorage.setItem('exp', tokenInfo.exp);
 
-        this.router.navigateByUrl('/').then(() => { window.location.reload(); });
+        this.router.navigateByUrl('/allprofiles').then(() => { window.location.reload(); });
       },
       error => {
         this.isSubmitted = false;

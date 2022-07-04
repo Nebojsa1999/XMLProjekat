@@ -33,6 +33,7 @@ import { AddJobComponent } from './modal/add-job/add-job.component';
 import { AllProfilesComponent } from './components/all-profiles/all-profiles.component';
 import { JobTokenDialogComponent } from './modal/job-token-dialog/job-token-dialog.component';
 import { ConnectionsComponent } from './components/connections/connections.component';
+import { RequestsComponent } from './components/requests/requests.component';
 
 
 
@@ -50,6 +51,7 @@ import { ConnectionsComponent } from './components/connections/connections.compo
     AllProfilesComponent,
     JobTokenDialogComponent,
     ConnectionsComponent,
+    RequestsComponent,
    
   ],
   imports: [

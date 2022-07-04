@@ -1,6 +1,6 @@
 <div style="margin-inline: 20%; margin-top: 2%;">
     <div class="profiles-container">
-        <h2 style="font-size:20px; font-weight: 200; padding-inline: 2%; padding-top: 2%;">{{connections.length}} Connection(s)</h2>
+        <h2 style="font-size:20px; font-weight: 200; padding-inline: 2%; padding-top: 2%;">{{connections.length}} Request(s)</h2>
 
         <div *ngFor="let connection of connections">
             <hr color="#c5c5c5" size="1" style="width: 97%;">
@@ -15,9 +15,8 @@
 
                 </div>
                 <div class="flex-item-right">
-                    <button mat-stroked-button color="primary">Message </button>
-                    <button mat-stroked-button color="primary">Block </button>
-                    <button mat-stroked-button color="primary" (click)="deleteConnection(this.connectionsId)">Remove </button>
+                    <button mat-stroked-button color="primary" (click)="acceptRequest(this.connectionsId)">Approve </button>
+                    <button mat-stroked-button color="primary" (click)="declineRequest(this.connectionsId)">Decline </button>
                 </div>
             </div>
         </div>
@@ -25,3 +24,4 @@
     </div>
     <br>
 </div>
+
