@@ -118,14 +118,6 @@ func (handler *ConnectionHandler) Create(ctx context.Context, request *pb.Create
 		return nil, err
 	}
 
-	if newConnection.IsApproved {
-		_, err = handler.service.Create(newConnection)
-		if err != nil {
-			handler.service.Delete(newConnection.Id.Hex())
-			return nil, err
-		}
-	}
-
 	return &pb.CreateResponse{Connection: mapDomainConnectionToPbConnection(newConnection)}, nil
 }
 
