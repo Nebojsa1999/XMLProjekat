@@ -29,24 +29,31 @@ func NewConnectionMongoDBStore(client *mongo.Client) domain.ConnectionStore {
 	}
 }
 
-func (store *ConnectionMongoDBStore) Get(userId string) ([]*domain.Connection, error) {
-	id, err := primitive.ObjectIDFromHex(userId)
-	if err != nil {
-		return nil, err
-	}
+func (store *ConnectionMongoDBStore) Get(id primitive.ObjectID) (*domain.Connection, error) {
+	filter := bson.M{"_id": id}
 
-	filter := bson.M{"$or": []bson.M{{"subject_id": id}, {"issuer_id": id}}}
+	return store.filterOneConnection(filter)
+}
 
-	return store.filter(filter)
+func (store *ConnectionMongoDBStore) GetByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	filter := bson.M{"$or": []bson.M{{"issuer_id": userId}, {"subject_id": userId}}}
+
+	return store.filterConnections(filter)
+}
+
+func (store *ConnectionMongoDBStore) GetFollowingByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	filter := bson.M{"issuer_id": userId}
+
+	return store.filterConnections(filter)
+}
+
+func (store *ConnectionMongoDBStore) GetFollowersByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	filter := bson.M{"subject_id": userId}
+
+	return store.filterConnections(filter)
 }
 
 func (store *ConnectionMongoDBStore) Create(connection *domain.Connection) (*domain.Connection, error) {
-	//filter := bson.M{"user_id": connection.SubjectId}
-	//privacy, err := store.filterOnePrivacy(filter)
-	//if err != nil {
-	//	return nil, err
-	//}
-	connection.IsApproved = true
 	result, err := store.connections.InsertOne(context.TODO(), connection)
 	if err != nil {
 		return nil, err
@@ -97,26 +104,16 @@ func (store *ConnectionMongoDBStore) Delete(id string) error {
 	return nil
 }
 
-func (store *ConnectionMongoDBStore) Update(id string) (*domain.Connection, error) {
-	Id, err := primitive.ObjectIDFromHex(id)
+func (store *ConnectionMongoDBStore) Update(updatedConnection *domain.Connection) (*domain.Connection, error) {
+	filter := bson.M{"_id": updatedConnection.Id}
+	update := bson.M{"$set": updatedConnection}
+
+	_, err := store.connections.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		return nil, err
 	}
 
-	filter := bson.M{"_id": Id}
-	connection, err := store.filterOne(filter)
-	if err != nil {
-		return nil, err
-	}
-
-	connection.IsApproved = !connection.IsApproved
-	_, err = store.connections.UpdateOne(context.TODO(), filter, bson.D{{"$set",
-		bson.M{"is_approved": connection.IsApproved}}})
-	if err != nil {
-		return nil, err
-	}
-
-	return connection, nil
+	return updatedConnection, nil
 }
 
 func (store *ConnectionMongoDBStore) UpdatePrivacy(id primitive.ObjectID) error {
@@ -156,14 +153,9 @@ func (store *ConnectionMongoDBStore) DeleteProfilePrivacy(id primitive.ObjectID)
 	return nil
 }
 
-func (store *ConnectionMongoDBStore) filter(filter interface{}) ([]*domain.Connection, error) {
+func (store *ConnectionMongoDBStore) filterConnections(filter interface{}) ([]*domain.Connection, error) {
 	cursor, err := store.connections.Find(context.TODO(), filter)
-	defer func(cursor *mongo.Cursor, ctx context.Context) {
-		err := cursor.Close(ctx)
-		if err != nil {
-			return
-		}
-	}(cursor, context.TODO())
+	defer cursor.Close(context.TODO())
 
 	if err != nil {
 		return nil, err
@@ -172,18 +164,24 @@ func (store *ConnectionMongoDBStore) filter(filter interface{}) ([]*domain.Conne
 	return decode(cursor)
 }
 
-func (store *ConnectionMongoDBStore) filterOne(filter interface{}) (connection *domain.Connection, err error) {
+func (store *ConnectionMongoDBStore) filterOneConnection(filter interface{}) (connection *domain.Connection, err error) {
 	result := store.connections.FindOne(context.TODO(), filter)
 	err = result.Decode(&connection)
+	if err != nil {
+		return nil, nil
+	}
 
-	return
+	return connection, nil
 }
 
 func (store *ConnectionMongoDBStore) filterOnePrivacy(filter interface{}) (privacy *domain.ProfilePrivacy, err error) {
 	result := store.profilesPrivacy.FindOne(context.TODO(), filter)
 	err = result.Decode(&privacy)
+	if err != nil {
+		return nil, nil
+	}
 
-	return
+	return privacy, nil
 }
 
 func decode(cursor *mongo.Cursor) (connections []*domain.Connection, err error) {
