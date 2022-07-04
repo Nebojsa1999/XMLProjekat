@@ -68,8 +68,15 @@ func (service *ConnectionService) Update(id primitive.ObjectID) (*domain.Connect
 	return service.store.Update(connectionInDatabase)
 }
 
-func (service *ConnectionService) UpdatePrivacy(id primitive.ObjectID) error {
-	return service.store.UpdatePrivacy(id)
+func (service *ConnectionService) UpdatePrivacy(modifiedPrivacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
+	privacyInDatabase, _ := service.store.GetPrivacy(modifiedPrivacy.Id)
+	if privacyInDatabase == nil {
+		return nil, fmt.Errorf("profile privacy with given id does not exist")
+	}
+
+	privacyInDatabase.IsPrivate = !privacyInDatabase.IsPrivate
+
+	return service.store.UpdatePrivacy(modifiedPrivacy)
 }
 
 func (service *ConnectionService) CreateProfilePrivacy(privacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {

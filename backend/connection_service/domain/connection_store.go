@@ -9,11 +9,11 @@ type ConnectionStore interface {
 	GetFollowingByUserId(userId primitive.ObjectID) ([]*Connection, error)
 	GetFollowersByUserId(userId primitive.ObjectID) ([]*Connection, error)
 	Create(connection *Connection) (*Connection, error)
-	CreatePrivacy(privacy *ProfilePrivacy) (*ProfilePrivacy, error)
+	Update(updatedConnection *Connection) (*Connection, error)
 	Delete(id string) error
 	DeleteAll() error
-	Update(updatedConnection *Connection) (*Connection, error)
+	GetPrivacy(id primitive.ObjectID) (*ProfilePrivacy, error)
 	CreateProfilePrivacy(privacy *ProfilePrivacy) (*ProfilePrivacy, error)
 	DeleteProfilePrivacy(id primitive.ObjectID) error
-	UpdatePrivacy(id primitive.ObjectID) error
+	UpdatePrivacy(updatedPrivacy *ProfilePrivacy) (*ProfilePrivacy, error)
 }
