@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AllProfilesComponent } from './components/all-profiles/all-profiles.component';
+import { ConnectionsComponent } from './components/connections/connections.component';
 import { JobsComponent } from './components/jobs/jobs.component';
 import { LoginComponent } from './components/login/login.component';
 import { PostsComponent } from './components/posts/posts.component';
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'profiles' , component: ProfilesComponent},
   { path: 'allprofiles',component: AllProfilesComponent},
   { path: 'profile/:id' , component: ProfileComponent},
+  { path: 'connections' , component: ConnectionsComponent},
   { path: 'login', component: LoginComponent},
   { path: 'posts', component: PostsComponent},
   { path: '', redirectTo: 'profiles', pathMatch: 'full'},

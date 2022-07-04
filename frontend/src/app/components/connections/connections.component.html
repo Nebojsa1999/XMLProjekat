@@ -1,0 +1,36 @@
+<div style="margin-inline: 20%; margin-top: 2%;">
+    <div class="profiles-container">
+        <h2 style="font-size:20px; font-weight: 200; padding-inline: 2%; padding-top: 2%;">1 Connection(s)</h2>
+
+        <div *ngFor="let connection of connections">
+            <hr color="#c5c5c5" size="1" style="width: 97%;">
+            <div class="flex-container">
+                <div class="flex-item-left profile-picture">
+                    <img src="../../../assets/images/profile.jpg" class="profile-picture" />
+                </div>
+                <div class="flex-item-center">
+                    <p style="font-size: large; font-weight: 400;">{{connection.firstName}} {{connection.lastName}}</p>
+    
+                    <p style="margin-block: 0.5%;">Serbia</p>
+                    <p style="margin-block: 0.5%;">17 shared connections</p>
+                </div>
+                <div class="flex-item-right">
+                    <button mat-stroked-button color="primary" style="margin: 2%;">Message </button>
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item>
+                            <span>Remove</span>
+                        </button>
+                        <button mat-menu-item>
+                            <span>Block</span>
+                        </button>
+                    </mat-menu>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <br>
+</div>

@@ -13,7 +13,7 @@ export class ConnectionService {
   constructor(private _http: HttpClient) { }
 
   getConnections(userId: string): Observable<any> {
-    return this._http.get<any>(this.applicationURL + "/connection/" + userId);
+    return this._http.get<any>(this.applicationURL + "/connection/" + userId + "/following");
   }
 
   makeConnection(request: ConnectionDTO): Observable<any> {
