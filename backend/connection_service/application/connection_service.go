@@ -20,6 +20,10 @@ func (service *ConnectionService) Get(id primitive.ObjectID) (*domain.Connection
 	return service.store.Get(id)
 }
 
+func (service *ConnectionService) GetAll() ([]*domain.Connection, error) {
+	return service.store.GetAll()
+}
+
 func (service *ConnectionService) GetByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
 	return service.store.GetByUserId(userId)
 }
@@ -37,6 +41,13 @@ func (service *ConnectionService) Create(connection *domain.Connection) (*domain
 	connection.Id = primitive.NewObjectID()
 	if existingConnection != nil {
 		return nil, fmt.Errorf("connection with the same id already exists")
+	}
+
+	allConnections, _ := service.store.GetAll()
+	for _, c := range allConnections {
+		if c.IssuerId == connection.IssuerId && c.SubjectId == connection.SubjectId {
+			return nil, fmt.Errorf("same connection already exists")
+		}
 	}
 
 	return service.store.Create(connection)
@@ -57,8 +68,15 @@ func (service *ConnectionService) Update(id primitive.ObjectID) (*domain.Connect
 	return service.store.Update(connectionInDatabase)
 }
 
-func (service *ConnectionService) UpdatePrivacy(id primitive.ObjectID) error {
-	return service.store.UpdatePrivacy(id)
+func (service *ConnectionService) UpdatePrivacy(modifiedPrivacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
+	privacyInDatabase, _ := service.store.GetPrivacy(modifiedPrivacy.Id)
+	if privacyInDatabase == nil {
+		return nil, fmt.Errorf("profile privacy with given id does not exist")
+	}
+
+	privacyInDatabase.IsPrivate = !privacyInDatabase.IsPrivate
+
+	return service.store.UpdatePrivacy(modifiedPrivacy)
 }
 
 func (service *ConnectionService) CreateProfilePrivacy(privacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {

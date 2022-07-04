@@ -38,6 +38,24 @@ func (handler *ConnectionHandler) Get(ctx context.Context, request *pb.GetReques
 	return response, nil
 }
 
+func (handler *ConnectionHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetMultipleResponse, error) {
+	connections, err := handler.service.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &pb.GetMultipleResponse{
+		Connections: []*pb.Connection{},
+	}
+
+	for _, connection := range connections {
+		current := mapDomainConnectionToPbConnection(connection)
+		response.Connections = append(response.Connections, current)
+	}
+
+	return response, nil
+}
+
 func (handler *ConnectionHandler) GetByUserId(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
 	userId := request.UserId
 	objectId, err := primitive.ObjectIDFromHex(userId)

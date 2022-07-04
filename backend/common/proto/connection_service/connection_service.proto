@@ -13,6 +13,11 @@ service ConnectionService{
       get: "/connection/{id}"
     };
   }
+  rpc GetAll(GetAllRequest) returns(GetMultipleResponse) {
+    option (google.api.http) = {
+      get: "/connection"
+    };
+  }
   rpc GetByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
     option (google.api.http) = {
       get: "/connection/{userId}"
@@ -53,6 +58,9 @@ service ConnectionService{
 
 message GetRequest {
   string id = 1;
+}
+
+message GetAllRequest {
 }
 
 message GetResponse {
