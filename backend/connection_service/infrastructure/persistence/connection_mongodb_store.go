@@ -168,7 +168,7 @@ func (store *ConnectionMongoDBStore) filterOneConnection(filter interface{}) (co
 	result := store.connections.FindOne(context.TODO(), filter)
 	err = result.Decode(&connection)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 
 	return connection, nil
