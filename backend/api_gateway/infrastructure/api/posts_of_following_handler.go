@@ -72,7 +72,9 @@ func (handler *PostsOfFollowingHandler) getFollowingUsersIds(request *domain.Get
 		return err
 	}
 
-	request.FollowingIds = followingUsersIdsResponse.Ids
+	for _, id := range followingUsersIdsResponse.Ids {
+		request.FollowingIds = append(request.FollowingIds, id)
+	}
 
 	return nil
 }
@@ -90,11 +92,17 @@ func (handler *PostsOfFollowingHandler) getAllPostsOfFollowingUsers(request *dom
 		}
 
 		if allPostsOfOneUserResponse.Posts != nil {
-			allPostsCollection = append(allPostsCollection, allPostsOfOneUserResponse.Posts)
+			allPostsCollection = append(allPostsCollection, allPostsOfOneUserResponse.Posts...)
 		}
 	}
 
 	request.PostsOfFollowingUsers = allPostsCollection
 
 	return nil
+}
+
+func (handler *PostsOfFollowingHandler) convert(posts []*postingPb.Post) []*domain.Post {
+	var convertedPosts []*domain.Post
+
+	return convertedPosts
 }
