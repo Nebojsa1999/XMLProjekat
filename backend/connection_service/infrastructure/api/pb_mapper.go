@@ -27,6 +27,22 @@ func mapPbConnectionToDomainConnection(pbConnection *pb.Connection) *domain.Conn
 	}
 }
 
+func mapDomainConnectionUpdateDTOToPbConnectionUpdateDTO(connectionUpdateDTO *domain.ConnectionUpdateDTO) *pb.ConnectionUpdateDTO {
+	return &pb.ConnectionUpdateDTO{
+		IssuerId:  connectionUpdateDTO.IssuerId.Hex(),
+		SubjectId: connectionUpdateDTO.SubjectId.Hex(),
+		IsApproved:  connectionUpdateDTO.IsApproved,
+	}
+}
+
+func mapPbConnectionUpdateDTOToDomainConnectionUpdateDTO(pbConnectionUpdateDTO *pb.ConnectionUpdateDTO) *domain.ConnectionUpdateDTO {
+	return &domain.ConnectionUpdateDTO{
+		IssuerId:  getObjectId(pbConnectionUpdateDTO.IssuerId),
+		SubjectId: getObjectId(pbConnectionUpdateDTO.SubjectId),
+		IsApproved:  pbConnectionUpdateDTO.IsApproved,
+	}
+}
+
 func getObjectId(id string) primitive.ObjectID {
 	if objectId, err := primitive.ObjectIDFromHex(id); err == nil {
 		return objectId
