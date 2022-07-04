@@ -43,6 +43,10 @@ func (service *ConnectionService) Create(connection *domain.Connection) (*domain
 		return nil, fmt.Errorf("connection with the same id already exists")
 	}
 
+	if connection.IssuerId == connection.SubjectId {
+		return nil, fmt.Errorf("user cannot follow themselves")
+	}
+
 	allConnections, _ := service.store.GetAll()
 	for _, c := range allConnections {
 		if c.IssuerId == connection.IssuerId && c.SubjectId == connection.SubjectId {
