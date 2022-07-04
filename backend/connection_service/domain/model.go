@@ -13,6 +13,12 @@ type Connection struct {
 	IsApproved bool               `json:"isApproved" bson:"is_approved"`
 }
 
+type ConnectionUpdateDTO struct {
+	IssuerId   primitive.ObjectID
+	SubjectId  primitive.ObjectID
+	IsApproved bool
+}
+
 type ProfilePrivacy struct {
 	Id        primitive.ObjectID `json:"id" bson:"_id"`
 	UserId    primitive.ObjectID `json:"userId" bson:"user_id"`

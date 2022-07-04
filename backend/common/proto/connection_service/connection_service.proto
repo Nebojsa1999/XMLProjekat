@@ -40,18 +40,19 @@ service ConnectionService{
   }
   rpc Create(CreateRequest) returns(CreateResponse) {
     option (google.api.http) = {
-      post: "/connection"
+      post: "/connection",
       body: "connection"
     };
   }
   rpc Update(UpdateRequest) returns(UpdateResponse) {
     option (google.api.http) = {
-      put: "/connection/{id}"
+      put: "/connection",
+      body: "connectionUpdateDTO"
     };
   }
   rpc Delete(DeleteRequest) returns(DeleteResponse) {
     option (google.api.http) = {
-      delete: "/connection/{id}"
+      delete: "/connection"
     };
   }
 }
@@ -88,7 +89,7 @@ message CreateResponse {
 }
 
 message UpdateRequest {
-  string id = 1;
+  ConnectionUpdateDTO connectionUpdateDTO = 1;
 }
 
 message UpdateResponse {
@@ -96,7 +97,8 @@ message UpdateResponse {
 }
 
 message DeleteRequest {
-  string id = 1;
+  string issuerId = 1;
+  string subjectId = 2;
 }
 
 message DeleteResponse {
@@ -108,4 +110,10 @@ message Connection {
   string subjectId = 3;
   google.protobuf.Timestamp date = 4;
   bool isApproved = 5;
+}
+
+message ConnectionUpdateDTO {
+  string issuerId = 1;
+  string subjectId = 2;
+  bool isApproved = 3;
 }

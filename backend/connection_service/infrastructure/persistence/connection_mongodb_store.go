@@ -41,6 +41,12 @@ func (store *ConnectionMongoDBStore) GetAll() ([]*domain.Connection, error) {
 	return store.filterConnections(filter)
 }
 
+func (store *ConnectionMongoDBStore) GetByIssuerIdAndSubjectId(issuerId, subjectId primitive.ObjectID) (*domain.Connection, error) {
+	filter := bson.M{"issuer_id": issuerId, "subject_id": subjectId}
+
+	return store.filterOneConnection(filter)
+}
+
 func (store *ConnectionMongoDBStore) GetByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
 	filter := bson.M{"$or": []bson.M{{"issuer_id": userId}, {"subject_id": userId}}}
 
@@ -82,14 +88,10 @@ func (store *ConnectionMongoDBStore) Update(updatedConnection *domain.Connection
 	return updatedConnection, nil
 }
 
-func (store *ConnectionMongoDBStore) Delete(id string) error {
-	Id, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return err
-	}
+func (store *ConnectionMongoDBStore) Delete(id primitive.ObjectID) error {
+	filter := bson.M{"_id": id}
 
-	filter := bson.M{"_id": Id}
-	_, err = store.connections.DeleteOne(context.TODO(), filter)
+	_, err := store.connections.DeleteOne(context.TODO(), filter)
 	if err != nil {
 		return err
 	}
