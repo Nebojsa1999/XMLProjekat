@@ -4,6 +4,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type ConnectionStore interface {
 	Get(id primitive.ObjectID) (*Connection, error)
+	GetAll() ([]*Connection, error)
 	GetByUserId(userId primitive.ObjectID) ([]*Connection, error)
 	GetFollowingByUserId(userId primitive.ObjectID) ([]*Connection, error)
 	GetFollowersByUserId(userId primitive.ObjectID) ([]*Connection, error)

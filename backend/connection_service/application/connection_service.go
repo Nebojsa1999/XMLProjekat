@@ -20,6 +20,10 @@ func (service *ConnectionService) Get(id primitive.ObjectID) (*domain.Connection
 	return service.store.Get(id)
 }
 
+func (service *ConnectionService) GetAll() ([]*domain.Connection, error) {
+	return service.store.GetAll()
+}
+
 func (service *ConnectionService) GetByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
 	return service.store.GetByUserId(userId)
 }
@@ -37,6 +41,13 @@ func (service *ConnectionService) Create(connection *domain.Connection) (*domain
 	connection.Id = primitive.NewObjectID()
 	if existingConnection != nil {
 		return nil, fmt.Errorf("connection with the same id already exists")
+	}
+
+	allConnections, _ := service.store.GetAll()
+	for _, c := range allConnections {
+		if c.IssuerId == connection.IssuerId && c.SubjectId == connection.SubjectId {
+			return nil, fmt.Errorf("same connection already exists")
+		}
 	}
 
 	return service.store.Create(connection)

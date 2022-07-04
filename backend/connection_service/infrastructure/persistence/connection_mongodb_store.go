@@ -35,6 +35,12 @@ func (store *ConnectionMongoDBStore) Get(id primitive.ObjectID) (*domain.Connect
 	return store.filterOneConnection(filter)
 }
 
+func (store *ConnectionMongoDBStore) GetAll() ([]*domain.Connection, error) {
+	filter := bson.D{{}}
+
+	return store.filterConnections(filter)
+}
+
 func (store *ConnectionMongoDBStore) GetByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
 	filter := bson.M{"$or": []bson.M{{"issuer_id": userId}, {"subject_id": userId}}}
 
@@ -178,7 +184,7 @@ func (store *ConnectionMongoDBStore) filterOnePrivacy(filter interface{}) (priva
 	result := store.profilesPrivacy.FindOne(context.TODO(), filter)
 	err = result.Decode(&privacy)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 
 	return privacy, nil
