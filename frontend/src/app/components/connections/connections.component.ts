@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/model/user';
 import { ConnectionService } from 'src/app/service/connection-service/connection.service';
 import { ProfileService } from 'src/app/service/profile-service/profile.service';
+import { ConnectionDTO } from '../dto/connection.dto';
 
 @Component({
   selector: 'app-connections',
@@ -10,8 +11,8 @@ import { ProfileService } from 'src/app/service/profile-service/profile.service'
 })
 export class ConnectionsComponent implements OnInit {
   private id: any;
-  public connectionsId: string="";
-  connections: User[] = [];
+  public connectionsId: string[]=[];
+  users: User[] = [];
   numberOfConnections: number = 0;
 
   constructor(private _connectionService: ConnectionService,
@@ -28,7 +29,8 @@ export class ConnectionsComponent implements OnInit {
         console.log(response);
         for(let i = 0;i<response.connections.length;i++){
           if(response.connections[i].isApproved == true){
-            this.connectionsId = response.connections[i].id;
+            this.connectionsId.push(response.connections[i].id);
+            console.log(this.connectionsId)
             this.getConnectionProfiles(response.connections[i].subjectId);
           }
         }
@@ -42,14 +44,15 @@ export class ConnectionsComponent implements OnInit {
       this._profileService.getProfile(id).subscribe(
         response => {
           console.log(response.user)
-          this.connections.push(response.user);
-          console.log(  this.connections)
+          this.users.push(response.user);
+          console.log(  this.users)
          
         }
       )
     }
 
   deleteConnection(id:string):void{
+    console.log(id);
     this._connectionService.deleteConnection(id).subscribe(
       response=>{
         console.log("deleted connection");

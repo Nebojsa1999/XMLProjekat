@@ -89,6 +89,10 @@ export class AllProfilesComponent implements OnInit {
       this._connectionService.makeConnection(this.connectionDTO).subscribe(
         response => {
           console.log(response);
+          alert("Done");
+        },
+        error =>{ alert("Already sent request to this profile")
+
         }
       )
     } else {
@@ -96,7 +100,9 @@ export class AllProfilesComponent implements OnInit {
       this._connectionService.makeConnection(this.connectionDTO).subscribe(
         response => {
           console.log(response);
-        }
+          alert("Done");
+        },
+        error =>{ alert("Already sent request to this profile")}
       )
     }
   }
