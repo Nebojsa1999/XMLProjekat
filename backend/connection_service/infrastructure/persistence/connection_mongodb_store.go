@@ -35,6 +35,12 @@ func (store *ConnectionMongoDBStore) Get(id primitive.ObjectID) (*domain.Connect
 	return store.filterOneConnection(filter)
 }
 
+func (store *ConnectionMongoDBStore) GetAll() ([]*domain.Connection, error) {
+	filter := bson.D{{}}
+
+	return store.filterConnections(filter)
+}
+
 func (store *ConnectionMongoDBStore) GetByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
 	filter := bson.M{"$or": []bson.M{{"issuer_id": userId}, {"subject_id": userId}}}
 
@@ -64,29 +70,16 @@ func (store *ConnectionMongoDBStore) Create(connection *domain.Connection) (*dom
 	return connection, nil
 }
 
-func (store *ConnectionMongoDBStore) CreatePrivacy(privacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
-	result, err := store.profilesPrivacy.InsertOne(context.TODO(), privacy)
+func (store *ConnectionMongoDBStore) Update(updatedConnection *domain.Connection) (*domain.Connection, error) {
+	filter := bson.M{"_id": updatedConnection.Id}
+	update := bson.M{"$set": updatedConnection}
+
+	_, err := store.connections.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		return nil, err
 	}
 
-	privacy.Id = result.InsertedID.(primitive.ObjectID)
-
-	return privacy, nil
-}
-
-func (store *ConnectionMongoDBStore) DeleteAll() error {
-	_, err := store.connections.DeleteMany(context.TODO(), bson.D{{}})
-	if err != nil {
-		return err
-	}
-
-	_, err = store.profilesPrivacy.DeleteMany(context.TODO(), bson.D{{}})
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return updatedConnection, nil
 }
 
 func (store *ConnectionMongoDBStore) Delete(id string) error {
@@ -104,33 +97,36 @@ func (store *ConnectionMongoDBStore) Delete(id string) error {
 	return nil
 }
 
-func (store *ConnectionMongoDBStore) Update(updatedConnection *domain.Connection) (*domain.Connection, error) {
-	filter := bson.M{"_id": updatedConnection.Id}
-	update := bson.M{"$set": updatedConnection}
-
-	_, err := store.connections.UpdateOne(context.TODO(), filter, update)
-	if err != nil {
-		return nil, err
-	}
-
-	return updatedConnection, nil
-}
-
-func (store *ConnectionMongoDBStore) UpdatePrivacy(id primitive.ObjectID) error {
-	filter := bson.M{"user_id": id}
-	privacy, err := store.filterOnePrivacy(filter)
+func (store *ConnectionMongoDBStore) DeleteAll() error {
+	_, err := store.connections.DeleteMany(context.TODO(), bson.D{{}})
 	if err != nil {
 		return err
 	}
 
-	privacy.IsPrivate = !privacy.IsPrivate
-	_, err = store.profilesPrivacy.UpdateOne(context.TODO(), filter, bson.D{{"$set",
-		bson.M{"is_private": privacy.IsPrivate}}})
+	_, err = store.profilesPrivacy.DeleteMany(context.TODO(), bson.D{{}})
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (store *ConnectionMongoDBStore) GetPrivacy(id primitive.ObjectID) (*domain.ProfilePrivacy, error) {
+	filter := bson.M{"_id": id}
+
+	return store.filterOnePrivacy(filter)
+}
+
+func (store *ConnectionMongoDBStore) UpdatePrivacy(updatedPrivacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
+	filter := bson.M{"_id": updatedPrivacy.Id}
+	update := bson.M{"$set": updatedPrivacy}
+
+	_, err := store.profilesPrivacy.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedPrivacy, nil
 }
 
 func (store *ConnectionMongoDBStore) CreateProfilePrivacy(privacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
@@ -178,7 +174,7 @@ func (store *ConnectionMongoDBStore) filterOnePrivacy(filter interface{}) (priva
 	result := store.profilesPrivacy.FindOne(context.TODO(), filter)
 	err = result.Decode(&privacy)
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 
 	return privacy, nil
