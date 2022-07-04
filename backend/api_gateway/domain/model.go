@@ -58,3 +58,28 @@ type JobOffersAPITokenStatusRequest struct {
 	UserId            string
 	HasGeneratedToken bool
 }
+
+type Post struct {
+	Id            string
+	OwnerId       string
+	Content       string
+	Image         string
+	LikesCount    int
+	DislikesCount int
+	Comments      []*Comment
+	Link          []string
+	WhoLiked      []string
+	WhoDisliked   []string
+	PostedAt      string
+}
+
+type Comment struct {
+	Code    string
+	Content string
+}
+
+type GetPostsOfFollowingUsersRequest struct {
+	UserId                string
+	FollowingIds          []string
+	PostsOfFollowingUsers []*postingPb.Post
+}

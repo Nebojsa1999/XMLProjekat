@@ -67,7 +67,7 @@ func (server *Server) initCustomHandlers() {
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	postingEndpoint := fmt.Sprintf("%s:%s", server.config.PostingHost, server.config.PostingPort)
 	jobEndpoint := fmt.Sprintf("%s:%s", server.config.JobHost, server.config.JobPort)
-	//connectionEndpoint := fmt.Sprintf("%s:%s", server.config.ConnectionHost, server.config.ConnectionPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.ConnectionHost, server.config.ConnectionPort)
 
 	registerHandler := api.NewRegisterHandler(userEndpoint)
 	registerHandler.Init(server.mux)
@@ -77,6 +77,9 @@ func (server *Server) initCustomHandlers() {
 
 	postJobHandler := api.NewPostJobHandler(userEndpoint, jobEndpoint, postingEndpoint)
 	postJobHandler.Init(server.mux)
+
+	postsOfFollowingHandler := api.NewPostsOfFollowingHandler(connectionEndpoint, postingEndpoint)
+	postsOfFollowingHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {
