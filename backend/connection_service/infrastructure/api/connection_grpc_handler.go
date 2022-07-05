@@ -4,7 +4,6 @@ import (
 	"context"
 	pb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/connection_service"
 	"github.com/Nebojsa1999/XMLProjekat/backend/connection_service/application"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ConnectionHandler struct {
@@ -19,13 +18,9 @@ func NewConnectionHandler(service *application.ConnectionService) *ConnectionHan
 }
 
 func (handler *ConnectionHandler) Get(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
-	id := request.Id
-	objectId, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return nil, err
-	}
+	id := getObjectId(request.Id)
 
-	connection, err := handler.service.Get(objectId)
+	connection, err := handler.service.Get(id)
 	if err != nil {
 		return nil, err
 	}
@@ -57,13 +52,9 @@ func (handler *ConnectionHandler) GetAll(ctx context.Context, request *pb.GetAll
 }
 
 func (handler *ConnectionHandler) GetByUserId(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
-	userId := request.UserId
-	objectId, err := primitive.ObjectIDFromHex(userId)
-	if err != nil {
-		return nil, err
-	}
+	userId := getObjectId(request.UserId)
 
-	connections, err := handler.service.GetByUserId(objectId)
+	connections, err := handler.service.GetByUserId(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -81,13 +72,9 @@ func (handler *ConnectionHandler) GetByUserId(ctx context.Context, request *pb.G
 }
 
 func (handler *ConnectionHandler) GetFollowingByUserId(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
-	userId := request.UserId
-	objectId, err := primitive.ObjectIDFromHex(userId)
-	if err != nil {
-		return nil, err
-	}
+	userId := getObjectId(request.UserId)
 
-	connections, err := handler.service.GetFollowingByUserId(objectId)
+	connections, err := handler.service.GetFollowingByUserId(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -105,13 +92,9 @@ func (handler *ConnectionHandler) GetFollowingByUserId(ctx context.Context, requ
 }
 
 func (handler *ConnectionHandler) GetFollowersByUserId(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
-	userId := request.UserId
-	objectId, err := primitive.ObjectIDFromHex(userId)
-	if err != nil {
-		return nil, err
-	}
+	userId := getObjectId(request.UserId)
 
-	connections, err := handler.service.GetFollowersByUserId(objectId)
+	connections, err := handler.service.GetFollowersByUserId(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -139,28 +122,25 @@ func (handler *ConnectionHandler) Create(ctx context.Context, request *pb.Create
 	return &pb.CreateResponse{Connection: mapDomainConnectionToPbConnection(newConnection)}, nil
 }
 
-func (handler *ConnectionHandler) Delete(ctx context.Context, request *pb.DeleteRequest) (*pb.DeleteResponse, error) {
-	err := handler.service.Delete(request.Id)
-	if err != nil {
-		return nil, err
-	}
-
-	handler.service.Delete(request.Id)
-
-	return &pb.DeleteResponse{}, nil
-}
-
 func (handler *ConnectionHandler) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UpdateResponse, error) {
-	id := request.Id
-	objectId, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return nil, err
-	}
+	connectionUpdateDTO := mapPbConnectionUpdateDTOToDomainConnectionUpdateDTO(request.ConnectionUpdateDTO)
 
-	updatedConnection, err := handler.service.Update(objectId)
+	updatedConnection, err := handler.service.Update(connectionUpdateDTO)
 	if err != nil {
 		return nil, err
 	}
 
 	return &pb.UpdateResponse{Connection: mapDomainConnectionToPbConnection(updatedConnection)}, nil
+}
+
+func (handler *ConnectionHandler) Delete(ctx context.Context, request *pb.DeleteRequest) (*pb.DeleteResponse, error) {
+	issuerId := getObjectId(request.IssuerId)
+	subjectId := getObjectId(request.SubjectId)
+
+	err := handler.service.Delete(issuerId, subjectId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.DeleteResponse{}, nil
 }

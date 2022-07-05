@@ -43,6 +43,10 @@ func (service *ConnectionService) Create(connection *domain.Connection) (*domain
 		return nil, fmt.Errorf("connection with the same id already exists")
 	}
 
+	if connection.IssuerId == connection.SubjectId {
+		return nil, fmt.Errorf("user cannot follow themselves")
+	}
+
 	allConnections, _ := service.store.GetAll()
 	for _, c := range allConnections {
 		if c.IssuerId == connection.IssuerId && c.SubjectId == connection.SubjectId {
@@ -53,19 +57,29 @@ func (service *ConnectionService) Create(connection *domain.Connection) (*domain
 	return service.store.Create(connection)
 }
 
-func (service *ConnectionService) Delete(id string) error {
-	return service.store.Delete(id)
-}
-
-func (service *ConnectionService) Update(id primitive.ObjectID) (*domain.Connection, error) {
-	connectionInDatabase, _ := service.store.Get(id)
+func (service *ConnectionService) Update(connectionUpdateDTO *domain.ConnectionUpdateDTO) (*domain.Connection, error) {
+	connectionInDatabase, _ :=
+		service.store.GetByIssuerIdAndSubjectId(connectionUpdateDTO.IssuerId, connectionUpdateDTO.SubjectId)
 	if connectionInDatabase == nil {
-		return nil, fmt.Errorf("connection with given id does not exist")
+		return nil, fmt.Errorf("connection with given issuer id and subject id does not exist")
 	}
 
-	connectionInDatabase.IsApproved = !connectionInDatabase.IsApproved
+	connectionInDatabase.IsApproved = connectionUpdateDTO.IsApproved
 
 	return service.store.Update(connectionInDatabase)
+}
+
+func (service *ConnectionService) Delete(issuerId, subjectId primitive.ObjectID) error {
+	connectionInDatabase, _ := service.store.GetByIssuerIdAndSubjectId(issuerId, subjectId)
+	if connectionInDatabase == nil {
+		return fmt.Errorf("connection with given issuer id and subject id does not exist")
+	}
+
+	return service.store.Delete(connectionInDatabase.Id)
+}
+
+func (service *ConnectionService) CreateProfilePrivacy(privacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
+	return service.store.CreateProfilePrivacy(privacy)
 }
 
 func (service *ConnectionService) UpdatePrivacy(modifiedPrivacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
@@ -77,10 +91,6 @@ func (service *ConnectionService) UpdatePrivacy(modifiedPrivacy *domain.ProfileP
 	privacyInDatabase.IsPrivate = !privacyInDatabase.IsPrivate
 
 	return service.store.UpdatePrivacy(modifiedPrivacy)
-}
-
-func (service *ConnectionService) CreateProfilePrivacy(privacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
-	return service.store.CreateProfilePrivacy(privacy)
 }
 
 func (service *ConnectionService) DeleteProfilePrivacy(id primitive.ObjectID) error {
