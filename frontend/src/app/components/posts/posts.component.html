@@ -1,27 +1,28 @@
 <div class="feed">
 
-    <div *ngFor="let post of posts" >
+    <div *ngFor="let wrapper of wrappers" >
         <div class="feed-input-container">
             <div class="picture-name">
                 <p class="profile-pic">
                     <img src="../../../assets/images/profile.jpg" class="profile-picture" />
+                    <label>{{ wrapper.user.firstName}} {{ wrapper.user.lastName }} ({{ wrapper.user.username }})</label>
                 </p>
             </div> <br> <br>
-            <p class="post-text" [innerHTML]="post.content"></p> 
-            <img style="width: 500px; " src="../../../assets/images/{{post.image}}"/><br><br>
-            <p class="post-info likes">{{post.likesCount}} likes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{post.dislikesCount}} dislikes</p>
+            <p class="post-text" [innerHTML]="wrapper.post.content"></p> 
+            <img style="width: 500px; " src="../../../assets/images/{{wrapper.post.image}}"/><br><br>
+            <p class="post-info likes">{{wrapper.post.likesCount}} likes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{wrapper.post.dislikesCount}} dislikes</p>
             <hr color="#c5c5c5" size="1" class="line">
-            <button mat-raised-button color="secondary" class="like-button" (click)="insertLikeOrDislike(post.ownerId,post.id,this.like)">Like</button>
-            <button mat-raised-button color="secondary" class="like-button" (click)="insertLikeOrDislike(post.ownerId,post.id,this.dislike)">Dislike</button>
+            <button mat-raised-button color="secondary" class="like-button" (click)="insertLikeOrDislike(wrapper.post.ownerId, wrapper.post.id, this.like)">Like</button>
+            <button mat-raised-button color="secondary" class="like-button" (click)="insertLikeOrDislike(wrapper.post.ownerId, wrapper.post.id, this.dislike)">Dislike</button>
             <button mat-raised-button color="secondary" class="like-button" >Comment</button> <br><br>
             <div class="feed-input comments">
                 <form>
                     <mat-icon aria-hidden="false">comment</mat-icon>
                     <input type="text" placeholder="Write a comment" class="input-comment" [(ngModel)]="commentDTO.content" name="content" />
                 </form>
-                <button mat-raised-button color="secondary" class="like-button" (click)="createComment(post.ownerId,post.id)" >post</button>
+                <button mat-raised-button color="secondary" class="like-button" (click)="createComment(wrapper.post.ownerId, wrapper.post.id)" >post</button>
             </div>
-            <div class="feed-input comments" *ngFor="let comment of post.comments">
+            <div class="feed-input comments" *ngFor="let comment of wrapper.post.comments">
                 <p>{{comment}}</p>
             </div>
         </div> <br>
