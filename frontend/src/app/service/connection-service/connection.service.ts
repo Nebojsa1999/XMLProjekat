@@ -24,11 +24,11 @@ export class ConnectionService {
     return this._http.post<any>(this.applicationURL + "/connection", request);
   }
 
-  editRequest(requestId:string,request:ConnectionDTO): Observable<any>{
-    return this._http.put<any>(this.applicationURL + "/connection/"+ requestId, request);
+  editRequest(request:ConnectionDTO): Observable<any>{
+    return this._http.put<any>(this.applicationURL + "/connection", request);
   }
 
-  deleteConnection(id: string): Observable<any> {
-    return this._http.delete<any>(this.applicationURL + "/connection/" + id);
+  deleteConnection(issuerId:string,subjectId:string): Observable<any> {
+    return this._http.delete<any>(this.applicationURL + "/connection?issuerId=" + issuerId + "&subjectId=" + subjectId);
   }
 }

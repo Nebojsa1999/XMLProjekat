@@ -46,7 +46,6 @@ func (store *PostMongoDBStore) GetAllPosts(postIds []string) ([]*domain.Post, er
 func (store *PostMongoDBStore) UpdateLikes(liked_or_disliked_by *domain.LikeOrDislike) (*domain.Post, error) {
 	post, err := store.GetPostFromUser(liked_or_disliked_by.Id, liked_or_disliked_by.PostId)
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 	if has(post.WhoLiked, liked_or_disliked_by.LikedOrDislikedBy.Hex()) {
@@ -66,8 +65,7 @@ func (store *PostMongoDBStore) UpdateLikes(liked_or_disliked_by *domain.LikeOrDi
 		return nil, err
 	}
 	if insertResult.MatchedCount != 1 {
-		log.Fatal(err, "one document should've been updated")
-		return nil, err
+		return nil, fmt.Errorf("one document should've been updated")
 	}
 	return post, err
 }
@@ -75,7 +73,7 @@ func (store *PostMongoDBStore) UpdateLikes(liked_or_disliked_by *domain.LikeOrDi
 func (store *PostMongoDBStore) UpdateDislikes(liked_or_disliked_by *domain.LikeOrDislike) (*domain.Post, error) {
 	post, err := store.GetPostFromUser(liked_or_disliked_by.Id, liked_or_disliked_by.PostId)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	if has(post.WhoDisliked, liked_or_disliked_by.LikedOrDislikedBy.Hex()) {
 		return nil, errors.New("User already disliked post")
@@ -94,8 +92,7 @@ func (store *PostMongoDBStore) UpdateDislikes(liked_or_disliked_by *domain.LikeO
 		return nil, err
 	}
 	if insertResult.MatchedCount != 1 {
-		log.Fatal(err, "one document should've been updated")
-		return nil, err
+		return nil, fmt.Errorf("one document should've been updated")
 	}
 	return post, err
 }
@@ -117,12 +114,17 @@ func (store *PostMongoDBStore) GetAllPostsFromUser(id primitive.ObjectID) (post 
 func (store *PostMongoDBStore) CreatePost(id primitive.ObjectID, post *domain.Post) (*domain.Post, error) {
 
 	insertResult, err := store.dbPost.Collection(COLLECTION+id.Hex()).InsertOne(context.TODO(), &domain.Post{
-		Id:       primitive.NewObjectID(),
-		OwnerId:  id,
-		Content:  post.Content,
-		Image:    post.Image,
-		Link:     post.Link,
-		PostedAt: primitive.NewDateTimeFromTime(time.Now()),
+		Id:            primitive.NewObjectID(),
+		OwnerId:       id,
+		Content:       post.Content,
+		Image:         post.Image,
+		LikesCount:    post.LikesCount,
+		DislikesCount: post.DislikesCount,
+		Comments:      post.Comments,
+		Link:          post.Link,
+		WhoLiked:      post.WhoLiked,
+		WhoDisliked:   post.WhoDisliked,
+		PostedAt:      primitive.NewDateTimeFromTime(time.Now()),
 	})
 	if err != nil {
 		log.Fatal(err)

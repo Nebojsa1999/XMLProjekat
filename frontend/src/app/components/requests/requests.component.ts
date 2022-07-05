@@ -57,9 +57,11 @@ export class RequestsComponent implements OnInit {
       )
     }
 
-    acceptRequest(requestId: string): void {
+    acceptRequest(senderId:string): void {
       this.requestDTO.isApproved=true;
-      this._connectionService.editRequest(requestId,this.requestDTO).subscribe(
+      this.requestDTO.issuerId=senderId;
+      this.requestDTO.subjectId=this.id;
+      this._connectionService.editRequest(this.requestDTO).subscribe(
         response => {
           console.log(response);
         }
@@ -67,14 +69,14 @@ export class RequestsComponent implements OnInit {
       window.location.reload();
   }
 
-  declineRequest(requestId: string): void {
-    this.requestDTO.isApproved=false;
-    this._connectionService.editRequest(requestId,this.requestDTO).subscribe(
+  declineRequest(senderId:string): void {
+    this._connectionService.deleteConnection(senderId,this.id).subscribe(
       response => {
         console.log(response);
       }
     )
     window.location.reload();
 }
+
 }
 

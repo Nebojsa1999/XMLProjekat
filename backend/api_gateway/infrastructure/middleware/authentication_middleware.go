@@ -88,6 +88,7 @@ func isAProtectedRoute(method, path string) bool {
 
 	isPathToConnection, _ := regexp.MatchString("/connection/[0-9a-f]+", path)
 	pathToConnections := "/connection"
+	//isPathToConnectionDelete, _ := regexp.MatchString("/connection?issuerId=[0-9a-f]+&subjectId=[0-9a-f]+", path)
 
 	isPathToJob, _ := regexp.MatchString("/job/[0-9a-f]+", path)
 	pathToAllJobs := "/job/jobs"
@@ -130,11 +131,11 @@ func isAProtectedRoute(method, path string) bool {
 			return false
 		}
 	case http.MethodPut:
-		if isPathToConnection || path == pathToJobEdit || isPathToLikeOrDislikeOfPost {
+		if path == pathToConnections || path == pathToJobEdit || isPathToLikeOrDislikeOfPost {
 			return false
 		}
 	case http.MethodDelete:
-		if isPathToConnection {
+		if strings.HasPrefix(path, "/connection") {
 			return false
 		}
 	}
@@ -144,32 +145,16 @@ func isAProtectedRoute(method, path string) bool {
 
 func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDeterminingData) bool {
 	userId := authorizationDeterminingData.UserId
-	userRole := authorizationDeterminingData.UserRole
 	method := authorizationDeterminingData.Method
 	path := authorizationDeterminingData.Path
 
 	pathToAllPostsFromUser, _ := regexp.MatchString("/user/[0-9a-f]+/post", path)
-
-	pathToUser, _ := regexp.MatchString("/user/[0-9a-f]+", path)
 
 	if pathToAllPostsFromUser && method == http.MethodPost {
 		userIdInPath := strings.TrimPrefix(path, "/user/")
 		userIdInPath = strings.TrimSuffix(userIdInPath, "/post")
 
 		if userId == userIdInPath {
-			return true
-		}
-
-		return false
-	}
-
-	if pathToUser && method == http.MethodPut {
-		if userRole == Administrator {
-			return true
-		}
-
-		idInPath := strings.TrimPrefix(path, "/user/")
-		if userId == idInPath {
 			return true
 		}
 

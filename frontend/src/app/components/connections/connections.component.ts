@@ -51,9 +51,8 @@ export class ConnectionsComponent implements OnInit {
       )
     }
 
-  deleteConnection(id:string):void{
-    console.log(id);
-    this._connectionService.deleteConnection(id).subscribe(
+  deleteConnection(subjectId:string):void{
+    this._connectionService.deleteConnection(this.id,subjectId).subscribe(
       response=>{
         console.log("deleted connection");
       }

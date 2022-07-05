@@ -1,1 +1,30 @@
-<p>posts works!</p>
+<div class="feed">
+
+    <div *ngFor="let post of posts" >
+        <div class="feed-input-container">
+            <div class="picture-name">
+                <p class="profile-pic">
+                    <img src="../../../assets/images/profile.jpg" class="profile-picture" />
+                </p>
+            </div> <br> <br>
+            <p class="post-text" [innerHTML]="post.content"></p> 
+            <img style="width: 500px; " src="../../../assets/images/{{post.image}}"/><br><br>
+            <p class="post-info likes">{{post.likesCount}} likes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{post.dislikesCount}} dislikes</p>
+            <hr color="#c5c5c5" size="1" class="line">
+            <button mat-raised-button color="secondary" class="like-button" (click)="insertLikeOrDislike(post.ownerId,post.id,this.like)">Like</button>
+            <button mat-raised-button color="secondary" class="like-button" (click)="insertLikeOrDislike(post.ownerId,post.id,this.dislike)">Dislike</button>
+            <button mat-raised-button color="secondary" class="like-button" >Comment</button> <br><br>
+            <div class="feed-input comments">
+                <form>
+                    <mat-icon aria-hidden="false">comment</mat-icon>
+                    <input type="text" placeholder="Write a comment" class="input-comment" [(ngModel)]="commentDTO.content" name="content" />
+                </form>
+                <button mat-raised-button color="secondary" class="like-button" (click)="createComment(post.ownerId,post.id)" >post</button>
+            </div>
+            <div class="feed-input comments" *ngFor="let comment of post.comments">
+                <p>{{comment}}</p>
+            </div>
+        </div> <br>
+    </div>
+</div>
+

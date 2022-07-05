@@ -31,8 +31,8 @@ func mapPost(post *domain.Post) *pb.Post {
 }
 
 func mapPostRequest(postPb *pb.Post) *domain.Post {
-	id, _ := primitive.ObjectIDFromHex(postPb.Id)
-	ownerId, _ := primitive.ObjectIDFromHex(postPb.OwnerId)
+	id := getObjectId(postPb.Id)
+	ownerId := getObjectId(postPb.OwnerId)
 	Post := &domain.Post{
 		Id:            id,
 		OwnerId:       ownerId,
@@ -76,4 +76,12 @@ func mapCommentOnPostRequest(commentPb *pb.Comment) *domain.Comment {
 	}
 
 	return Comment
+}
+
+func getObjectId(id string) primitive.ObjectID {
+	if objectId, err := primitive.ObjectIDFromHex(id); err == nil {
+		return objectId
+	}
+
+	return primitive.NewObjectID()
 }

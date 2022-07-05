@@ -49,8 +49,7 @@ func (server *Server) initPostStore(client *mongo.Client) domain.PostStore {
 	store.DeleteAll()
 
 	for _, postRequest := range posts {
-		id := postRequest.OwnerId
-		_, err := store.CreatePost(id, &postRequest)
+		_, err := store.CreatePost(postRequest.OwnerId, &postRequest)
 		if err != nil {
 			log.Fatal(err)
 		}
