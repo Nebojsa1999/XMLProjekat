@@ -20,7 +20,7 @@ export class PostService {
   }
 
   createPost(ownerId:string,newPost: PostDTO): Observable<any>{
-    return this._http.post<any>(this.applicationURL+"/"+ownerId+"/post",newPost);
+    return this._http.post<any>(this.applicationURL+"/user/"+ownerId+"/post",newPost);
   }
 
   insertLikeOrDislike(ownerId:string,postId:string,type:string,reactionDTO:ReactionDTO):Observable<any>{

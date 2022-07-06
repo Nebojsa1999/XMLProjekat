@@ -99,14 +99,18 @@ export class PostsComponent implements OnInit {
       response => {
         for(let i = 0;i<response.posts.length;i++){
           this.posts.push(response.posts[i]);
-
+          console.log(response.posts[i]);
           this.currentWrapper.post = response.posts[i];
+         
           
           this.getProfileOfFollowingUser(response.posts[i].ownerId);
 
           this.wrappers.push(this.currentWrapper);
+       //   console.log(this.wrappers)
         }
-        console.log(this.posts);
+        // console.log(this.posts);
+        // console.log(this.wrappers);
+    
       
       }
     )
@@ -125,8 +129,6 @@ export class PostsComponent implements OnInit {
 
   createPost(): void {
     this.newPost.ownerId = this.id;
-    this.newPost.links.push("https://wwww.google.com");
-    console.log(this.newPost)
     this._postService.createPost(this.id,this.newPost).subscribe(
       response => {
         console.log(response);
@@ -158,6 +160,11 @@ export class PostsComponent implements OnInit {
       }
       
     )
+  }
+
+  
+  pc(comment:any):string{
+    return JSON.parse(JSON.stringify(comment)).content;
   }
 
 

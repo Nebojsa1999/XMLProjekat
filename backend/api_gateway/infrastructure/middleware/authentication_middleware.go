@@ -131,7 +131,7 @@ func isAProtectedRoute(method, path string) bool {
 			return false
 		}
 	case http.MethodPut:
-		if path == pathToConnections || path == pathToJobEdit || isPathToLikeOrDislikeOfPost {
+		if path == pathToConnections || path == pathToJobEdit || isPathToLikeOrDislikeOfPost || isPathToUser {
 			return false
 		}
 	case http.MethodDelete:

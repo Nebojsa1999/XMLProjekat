@@ -114,7 +114,6 @@ export class ProfileComponent implements OnInit {
       response => {
         this.posts = response.posts;
         console.log(this.posts);
-        console.log("post",JSON.stringify(this.posts[0]));
       }
     )
   }
