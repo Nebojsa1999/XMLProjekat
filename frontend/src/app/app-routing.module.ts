@@ -7,6 +7,7 @@ import { LoginComponent } from './components/login/login.component';
 import { PostsComponent } from './components/posts/posts.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProfilesComponent } from './components/profiles/profiles.component';
+import { RegistrationComponent } from './components/registration/registration.component';
 import { RequestsComponent } from './components/requests/requests.component';
 
 const routes: Routes = [
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'connections' , component: ConnectionsComponent},
   { path: 'requests' , component: RequestsComponent},
   { path: 'login', component: LoginComponent},
+  { path: 'register',component: RegistrationComponent},
   { path: 'posts', component: PostsComponent},
   { path: '', redirectTo: 'profiles', pathMatch: 'full'},
 ];

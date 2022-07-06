@@ -39,6 +39,10 @@ var posts = []domain.Post{
 				Code:    "2",
 				Content: "Sjajno",
 			},
+			{
+				Code:    "3",
+				Content: "Sjajno jako",
+			},
 		},
 		Image: "programiranje2.png",
 	},

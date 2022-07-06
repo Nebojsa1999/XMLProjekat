@@ -9,5 +9,10 @@ export interface Post{
 	links: string[];          
 	whoLiked: string[];      
 	whoDisliked: string[];   
-	postedAt: Date;      
+	postedAt: Date;   
+	
 }
+
+// export interface T{
+// 	posts: Post[];
+// }

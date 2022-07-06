@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { CommentDTO } from 'src/app/components/dto/comment.dto';
 import { PostDTO } from 'src/app/components/dto/post.dto';
 import { ReactionDTO } from 'src/app/components/dto/reaction.dto';
+import { Post } from 'src/app/model/post';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

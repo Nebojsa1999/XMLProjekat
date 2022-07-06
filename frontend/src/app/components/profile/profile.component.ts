@@ -49,14 +49,14 @@ export class ProfileComponent implements OnInit {
         firstName: ["", [Validators.required]],
         lastName: ["", [Validators.required]],
         email: ["", [Validators.required]],
-        phone: ["", [Validators.required]],
-        gender: ["", [Validators.required]],
-        dateOfBirth: [new Date(), [Validators.required]],
-        biography: ["", [Validators.required]],
-        workExperience: ["", [Validators.required]],
-        education: ["", [Validators.required]],
-        skills: ["", [Validators.required]],
-        interests: ["", [Validators.required]],
+        phone: ["", []],
+        gender: ["", []],
+        dateOfBirth: [new Date(), []],
+        biography: ["", []],
+        workExperience: ["", []],
+        education: ["", []],
+        skills: ["", []],
+        interests: ["", []],
       });
     }
 
@@ -114,6 +114,7 @@ export class ProfileComponent implements OnInit {
       response => {
         this.posts = response.posts;
         console.log(this.posts);
+        console.log("post",JSON.stringify(this.posts[0]));
       }
     )
   }
@@ -124,8 +125,11 @@ export class ProfileComponent implements OnInit {
     dialogConfig.id = "add-interests-modal";
     dialogConfig.height = "32%";
     dialogConfig.width = "22%";
-    //dialogConfig.data = { userId: this.id }
     const modalDialog = this.matDialog.open(JobTokenDialogComponent, dialogConfig);
+  }
+
+  pc(comment:any):string{
+    return JSON.parse(JSON.stringify(comment)).content;
   }
 
  

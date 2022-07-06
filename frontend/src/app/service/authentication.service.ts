@@ -3,13 +3,17 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { RegisterDTO } from '../components/dto/register.dto';
 import { Credentials } from '../model/credentials';
+import { User } from '../model/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
   private loginURL = 'http://localhost:8000/user/login';
+  private applicationURL = environment.apiUrl;
 
   private dislinktAppToken = null;
   private accessToken = localStorage.getItem('dislinktAppToken');
@@ -75,5 +79,9 @@ export class AuthenticationService {
     }
 
     return false;
+  }
+
+  register(user:RegisterDTO): Observable<any>{
+    return this.httpClient.post<any>(this.applicationURL + "/user/register", user);
   }
 }
