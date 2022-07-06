@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from 'src/app/model/post';
 import { User } from 'src/app/model/user';
+import { UserDataAndPostWrapper } from 'src/app/model/userDataAndPostWrapper';
 import { ConnectionService } from 'src/app/service/connection-service/connection.service';
 import { PostService } from 'src/app/service/post-service/post.service';
 import { ProfileService } from 'src/app/service/profile-service/profile.service';
@@ -14,6 +15,39 @@ import { ReactionDTO } from '../dto/reaction.dto';
   styleUrls: ['./posts.component.css']
 })
 export class PostsComponent implements OnInit {
+  public wrappers: UserDataAndPostWrapper[] = [];
+  public currentWrapper: UserDataAndPostWrapper = {
+    user: {
+      id: "",
+      username: "",
+      password: "",
+      isPrivate: false,
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      gender: "",
+      dateOfBirth: new Date(1/1/1999),
+      biography: "",
+      workExperience: "",
+      education: "",          
+      skills: "",          
+      interests: "",      
+    },
+    post: {
+      id: "",
+      ownerId: "",
+      content: "",
+      image: "",
+      likesCount: 0,
+      dislikesCount: 0,
+      comments: [],
+      links: [],
+      whoLiked: [],
+      whoDisliked: [],
+      postedAt: new Date(1/1/1999)
+    }
+  }
 
   public posts: Post[] = [];
   public users: User[]=[];
@@ -53,19 +87,24 @@ export class PostsComponent implements OnInit {
         console.log(response);
         for(let i = 0;i<response.connections.length;i++){
           if(response.connections[i].isApproved == true){
-            this.getConnectionPosts(response.connections[i].subjectId);
+            this.getPostsOfFollowingUsers(response.connections[i].subjectId);
           }
-        }    
+        }
       }
     )
   }
 
-  getConnectionPosts(id: string): void {
+  getPostsOfFollowingUsers(id: string): void {
     this._postService.getPostsByUser(id).subscribe(
       response => {
         for(let i = 0;i<response.posts.length;i++){
           this.posts.push(response.posts[i]);
-          // this.getProfilesPosts(response.posts[i].ownerId);
+
+          this.currentWrapper.post = response.posts[i];
+          
+          this.getProfileOfFollowingUser(response.posts[i].ownerId);
+
+          this.wrappers.push(this.currentWrapper);
         }
         console.log(this.posts);
       
@@ -73,17 +112,16 @@ export class PostsComponent implements OnInit {
     )
   }
 
-  // getProfilesPosts(id:string):void{
-  //   this._profileService.getProfile(id).subscribe(
-  //     response => {
-  //       console.log(response)
-  //       for(let i=0;i<response.users.length;i++){
-  //         this.users.push(response.users[i]);
-  //       }
-    
-  //     }
-  //   )
-  // }
+  getProfileOfFollowingUser(id: string): void {
+    this._profileService.getProfile(id).subscribe(
+      response => {
+        console.log(response);
+        this.users.push(response.user);
+        
+        this.currentWrapper.user = response.user;
+      }
+    )
+  }
 
   createPost(): void {
     this.newPost.ownerId = this.id;
