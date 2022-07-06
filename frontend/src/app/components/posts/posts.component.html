@@ -26,7 +26,7 @@
                 <h5>{{ wrapper.user.firstName}} {{ wrapper.user.lastName }} </h5>
             </div> <br> <br>
             <p class="post-text" [innerHTML]="wrapper.post.content"></p> 
-            <img style="width: 500px; " src="../../../assets/images/{{wrapper.post.image}}"/><br><br>
+            <img style="width: 500px; " src="{{wrapper.post.image}}"/><br><br>
             <p class="post-info likes">{{wrapper.post.likesCount}} likes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{wrapper.post.dislikesCount}} dislikes</p>
             <hr color="#c5c5c5" size="1" class="line">
             <button mat-raised-button color="secondary" class="like-button" (click)="insertLikeOrDislike(wrapper.post.ownerId, wrapper.post.id, this.like)">Like</button>
