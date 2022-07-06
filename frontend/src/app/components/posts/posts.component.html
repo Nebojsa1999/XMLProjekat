@@ -9,7 +9,7 @@
         <div className="feed-input-options">
             <div class="input-options">
                 <p>
-                    <input type="file" #file placeholder="Image">
+                    <input type="file" #file accept="image/*" id="postImageInput" placeholder="Image" (change)="onImageSelected($event)">
                 </p>
             </div>
             <button mat-raised-button color="secondary" class="like-button" type="submit" style="float: right; margin-top: -25px;" (click)="createPost()">Submit</button> <br>

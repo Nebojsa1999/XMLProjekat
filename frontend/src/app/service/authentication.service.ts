@@ -31,9 +31,9 @@ export class AuthenticationService {
   }
 
   logOut() {
-
     localStorage.removeItem('dislinktAppToken');
     localStorage.removeItem('id');
+    localStorage.removeItem('role');
     localStorage.removeItem('username');
     localStorage.removeItem('exp');
     this.dislinktAppToken = null;
@@ -72,9 +72,9 @@ export class AuthenticationService {
   }
 
   isARegisteredUser(): boolean {
-    var role = localStorage.getItem('role');
+    var id = localStorage.getItem('id');
 
-    if (role != undefined && role != null) {
+    if (id != undefined && id != null) {
       return true;
     }
 

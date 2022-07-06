@@ -62,6 +62,9 @@ export class PostsComponent implements OnInit {
     image:"",         
     links:[]          
   }
+  
+  selectedImage: any;
+  selectedImageName: string = "undefined";
 
   private reactionDTO: ReactionDTO={
     by_user_id:"",
@@ -78,13 +81,15 @@ export class PostsComponent implements OnInit {
   ngOnInit(): void {
     this.id = localStorage.getItem("id");
     this.getConnections(this.id);
+
+    console.log("Konacan niz obmotaca:\n" + JSON.stringify(this.wrappers));
   }
 
 
   getConnections(userId: string): void {
     this._connectionService.getConnections(userId).subscribe(
       response => {
-        console.log(response);
+        console.log("Zapraceni prijavljenog korisnika:\n" + JSON.stringify(response));
         for(let i = 0;i<response.connections.length;i++){
           if(response.connections[i].isApproved == true){
             this.getPostsOfFollowingUsers(response.connections[i].subjectId);
@@ -94,32 +99,30 @@ export class PostsComponent implements OnInit {
     )
   }
 
-  getPostsOfFollowingUsers(id: string): void {
-    this._postService.getPostsByUser(id).subscribe(
+  getPostsOfFollowingUsers(userId: string): void {
+    this._postService.getPostsByUser(userId).subscribe(
       response => {
+        console.log("Objave zapracenog korisnika:\n" + JSON.stringify(response));
         for(let i = 0;i<response.posts.length;i++){
           this.posts.push(response.posts[i]);
-          console.log(response.posts[i]);
+
           this.currentWrapper.post = response.posts[i];
-         
+          console.log("Trenutni obmotac nakon dodavanja objave:\n" + JSON.stringify(this.currentWrapper));
           
           this.getProfileOfFollowingUser(response.posts[i].ownerId);
 
+          console.log("Trenutni obmotac nakon dodavanja korisnika:\n" + JSON.stringify(this.currentWrapper));
           this.wrappers.push(this.currentWrapper);
-       //   console.log(this.wrappers)
+          console.log("Niz obmotaca:\n" + JSON.stringify(this.wrappers));
         }
-        // console.log(this.posts);
-        // console.log(this.wrappers);
-    
-      
       }
     )
   }
 
-  getProfileOfFollowingUser(id: string): void {
-    this._profileService.getProfile(id).subscribe(
+  getProfileOfFollowingUser(userId: string): void {
+    this._profileService.getProfile(userId).subscribe(
       response => {
-        console.log(response);
+        console.log("Zapraceni korisnik:\n" + JSON.stringify(response));
         this.users.push(response.user);
         
         this.currentWrapper.user = response.user;
@@ -132,8 +135,36 @@ export class PostsComponent implements OnInit {
     this._postService.createPost(this.id,this.newPost).subscribe(
       response => {
         console.log(response);
+        alert("Post has been successfully created.");
+      },
+      error => {
+        alert("Error occurred, post has not been created.");
       }
     )
+  }
+
+  onImageSelected(event: any) {
+    if (!event || !event.target) {
+      return;
+    }
+
+    if (!event.target.files) {
+      this.selectedImage = null;
+    }
+
+    this.selectedImage = <File>event.target.files[0];
+    this.selectedImageName = event.target.files[0].name;
+    let reader = new FileReader();
+    reader.readAsDataURL(this.selectedImage);
+    var self = this;
+
+    reader.onload = function() {
+      self.selectedImage = reader.result;
+      self.newPost.image = self.selectedImage;
+    }
+    reader.onerror = function() {
+      console.log("Error occured while converting image!");
+    }
   }
 
   createComment(ownerId:string,postId: string): void {

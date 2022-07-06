@@ -26,6 +26,9 @@ import { ProfilesComponent } from './components/profiles/profiles.component';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { AuthenticationService } from './service/authentication.service';
 import { ProfileService } from './service/profile-service/profile.service';
+import { PostService } from './service/post-service/post.service';
+import { ConnectionService } from './service/connection-service/connection.service';
+import { JobService } from './service/job-service/job.service';
 import { TokenInterceptor } from './interceptor/token-interceptor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -72,8 +75,7 @@ import { RequestsComponent } from './components/requests/requests.component';
     MatDividerModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule,
-
+    ReactiveFormsModule
   ],
   providers: [
     {
@@ -87,7 +89,10 @@ import { RequestsComponent } from './components/requests/requests.component';
       multi: true
     },
     AuthenticationService,
-    ProfileService
+    ProfileService,
+    PostService,
+    ConnectionService,
+    JobService
   ],
   bootstrap: [AppComponent]
 })
