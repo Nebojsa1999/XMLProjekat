@@ -5,6 +5,7 @@ option go_package = "github.com/Nebojsa1999/XMLProjekat/backend/common/posting";
 package posting;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 service PostingService{
   rpc GetPostFromUser(GetPostRequest) returns(GetResponse) {
@@ -66,9 +67,40 @@ message Post {
   repeated string link = 8;
   repeated string WhoLiked = 9;
   repeated string WhoDisliked = 10;
-  string PostedAt = 11;
-
+  User user = 11;
+  string PostedAt = 12;
 }
+
+message User {
+  string id = 1;
+  enum Role {
+    UndefinedRole = 0;
+    CommonUser = 1;
+    Administrator = 2;
+  }
+  Role role = 2;
+  string username = 3;
+  string password = 4;
+  bool isPrivate = 5;
+  string firstName = 6;
+  string lastName = 7;
+  string email = 8;
+  string phone = 9;
+  enum Gender {
+    UndefinedGender = 0;
+    Male = 1;
+    Female = 2;
+  }
+  Gender gender = 10;
+  google.protobuf.Timestamp dateOfBirth = 11;
+  string biography = 12;
+  string workExperience = 13;
+  string education = 14;
+  string skills = 15;
+  string interests = 16;
+  string jobOffersAPIToken = 17;
+}
+
 
 message GetPostRequest {
   string id = 1;

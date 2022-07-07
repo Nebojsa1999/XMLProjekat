@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface Post{
     id: string;          
 	ownerId: string;       
@@ -9,6 +11,7 @@ export interface Post{
 	links: string[];          
 	whoLiked: string[];      
 	whoDisliked: string[];   
+	user: User;
 	postedAt: Date;   
 	
 }

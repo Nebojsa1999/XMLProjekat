@@ -16,38 +16,38 @@ import { ReactionDTO } from '../dto/reaction.dto';
 })
 export class PostsComponent implements OnInit {
   public wrappers: UserDataAndPostWrapper[] = [];
-  public currentWrapper: UserDataAndPostWrapper = {
-    user: {
-      id: "",
-      username: "",
-      password: "",
-      isPrivate: false,
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      gender: "",
-      dateOfBirth: new Date(1/1/1999),
-      biography: "",
-      workExperience: "",
-      education: "",          
-      skills: "",          
-      interests: "",      
-    },
-    post: {
-      id: "",
-      ownerId: "",
-      content: "",
-      image: "",
-      likesCount: 0,
-      dislikesCount: 0,
-      comments: [],
-      links: [],
-      whoLiked: [],
-      whoDisliked: [],
-      postedAt: new Date(1/1/1999)
-    }
-  }
+  // public currentWrapper: UserDataAndPostWrapper = {
+  //   user: {
+  //     id: "",
+  //     username: "",
+  //     password: "",
+  //     isPrivate: false,
+  //     firstName: "",
+  //     lastName: "",
+  //     email: "",
+  //     phone: "",
+  //     gender: "",
+  //     dateOfBirth: new Date(1/1/1999),
+  //     biography: "",
+  //     workExperience: "",
+  //     education: "",          
+  //     skills: "",          
+  //     interests: "",      
+  //   },
+  //   post: {
+  //     id: "",
+  //     ownerId: "",
+  //     content: "",
+  //     image: "",
+  //     likesCount: 0,
+  //     dislikesCount: 0,
+  //     comments: [],
+  //     links: [],
+  //     whoLiked: [],
+  //     whoDisliked: [],
+  //     postedAt: new Date(1/1/1999)
+  //   }
+  // }
 
   public posts: Post[] = [];
   public users: User[]=[];
@@ -100,14 +100,15 @@ export class PostsComponent implements OnInit {
   getPostsOfFollowingUsers(userId: string): void {
     this._postService.getPostsByUser(userId).subscribe(
       response => {
-        console.log("Objave zapracenog korisnika:\n" + response);
+        console.log(response)
         for(let i = 0;i<response.posts.length;i++){
           this.posts.push(response.posts[i]);
+          this.setUserToPost(this.posts);
 
           // this.currentWrapper.post = response.posts[i];
           // console.log("Trenutni obmotac nakon dodavanja objave:\n" + JSON.stringify(this.currentWrapper));
           
-          this.getProfileOfFollowingUser(response.posts[i].ownerId);
+         // this.getProfileOfFollowingUser(response.posts[i].ownerId);
 
           // console.log("Trenutni obmotac nakon dodavanja korisnika:\n" + JSON.stringify(this.currentWrapper));
           // this.wrappers.push(this.currentWrapper);
@@ -117,16 +118,27 @@ export class PostsComponent implements OnInit {
     )
   }
 
-  getProfileOfFollowingUser(userId: string): void {
-    this._profileService.getProfile(userId).subscribe(
-      response => {
-        console.log("Zapraceni korisnik:\n" + response);
-        this.users.push(response.user);
+  // getProfileOfFollowingUser(userId: string): void {
+  //   this._profileService.getProfile(userId).subscribe(
+  //     response => {
+  //       console.log("Zapraceni korisnik:\n" + response);
+  //       this.users.push(response.user);
         
-      //  this.currentWrapper.user = response.user;
-      }
-    )
+  //     //  this.currentWrapper.user = response.user;
+  //     }
+  //   )
+  // }
+
+  setUserToPost(posts: Post[]): void {
+    for(let i = 0; i < posts.length; i++) {
+      this._profileService.getProfile(posts[i].ownerId).subscribe(
+        response => {
+          posts[i].user = response;
+        }
+      )
+    }
   }
+
 
   createPost(): void {
     this.newPost.ownerId = this.id;
@@ -184,17 +196,27 @@ export class PostsComponent implements OnInit {
     this._postService.insertLikeOrDislike(ownerId,postId,type,this.reactionDTO).subscribe(
       response => {
         console.log(response);
+        window.location.reload();
       },
       error => {
         alert("Already liked/disliked")
       }
       
     )
+    
   }
 
   
-  pc(comment:any):string{
+  ParseComment(comment:any):string{
     return JSON.parse(JSON.stringify(comment)).content;
+  }
+
+  ParseFirstName(user:any):string{
+    return JSON.parse(JSON.stringify(user)).user.firstName;
+  }
+
+  ParseLastName(user:any):string{
+    return JSON.parse(JSON.stringify(user)).user.lastName;
   }
 
 
