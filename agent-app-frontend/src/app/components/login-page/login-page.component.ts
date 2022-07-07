@@ -1,8 +1,11 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import jwt_decode from 'jwt-decode';
+
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AuthService } from 'src/app/services/auth/auth.service';
 
@@ -20,7 +23,7 @@ export class LoginPageComponent implements OnInit {
   agentAppToken: string = '';
 
   constructor(private authService: AuthService, private formBuilder: FormBuilder, 
-    private router: Router) { }
+    private router: Router, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
@@ -42,6 +45,7 @@ export class LoginPageComponent implements OnInit {
     this.authService.loginWith(credentials).subscribe(
       data => {
         console.log('Login response: ', data);
+        this.snackBar.open('Login succeeded.', 'Close', { duration: 5000 });
 
         localStorage.setItem('agentAppToken', data.token);
         let tokenInfo = this.getDecodedAccessToken(data.token);
@@ -55,10 +59,11 @@ export class LoginPageComponent implements OnInit {
 
         this.router.navigateByUrl('/').then(() => { window.location.reload(); });
       },
-      error => {
+      (error: HttpErrorResponse) => {
         this.isSubmitted = false;
 
-        console.log('Error on login: ', error);
+        console.log('Error on login: ', error.error);
+        this.snackBar.open(error.error, 'Close', { duration: 5000 });
       }
     );
   }
