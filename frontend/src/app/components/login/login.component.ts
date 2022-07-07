@@ -59,6 +59,7 @@ export class LoginComponent implements OnInit {
         this.isSubmitted = false;
 
         console.log('Error on login: ', error);
+        alert("Password is incorect");
       }
     );
   }

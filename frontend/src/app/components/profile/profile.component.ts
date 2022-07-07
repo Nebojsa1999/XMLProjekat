@@ -19,6 +19,8 @@ export class ProfileComponent implements OnInit {
   private id: any;
   isProfileOwner = false; 
   isAuthenticated = false;
+  profilePrivacy=false;
+  profilePassword="";
  
   profile : User = {
     id:"",
@@ -74,6 +76,10 @@ export class ProfileComponent implements OnInit {
     this._profileService.getProfile(id).subscribe(
       response => {
         this.profile = response.user;
+        this.profilePrivacy=response.user.isPrivate;
+        this.profilePassword=response.user.password;
+        console.log(this.profilePrivacy);
+        console.log(this.profilePassword);
         this.userForm.patchValue(this.profile);
         console.log(this.profile)
       }
@@ -96,6 +102,9 @@ export class ProfileComponent implements OnInit {
   onSubmit(): void {
     this.profile=this.userForm.value;
     this.profile.id=this._route.snapshot.url[1].path;
+    this.profile.password=this.profilePassword;
+    this.profile.isPrivate=this.profilePrivacy;
+
     console.log(this.id);
     this._profileService.updateProfile(this.id,this.profile).subscribe(
       response => {
@@ -104,8 +113,11 @@ export class ProfileComponent implements OnInit {
       },
       error => {
         console.log("error on profile update",error);
+        window.location.reload();
+        alert("Error username taken")
       }
     )
+
 
   }
 

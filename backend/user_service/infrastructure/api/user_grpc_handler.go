@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	pb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/application"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -92,6 +93,10 @@ func (handler *UserHandler) Login(ctx context.Context, request *pb.LoginRequest)
 		Message: message,
 	}
 
+	if jwtToken == nil {
+		err = fmt.Errorf(message)
+	}
+
 	if jwtToken != nil {
 		response.Token = jwtToken.Token
 	}
@@ -166,7 +171,9 @@ func (handler *UserHandler) Update(ctx context.Context, request *pb.UpdateReques
 		Message:     message,
 		UpdatedUser: nil,
 	}
-
+	if updatedUser == nil {
+		return response, fmt.Errorf(message)
+	}
 	if updatedUser != nil {
 		response.UpdatedUser = mapDomainUserToPbUser(updatedUser)
 	}
@@ -182,7 +189,7 @@ func (handler *UserHandler) GenerateJobOffersAPIToken(ctx context.Context, reque
 
 	message, jobOffersAPIToken, err := handler.service.GenerateJobOffersAPIToken(userId)
 	response := &pb.GenerateJobOffersAPITokenResponse{
-		Token: "",
+		Token:   "",
 		Message: message,
 	}
 
