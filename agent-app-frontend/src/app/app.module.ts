@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { HeaderComponent } from './components/header/header.component';
+import { RegistrationPageComponent } from './components/registration-page/registration-page.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
@@ -21,7 +22,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 
 const MaterialComponents = [
@@ -30,7 +33,9 @@ const MaterialComponents = [
   MatCardModule,
   MatFormFieldModule,
   MatInputModule,
+  MatRadioModule,
   MatProgressSpinnerModule,
+  MatSnackBarModule,
   MatListModule
 ]
 
@@ -38,6 +43,7 @@ const MaterialComponents = [
   declarations: [
     AppComponent,
     HeaderComponent,
+    RegistrationPageComponent,
     LoginPageComponent,
     UserProfileComponent
   ],
