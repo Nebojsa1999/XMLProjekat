@@ -81,8 +81,6 @@ export class PostsComponent implements OnInit {
   ngOnInit(): void {
     this.id = localStorage.getItem("id");
     this.getConnections(this.id);
-
-    console.log("Konacan niz obmotaca:\n" + JSON.stringify(this.wrappers));
   }
 
 
@@ -102,18 +100,18 @@ export class PostsComponent implements OnInit {
   getPostsOfFollowingUsers(userId: string): void {
     this._postService.getPostsByUser(userId).subscribe(
       response => {
-        console.log("Objave zapracenog korisnika:\n" + JSON.stringify(response));
+        console.log("Objave zapracenog korisnika:\n" + response);
         for(let i = 0;i<response.posts.length;i++){
           this.posts.push(response.posts[i]);
 
-          this.currentWrapper.post = response.posts[i];
-          console.log("Trenutni obmotac nakon dodavanja objave:\n" + JSON.stringify(this.currentWrapper));
+          // this.currentWrapper.post = response.posts[i];
+          // console.log("Trenutni obmotac nakon dodavanja objave:\n" + JSON.stringify(this.currentWrapper));
           
           this.getProfileOfFollowingUser(response.posts[i].ownerId);
 
-          console.log("Trenutni obmotac nakon dodavanja korisnika:\n" + JSON.stringify(this.currentWrapper));
-          this.wrappers.push(this.currentWrapper);
-          console.log("Niz obmotaca:\n" + JSON.stringify(this.wrappers));
+          // console.log("Trenutni obmotac nakon dodavanja korisnika:\n" + JSON.stringify(this.currentWrapper));
+          // this.wrappers.push(this.currentWrapper);
+          // console.log("Niz obmotaca:\n" + JSON.stringify(this.wrappers));
         }
       }
     )
@@ -122,10 +120,10 @@ export class PostsComponent implements OnInit {
   getProfileOfFollowingUser(userId: string): void {
     this._profileService.getProfile(userId).subscribe(
       response => {
-        console.log("Zapraceni korisnik:\n" + JSON.stringify(response));
+        console.log("Zapraceni korisnik:\n" + response);
         this.users.push(response.user);
         
-        this.currentWrapper.user = response.user;
+      //  this.currentWrapper.user = response.user;
       }
     )
   }
@@ -160,7 +158,7 @@ export class PostsComponent implements OnInit {
 
     reader.onload = function() {
       self.selectedImage = reader.result;
-      self.newPost.image = self.selectedImage;
+      self.newPost.image = self.selectedImageName;
     }
     reader.onerror = function() {
       console.log("Error occured while converting image!");
@@ -175,6 +173,7 @@ export class PostsComponent implements OnInit {
         console.log(response);
       }
     )
+    window.location.reload();
   }
 
   insertLikeOrDislike(ownerId:string,postId:string,type:string):void{
