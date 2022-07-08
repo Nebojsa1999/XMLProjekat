@@ -35,6 +35,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
+import { RegisterCompanyComponent } from './components/register-company/register-company.component';
+import { CompanyComponent } from './components/company/company.component';
 
 const MaterialComponents = [
   MatToolbarModule,
@@ -62,7 +64,9 @@ const MaterialComponents = [
     AddJobComponent,
     AddCommentComponent,
     AddWageComponent,
-    AddInterviewComponent
+    AddInterviewComponent,
+    RegisterCompanyComponent,
+    CompanyComponent
   ],
   imports: [
     BrowserModule,

@@ -1,9 +1,12 @@
 <mat-toolbar color="primary" class="navbar">
     <button style="font-size: 25px" mat-button routerLink="/">AgentApp</button>
-
+    <button  mat-raised-button mat-button  [routerLink]="['/register-company']" *ngIf="role == 'CommonUser'">Company Registration</button>
+    <button mat-raised-button mat-button [routerLink]="['/companies']">Companies</button>
+    <button mat-raised-button mat-button [routerLink]="['/jobs']">Jobs</button>
+    <button mat-raised-button mat-button [routerLink]="['/registration-requests']" *ngIf="role == 'Administrator'">Registration Requests</button>
     <span class="example-spacer"></span>
 
-    <button mat-raised-button mat-button routerLink="/register">Registruj se</button>
-    <button mat-raised-button mat-button routerLink="/login">Prijavi se</button>
-    <button mat-raised-button mat-button (click)="logOut()">Odjavi se</button>
+    <button mat-raised-button mat-button routerLink="/register" *ngIf="!isAuthenticated">Registruj se</button>
+    <button mat-raised-button mat-button routerLink="/login" *ngIf="!isAuthenticated">Prijavi se</button>
+    <button mat-raised-button mat-button (click)="logOut()" *ngIf="isAuthenticated">Odjavi se</button>
 </mat-toolbar>

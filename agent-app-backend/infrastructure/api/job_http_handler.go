@@ -104,7 +104,6 @@ func (handler *JobHandler) Update(writer http.ResponseWriter, request *http.Requ
 }
 
 func (handler *JobHandler) UpdateReviews(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
 
 	if !isContentTypeValid(writer, request) {
 		return
