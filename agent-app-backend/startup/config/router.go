@@ -65,6 +65,8 @@ func ConfigureRouter(handlers Handlers) *mux.Router {
 		handlers.JobHandler.CreateNewJob).Methods("POST")
 	router.HandleFunc("/agent-app/job/{id:[0-9a-f]+}",
 		handlers.JobHandler.Update).Methods("PUT")
+	router.HandleFunc("/agent-app/job/{id:[0-9a-f]+}",
+		handlers.JobHandler.UpdateReviews).Methods("PUT")
 
 	router.HandleFunc("/agent-app/job/comment/{id:[0-9a-f]+}",
 		handlers.CommentHandler.Get).Methods("GET")
