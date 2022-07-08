@@ -102,3 +102,38 @@ func (handler *JobHandler) Update(writer http.ResponseWriter, request *http.Requ
 
 	renderJSON(writer, updatedJob)
 }
+
+func (handler *JobHandler) UpdateReviews(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+
+	if !isContentTypeValid(writer, request) {
+		return
+	}
+
+	modifiedJob, err := decodeJobFromBody(request.Body)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	id, _ := mux.Vars(request)["id"]
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	} else if objectId != modifiedJob.Id {
+		http.Error(writer, "Id in path and id of modified job do not match!", http.StatusBadRequest)
+		return
+	}
+
+	message, updatedJob, err := handler.service.UpdateReviews(modifiedJob)
+	if err != nil {
+		http.Error(writer, message, http.StatusInternalServerError)
+		return
+	} else if updatedJob == nil {
+		http.Error(writer, message, http.StatusBadRequest)
+		return
+	}
+
+	renderJSON(writer, updatedJob)
+}
