@@ -1,1 +1,67 @@
-<p>register-company works!</p>
+
+<div class="center">
+    <div class="white-container" style="align-content: center; padding-top: 5%; padding-bottom: 5%;">
+        <div style=" margin-inline: 20%; text-align: center;">
+            <h2 style="font-size:24px; font-weight: 200; margin-bottom: 7%;">Company Registration</h2>
+            <div class="rectangle"></div>
+        </div>
+
+        <br>
+        <form [formGroup]="form"  style="text-align: center;">
+            <div>
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" required>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field>
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="address" required>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" required>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field>
+                    <mat-label>Phone</mat-label>
+                    <input matInput formControlName="phone" required>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field>
+                    <mat-label>Area of work</mat-label>
+                    <textarea matInput formControlName="areaOfWork" required> </textarea>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field>
+                    <mat-label>Description</mat-label>
+                    <textarea matInput formControlName="description" required> </textarea>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field>
+                    <mat-label>Work culture</mat-label>
+                    <textarea matInput formControlName="workCulture" required> </textarea>
+                </mat-form-field>
+            </div>
+            <br>
+            <br>
+            <div style="text-align: center; width: 100%;">
+                <button mat-raised-button color="primary" (click)="register()">Register</button>
+
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+<div style="margin-inline: 15%; margin-top: 3%;">
+
+    <h1 >Companies overview</h1>
+
+    <div class="flex-container">
+      
+        <div class="flex-item" *ngFor="let company of companies">
+            <div class="company-container " style="padding: 3%; padding-inline: 4%;">
+                <h2>{{company.name}}</h2>
+            <div>
+                <div>Address: </div>{{company.address}}
+            </div>
+            <br>
+            <div >
+                <div >Email: </div>{{company.email}}
+            </div>
+            <br>
+            <div >
+                <div>Phone: </div> {{company.phone}}
+            </div>
+            <br>
+            <div>
+                <div >Area of work: </div>{{company.areaOfWork}}
+            </div>
+            <br>
+            <div>
+                <div >Description: </div> {{company.description}}
+            </div>
+            <br>
+            <div >
+                <div>Work culture: </div> {{company.workCulture}}
+            </div>
+            <br>
+                <button mat-raised-button color="primary" (click)="openCompanyPage(company.id)"> Company page </button>
+            </div>
+        </div>
+    </div>
+</div>

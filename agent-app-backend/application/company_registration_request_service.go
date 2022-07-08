@@ -143,8 +143,6 @@ func (service *CompanyRegistrationRequestService) UpdateByAdministrator(modified
 	if modifiedRequest.ReasonForRejection == "" {
 		if modifiedRequest.Status == enums.Rejected {
 			return "Reason for rejection must be written.", nil, nil
-		} else {
-			return "Registration request is not rejected and therefore cannot have a filled reason.", nil, nil
 		}
 	}
 

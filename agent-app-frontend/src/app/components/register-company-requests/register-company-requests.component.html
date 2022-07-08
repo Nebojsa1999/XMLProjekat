@@ -1,0 +1,37 @@
+<div style="margin-inline: 15%; margin-top: 3%;">
+
+    <h1>Registration Requests</h1>
+
+    <div class="flex-container">
+        <div class="flex-item" *ngFor="let request of requests">
+            <div class="request-container " style="padding: 3%; padding-inline: 4%;">
+                <h2>{{request.name}}</h2>
+            <div>
+                <div>Address: </div>{{request.address}}
+            </div>
+            <br>
+            <div >
+                <div >Email: </div>{{request.email}}
+            </div>
+            <br>
+            <div >
+                <div>Phone: </div> {{request.phone}}
+            </div>
+            <br>
+            <div>
+                <div >Area of work: </div>{{request.areaOfWork}}
+            </div>
+            <br>
+            <div>
+                <div >Description: </div> {{request.description}}
+            </div>
+            <br>
+            <div >
+                <div>Work culture: </div> {{request.workCulture}}
+            </div>
+            <br>
+                <button mat-raised-button color="primary" (click)="approveRequest(request.id,request)"> Approve requst </button>
+            </div>
+        </div>
+    </div>
+</div>

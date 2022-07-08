@@ -36,6 +36,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 import { RegisterCompanyComponent } from './components/register-company/register-company.component';
+import { CompaniesComponent } from './components/companies/companies.component';
+import { RegisterCompanyRequestsComponent } from './components/register-company-requests/register-company-requests.component';
 import { CompanyComponent } from './components/company/company.component';
 
 const MaterialComponents = [
@@ -66,6 +68,8 @@ const MaterialComponents = [
     AddWageComponent,
     AddInterviewComponent,
     RegisterCompanyComponent,
+    CompaniesComponent,
+    RegisterCompanyRequestsComponent,
     CompanyComponent
   ],
   imports: [
