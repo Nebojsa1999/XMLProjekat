@@ -15,6 +15,15 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { JobComponent } from './components/job/job.component';
+import { AddJobComponent } from './components/add-job/add-job.component';
+import { CommentComponent } from './components/comment/comment.component';
+import { AddCommentComponent } from './components/add-comment/add-comment.component';
+import { WageComponent } from './components/wage/wage.component';
+import { AddWageComponent } from './components/add-wage/add-wage.component';
+import { InterviewComponent } from './components/interview/interview.component';
+import { AddInterviewComponent } from './components/add-interview/add-interview.component';
+
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -39,7 +48,15 @@ const MaterialComponents = [
     AppComponent,
     HeaderComponent,
     LoginPageComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    JobComponent,
+    CommentComponent,
+    WageComponent,
+    InterviewComponent,
+    AddJobComponent,
+    AddCommentComponent,
+    AddWageComponent,
+    AddInterviewComponent
   ],
   imports: [
     BrowserModule,
