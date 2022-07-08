@@ -20,8 +20,6 @@ func NewInterviewHandler(service *application.InterviewService) *InterviewHandle
 }
 
 func (handler *InterviewHandler) Get(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	id, _ := mux.Vars(request)["id"]
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -39,8 +37,6 @@ func (handler *InterviewHandler) Get(writer http.ResponseWriter, request *http.R
 }
 
 func (handler *InterviewHandler) GetAll(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	interviews, err := handler.service.GetAll()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -51,8 +47,6 @@ func (handler *InterviewHandler) GetAll(writer http.ResponseWriter, request *htt
 }
 
 func (handler *InterviewHandler) CreateNewInterview(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	if !isContentTypeValid(writer, request) {
 		return
 	}
@@ -77,8 +71,6 @@ func (handler *InterviewHandler) CreateNewInterview(writer http.ResponseWriter, 
 }
 
 func (handler *InterviewHandler) Update(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	if !isContentTypeValid(writer, request) {
 		return
 	}

@@ -20,8 +20,6 @@ func NewJobHandler(service *application.JobService) *JobHandler {
 }
 
 func (handler *JobHandler) Get(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	id, _ := mux.Vars(request)["id"]
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -39,8 +37,6 @@ func (handler *JobHandler) Get(writer http.ResponseWriter, request *http.Request
 }
 
 func (handler *JobHandler) GetAll(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	jobs, err := handler.service.GetAll()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -51,8 +47,6 @@ func (handler *JobHandler) GetAll(writer http.ResponseWriter, request *http.Requ
 }
 
 func (handler *JobHandler) CreateNewJob(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	if !isContentTypeValid(writer, request) {
 		return
 	}
@@ -77,8 +71,6 @@ func (handler *JobHandler) CreateNewJob(writer http.ResponseWriter, request *htt
 }
 
 func (handler *JobHandler) Update(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	if !isContentTypeValid(writer, request) {
 		return
 	}
