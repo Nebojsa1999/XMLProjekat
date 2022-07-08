@@ -20,8 +20,6 @@ func NewWageHandler(service *application.WageService) *WageHandler {
 }
 
 func (handler *WageHandler) Get(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	id, _ := mux.Vars(request)["id"]
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -39,8 +37,6 @@ func (handler *WageHandler) Get(writer http.ResponseWriter, request *http.Reques
 }
 
 func (handler *WageHandler) GetAll(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	wages, err := handler.service.GetAll()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -51,8 +47,6 @@ func (handler *WageHandler) GetAll(writer http.ResponseWriter, request *http.Req
 }
 
 func (handler *WageHandler) CreateNewWage(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	if !isContentTypeValid(writer, request) {
 		return
 	}
@@ -77,8 +71,6 @@ func (handler *WageHandler) CreateNewWage(writer http.ResponseWriter, request *h
 }
 
 func (handler *WageHandler) Update(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	if !isContentTypeValid(writer, request) {
 		return
 	}

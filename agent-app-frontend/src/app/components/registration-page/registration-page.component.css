@@ -1,0 +1,42 @@
+.matCardDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-left: 25vw;
+    margin-right: 25vw;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    z-index: 0;
+}
+
+mat-card {
+    text-align: center;
+    min-width: 100%;
+    animation: fadein 1s;
+    -o-animation: fadein 1s;
+    -moz-animation: fadein 1s;
+    -webkit-animation: fadein 1s;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+mat-radio-button {
+    margin-left: 20px;
+}
+
+.buttonDiv, .spinnerDiv {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+form > div.buttonDiv > button {
+    width: 50%;
+}
+
+mat-card-actions > div.buttonDiv > button {
+    width: 100%;
+}

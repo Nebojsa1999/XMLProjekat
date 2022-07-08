@@ -45,3 +45,18 @@ func (service *JobService) Update(modifiedJob *domain.Job) (string, *domain.Job,
 
 	return service.store.Update(jobInDatabase)
 }
+
+func (service *JobService) UpdateReviews(modifiedJob *domain.Job) (string, *domain.Job, error) {
+	jobInDatabase, _ := service.store.Get(modifiedJob.Id)
+	if jobInDatabase == nil {
+		return "Job with given id does not exist.", nil, nil
+
+	}
+
+	jobInDatabase.Comments = modifiedJob.Comments
+	jobInDatabase.Wages = modifiedJob.Wages
+	jobInDatabase.Interviews = modifiedJob.Interviews
+
+	return service.store.UpdateReviews(jobInDatabase)
+
+}

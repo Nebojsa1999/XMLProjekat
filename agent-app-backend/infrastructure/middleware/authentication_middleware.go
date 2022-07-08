@@ -142,6 +142,8 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 	pathToJob, _ :=
 		regexp.MatchString("/agent-app/job/[0-9a-f]+", path)
 	pathToJobCreation := "/agent-app/job/create"
+	pathToJobUpdate, _ := regexp.MatchString("/agent-app/job/[0-9a-f]+/update", path)
+	pathToJobUpdateReviews, _ := regexp.MatchString("/agent-app/job/[0-9a-f]+/update-reviews", path)
 
 	pathToComment, _ :=
 		regexp.MatchString("/agent-app/job/comment/[0-9a-f]+", path)
@@ -267,6 +269,33 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 	if pathToInterview && method == "PUT" {
 		if userRole == enums.CommonUser {
 			return true
+		}
+
+		return false
+	}
+
+	if pathToJobUpdate && method == http.MethodPut {
+		if userRole == enums.CompanyOwner {
+			return true
+		}
+
+		return false
+	}
+
+	if pathToJobUpdateReviews && method == http.MethodPut {
+		if userRole == enums.CommonUser {
+			return true
+		}
+
+		return false
+	}
+
+	if pathToCompanyRegistrationRequestUpdateByOwner && method == http.MethodPut {
+		if userRole == enums.CompanyOwner {
+			idInPath := strings.TrimPrefix(path, "/agent-app/company-registration-request/")
+			if issuedCompanyRequestId == idInPath {
+				return true
+			}
 		}
 
 		return false

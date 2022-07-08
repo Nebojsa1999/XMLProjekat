@@ -63,6 +63,18 @@ func (store *JobMongoDBStore) Update(updatedJob *domain.Job) (string, *domain.Jo
 	return "Success: job has been updated.", updatedJob, nil
 }
 
+func (store *JobMongoDBStore) UpdateReviews(updatedJob *domain.Job) (string, *domain.Job, error) {
+	filter := bson.M{"_id": updatedJob.Id}
+	update := bson.M{"$set": updatedJob}
+
+	_, err := store.jobs.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return "Error occurred during update of job!", nil, err
+	}
+
+	return "Success: job has been updated.", updatedJob, nil
+}
+
 func (store *JobMongoDBStore) DeleteAll() (string, error) {
 	_, err := store.jobs.DeleteMany(context.TODO(), bson.D{{}})
 	if err != nil {

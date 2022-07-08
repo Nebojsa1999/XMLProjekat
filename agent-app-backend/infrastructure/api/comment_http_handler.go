@@ -20,8 +20,6 @@ func NewCommentHandler(service *application.CommentService) *CommentHandler {
 }
 
 func (handler *CommentHandler) Get(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	id, _ := mux.Vars(request)["id"]
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -39,8 +37,6 @@ func (handler *CommentHandler) Get(writer http.ResponseWriter, request *http.Req
 }
 
 func (handler *CommentHandler) GetAll(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	comments, err := handler.service.GetAll()
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -51,8 +47,6 @@ func (handler *CommentHandler) GetAll(writer http.ResponseWriter, request *http.
 }
 
 func (handler *CommentHandler) CreateNewComment(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	if !isContentTypeValid(writer, request) {
 		return
 	}
@@ -77,8 +71,6 @@ func (handler *CommentHandler) CreateNewComment(writer http.ResponseWriter, requ
 }
 
 func (handler *CommentHandler) Update(writer http.ResponseWriter, request *http.Request) {
-	enableCors(&writer)
-
 	if !isContentTypeValid(writer, request) {
 		return
 	}

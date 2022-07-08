@@ -1,4 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -30,7 +33,7 @@ export class UserProfileComponent implements OnInit {
     interests: ''
   }
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private snackBar: MatSnackBar) { }
   
   ngOnInit(): void {
     this.getUser();
@@ -45,11 +48,14 @@ export class UserProfileComponent implements OnInit {
 
     this.userService.getUserWith(id).subscribe(
       data => {
-        console.log('User data: ' + data);
-        this.user = data.user;
+        console.log('User data: ' + JSON.stringify(data));
+        this.snackBar.open('Retrieving logged user\'s data succeeded.', 'Close', { duration: 5000 });
+
+        this.user = data;
       },
-      error => {
-        console.log('Error on "getUserById"!', error)
+      (error: HttpErrorResponse) => {
+        console.log('Error on get user by id: ', error.error);
+        this.snackBar.open(error.error, 'Close', { duration: 5000 });
       }
     );
   }
