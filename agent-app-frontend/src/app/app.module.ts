@@ -39,6 +39,7 @@ import { RegisterCompanyComponent } from './components/register-company/register
 import { CompaniesComponent } from './components/companies/companies.component';
 import { RegisterCompanyRequestsComponent } from './components/register-company-requests/register-company-requests.component';
 import { CompanyComponent } from './components/company/company.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const MaterialComponents = [
   MatToolbarModule,
@@ -49,7 +50,8 @@ const MaterialComponents = [
   MatRadioModule,
   MatProgressSpinnerModule,
   MatSnackBarModule,
-  MatListModule
+  MatListModule,
+  MatDialogModule,
 ]
 
 @NgModule({

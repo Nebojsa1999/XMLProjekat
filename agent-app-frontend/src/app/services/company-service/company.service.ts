@@ -32,4 +32,13 @@ export class CompanyService {
   getCompanies():Observable<CompanyDto[]>{
     return this.http.get<CompanyDto[]>(environment.apiUrl + "/agent-app/company");
   }
+
+  getCompany(id:string):Observable<CompanyDto>{
+    return this.http.get<CompanyDto>(environment.apiUrl + "/agent-app/company/" + id);
+  }
+
+  updateCompany(id:string,dto:CompanyDto): Observable<CompanyDto>{
+    return this.http.put<CompanyDto>(`${environment.apiUrl}/agent-app/company-registration-request/${id}/update-by-owner`,dto);
+  }
+  
 }

@@ -1,1 +1,80 @@
-<p>company works!</p>
+<div style="margin-inline: 20%; margin-top: 2%;">
+
+
+    <div class="profiles-container">
+        <div>
+            <h3 style="margin-top: 5%; font-size: 18px; font-weight: 400;">Company Info:</h3>
+            <br>
+            <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+                <div class="form-group row">
+                    <label for="name">Company name:</label>
+                    <div >
+                        <input class="form-control" type="text" id="name" placeholder="name"
+                            formControlName="name">
+                        <small *ngIf="companyForm.controls['name'].touched && companyForm.controls['name'].errors?.['required']" class="text-danger">Name is required!</small>          
+                    </div>
+                </div>
+                <br>
+                <div class="form-group row">
+                    <label for="name">Company address:</label>
+                    <div >
+                        <input class="form-control" type="text" id="address" placeholder="address"
+                            formControlName="address">
+                    </div>
+                </div>
+                <br>
+                <div class="form-group row">
+                    <label for="name">Company email:</label>
+                    <div >
+                        <input class="form-control" type="text" id="email" placeholder="email"
+                            formControlName="email">
+                    </div>
+                </div>
+                <br>
+                <div class="form-group row">
+                    <label for="name">Company phone:</label>
+                    <div >
+                        <input class="form-control" type="text" id="phone" placeholder="phone"
+                            formControlName="phone">
+                    </div>
+                </div>
+                <br>
+                <div class="form-group row">
+                    <label for="name">Area of work:</label>
+                    <div >
+                        <textarea class="form-control" type="text" id="areaOfWork" placeholder="Area of work"
+                            formControlName="areaOfWork"> </textarea>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group row">
+                    <label for="name">Description:</label>
+                    <div >
+                        <textarea class="form-control" type="text" id="description" placeholder="description"
+                            formControlName="description"> </textarea>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group row">
+                    <label for="name">Work culture:</label>
+                    <div >
+                        <textarea class="form-control" type="text" id="workCulture" placeholder="Work culture"
+                            formControlName="workCulture"> </textarea>
+                    </div>
+                </div>
+                <br>
+            
+                
+
+                <div class="form-group row float-right" *ngIf="isCompanyOwner">
+                    <div class="col-12">
+                        <button class="btn btn-primary " type="submit"
+                            [disabled]="companyForm.invalid" (click)="onSubmit()" >Save changes</button>
+                    </div>
+                </div>
+            </form>
+         </div>
+    </div>
+
+
+</div>
