@@ -10,8 +10,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 const routes: Routes = [
   { path: 'register', component: RegistrationPageComponent },
   { path: 'login', component: LoginPageComponent },
-  { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard], 
-    data: { role: 'Administrator' } }
+  { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
