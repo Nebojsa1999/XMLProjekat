@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NewJobDto } from 'src/app/components/dto/new-job-dto';
+import { NewJobDto, NewJobForSendingToDislinktAppDto } from 'src/app/components/dto/new-job-dto';
 import { Job } from 'src/app/models/job';
 import { environment } from 'src/environments/environment';
 
@@ -24,6 +24,10 @@ export class JobService {
 
   createNewJob(dto: NewJobDto): Observable<any> {
     return this._http.post<any>(this.applicationURL + "/agent-app/job/create", dto);
+  }
+
+  createNewJobOnDislinktApp(dto: NewJobForSendingToDislinktAppDto): Observable<any> {
+    return this._http.post<any>("http://localhost:8000/post/job-offer", dto);
   }
 
   updateJob(id: string, job: Job): Observable<any> {

@@ -3,5 +3,10 @@ export interface NewJobDto {
     createdAt: Date;
     position: string;
     description: string;
-    requirements:string;
+    requirements: string;
+}
+
+export interface NewJobForSendingToDislinktAppDto {
+    jobOffersAPIToken: string;
+    job: NewJobDto;
 }

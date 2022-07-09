@@ -82,8 +82,4 @@ export class JobComponent implements OnInit {
         location.reload();
     });
   }
-
-  openJobPage(id: string): void {
-    this.router.navigate(['job', id]);
-  }
 }

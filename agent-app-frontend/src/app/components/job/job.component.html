@@ -10,7 +10,7 @@
                     <h4 style="font-size: 18px; padding-left:2%;"> ({{jobs.length}} Jobs)</h4>
                 </div>
                 <div class="flex-item" style="text-align: right;">
-                    <button mat-raised-button color="primary" (click)="openNewJobDialog()" *ngIf="isCompanyOwner">Leave a Comment</button>
+                    <button mat-raised-button color="primary" (click)="openNewJobDialog()" *ngIf="isCompanyOwner">Create a new job</button>
                 </div>
             </div>
             <div class="rectangle"></div>
@@ -47,7 +47,7 @@
                             <p><strong>Requirements:</strong> {{job.requirements}}</p>
                         
                         </div>
-                        
+
                     </div>
                 </div>
 
