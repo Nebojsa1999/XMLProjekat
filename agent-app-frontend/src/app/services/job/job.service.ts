@@ -14,12 +14,19 @@ export class JobService {
 
   constructor(private _http: HttpClient) { }
 
+  getJob(id: string): Observable<any> {
+    return this._http.get<any>(this.applicationURL + "/agent-app/job/" + id);
+  }
 
   getJobs(): Observable<any> {
     return this._http.get<any>(this.applicationURL + "/agent-app/job");
   }
 
-  createNewJob(dto: NewJobDto) {
-    return this._http.post(this.applicationURL + "/agent-app/job/create", dto);
+  createNewJob(dto: NewJobDto): Observable<any> {
+    return this._http.post<any>(this.applicationURL + "/agent-app/job/create", dto);
+  }
+
+  updateJob(id: string, job: Job): Observable<any> {
+    return this._http.put<any>(this.applicationURL + "/agent-app/job/" + id, job);
   }
 }

@@ -1,0 +1,57 @@
+<div style="margin-inline: 15%; margin-top: 3%;">
+
+    <h1>Jobs overview</h1>
+
+    <div style="margin-bottom: 10%; margin-top: 6%;">
+        <div style="padding-bottom: 2%; padding-inline: 0%; margin-bottom: 1%;">
+            <div class="flex-container">
+
+                <div class="flex-container flex-item" style="padding-inline: 0%;">
+                    <h4 style="font-size: 18px; padding-left:2%;"> ({{jobs.length}} Jobs)</h4>
+                </div>
+                <div class="flex-item" style="text-align: right;">
+                    <button mat-raised-button color="primary" (click)="openNewJobDialog()" *ngIf="isCompanyOwner">Leave a Comment</button>
+                </div>
+            </div>
+            <div class="rectangle"></div>
+            <br>
+            <div class="flex-container">
+                <div class="flex-item"  *ngFor="let job of jobs">
+                    <div class="white-container" style="padding: 3%; padding-inline: 4%;">
+
+                        <div class="flex-container" style="padding-inline: 1%;">
+                            <p>
+                                <strong>Company id:</strong>: {{job.companyId}}
+                            </p>
+                        </div>
+                        <div class="flex-container" style="padding-inline: 1%;">
+    
+                            <p><strong>Created at:</strong> {{job.createdAt}}</p>
+                        
+                        </div>
+
+                        <div class="flex-container" style="padding-inline: 1%;">
+    
+                            <p><strong>Position:</strong> {{job.position}}</p>
+                        
+                        </div>
+
+                        <div class="flex-container" style="padding-inline: 1%;">
+    
+                            <p><strong>Description:</strong> {{job.description}}</p>
+                        
+                        </div>
+
+                        <div class="flex-container" style="padding-inline: 1%;">
+    
+                            <p><strong>Requirements:</strong> {{job.requirements}}</p>
+                        
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

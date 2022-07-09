@@ -29,7 +29,7 @@ export class LoginPageComponent implements OnInit {
     this.form = this.formBuilder.group({
       username: ['', Validators.compose([Validators.required, Validators.minLength(4), 
         Validators.maxLength(32)])],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(6), 
+      password: ['', Validators.compose([Validators.required, Validators.minLength(5), 
         Validators.maxLength(32)])]
     });
   }
