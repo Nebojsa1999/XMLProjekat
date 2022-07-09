@@ -8,7 +8,7 @@ import (
 var jobs = []*domain.Job{
 	{
 		Id:        getObjectId("62bdba74ab73b862988b9fa5"),
-		UserId:    getObjectId("123a0cc3a34d25d8567f9f04"),
+		CompanyId: getObjectId("123a0cc3a34d25d8567f9f04"),
 		CreatedAt: getParsedDateOfBirthFrom("2022-06-26T00:00:00Z"),
 		Position:  enums.DevOps,
 		Description: "Have you ever dreamed of creating and designing the future? Making a great impact to the whole world? Being the part of privileged team? Well… we happen to have JUST the opportunity for you! \n\n" +

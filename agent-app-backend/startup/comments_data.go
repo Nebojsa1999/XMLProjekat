@@ -8,8 +8,7 @@ import (
 var comments = []*domain.Comment{
 	{
 		Id:              getObjectId("62bdbe44b55d3b5c0fa891e1"),
-		UserId:          getObjectId("123a0cc3a34d25d8567f9f01"),
-		JobId:           getObjectId("62bdba74ab73b862988b9fa5"),
+		CompanyId:       getObjectId("123a0cc3a34d25d8567f9f01"),
 		Position:        enums.DevOps,
 		Engagement:      enums.FullTime,
 		ExperienceLevel: enums.Junior,

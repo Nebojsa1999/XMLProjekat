@@ -64,7 +64,7 @@ type CompanyRegistrationRequest struct {
 
 type Job struct {
 	Id           primitive.ObjectID `json:"id" bson:"_id"`
-	UserId       primitive.ObjectID `json:"userId" bson:"user_id"`
+	CompanyId    primitive.ObjectID `json:"companyId" bson:"company_id"`
 	CreatedAt    time.Time          `json:"createdAt" bson:"created_at"`
 	Position     string             `json:"position" bson:"position"`
 	Description  string             `json:"description" bson:"description"`
@@ -76,8 +76,7 @@ type Job struct {
 
 type Wage struct {
 	Id              primitive.ObjectID    `json:"id" bson:"_id"`
-	UserId          primitive.ObjectID    `json:"userId" bson:"user_id"`
-	JobId           primitive.ObjectID    `json:"jobId" bson:job_id`
+	CompanyId       primitive.ObjectID    `json:"companyId" bson:"company_id"`
 	Position        enums.Position        `json:"poition" bson:"position"`
 	Engagement      enums.Engagement      `json:"engagement" bson:"engagement"`
 	ExperienceLevel enums.ExperienceLevel `json:"experience_level" bson:"experience_level"`
@@ -86,8 +85,7 @@ type Wage struct {
 
 type Interview struct {
 	Id                 primitive.ObjectID `json:"id" bson:"_id"`
-	UserId             primitive.ObjectID `json:"userId" bson:"user_id"`
-	JobId              primitive.ObjectID `json:"jobId" bson:job_id`
+	CompanyId          primitive.ObjectID `json:"companyId" bson:"company_id"`
 	Position           enums.Position     `json:"poition" bson:"position"`
 	Title              string             `json:"title" bson:"title"`
 	YearOfInterview    string             `json:"yearOfInterview" bson:"year_of_interview"`
@@ -97,8 +95,7 @@ type Interview struct {
 
 type Comment struct {
 	Id              primitive.ObjectID    `json:"id" bson:"_id"`
-	UserId          primitive.ObjectID    `json:"userId" bson:"user_id"`
-	JobId           primitive.ObjectID    `json:"jobId" bson:job_id`
+	CompanyId       primitive.ObjectID    `json:"companyId" bson:"company_id"`
 	Position        enums.Position        `json:"poition" bson:"position"`
 	Engagement      enums.Engagement      `json:"engagement" bson:"engagement"`
 	ExperienceLevel enums.ExperienceLevel `json:"experience_level" bson:"experience_level"`

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { NewWageDto } from 'src/app/components/dto/new-wage.dto';
 import { WageDto } from 'src/app/components/dto/wage.dto';
 import { Wage } from 'src/app/models/wage';
 import { environment } from 'src/environments/environment';
@@ -19,7 +20,7 @@ export class WageService {
     return this._http.get<any>(this.applicationURL + "/agent-app/job/wage");
   }
 
-  createNewWage(dto: WageDto) {
+  createNewWage(dto: NewWageDto) {
     return this._http.post(this.applicationURL + "/agent-app/job/wage/create", dto);
   }
 }

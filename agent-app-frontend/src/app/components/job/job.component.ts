@@ -18,8 +18,7 @@ export class JobComponent implements OnInit {
   allJobs: Job[] = [];
 
   public newJob: NewJobDto = {
-    id: "",
-    userId: "",
+    companyId: "",
     position: "",
     description: "",
     requirements: "",

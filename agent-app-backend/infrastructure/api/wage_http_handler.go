@@ -36,6 +36,23 @@ func (handler *WageHandler) Get(writer http.ResponseWriter, request *http.Reques
 	renderJSON(writer, wage)
 }
 
+func (handler *WageHandler) GetByCompanyId(writer http.ResponseWriter, request *http.Request) {
+	companyId, _ := mux.Vars(request)["companyId"]
+	objectId, err := primitive.ObjectIDFromHex(companyId)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	wage, err := handler.service.GetByCompanyId(objectId)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	renderJSON(writer, wage)
+}
+
 func (handler *WageHandler) GetAll(writer http.ResponseWriter, request *http.Request) {
 	wages, err := handler.service.GetAll()
 	if err != nil {

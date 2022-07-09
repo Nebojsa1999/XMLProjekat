@@ -23,6 +23,10 @@ func (service *CommentService) GetAll() ([]*domain.Comment, error) {
 	return service.store.GetAll()
 }
 
+func (service *CommentService) GetByCompanyId(companyId primitive.ObjectID) (*domain.Comment, error) {
+	return service.store.GetByCompanyId(companyId)
+}
+
 func (service *CommentService) CreateNewComment(comment *domain.Comment) (string, error) {
 	existingComment, _ := service.store.Get(comment.Id)
 	comment.Id = primitive.NewObjectID()

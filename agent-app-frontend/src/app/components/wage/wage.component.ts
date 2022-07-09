@@ -20,8 +20,7 @@ export class WageComponent implements OnInit {
 
   public newWage: WageDto = {
     id: "",
-    userId: "",
-    jobId: "",
+    companyId: "",
     position: "",
     engagement: "",
     experienceLevel: "",

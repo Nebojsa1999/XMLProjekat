@@ -1,6 +1,5 @@
 export interface NewJobDto {
-    id: string;
-    userId: string;
+    companyId: string;
     position: string;
     description: string;
     requirements:string;

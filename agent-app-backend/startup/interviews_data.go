@@ -8,8 +8,7 @@ import (
 var interviews = []*domain.Interview{
 	{
 		Id:                 getObjectId("62bdc05639c6e9c9d3b2757f"),
-		UserId:             getObjectId("123a0cc3a34d25d8567f9f01"),
-		JobId:              getObjectId("62bdba74ab73b862988b9fa5"),
+		CompanyId:          getObjectId("123a0cc3a34d25d8567f9f01"),
 		Position:           enums.DevOps,
 		Title:              "Jako dobar regruterski tim",
 		YearOfInterview:    "2022",

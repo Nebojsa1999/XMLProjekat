@@ -21,8 +21,7 @@ export class CommentComponent implements OnInit {
 
   public newComment: CommentDto = {
     id: "",
-    userId: "",
-    jobId: "",
+    companyId: "",
     position: "",
     engagement: "",
     experienceLevel: "",

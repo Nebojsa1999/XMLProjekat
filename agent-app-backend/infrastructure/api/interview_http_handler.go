@@ -36,6 +36,23 @@ func (handler *InterviewHandler) Get(writer http.ResponseWriter, request *http.R
 	renderJSON(writer, interview)
 }
 
+func (handler *InterviewHandler) GetByCompanyId(writer http.ResponseWriter, request *http.Request) {
+	companyId, _ := mux.Vars(request)["companyId"]
+	objectId, err := primitive.ObjectIDFromHex(companyId)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	interview, err := handler.service.GetByCompanyId(objectId)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	renderJSON(writer, interview)
+}
+
 func (handler *InterviewHandler) GetAll(writer http.ResponseWriter, request *http.Request) {
 	interviews, err := handler.service.GetAll()
 	if err != nil {

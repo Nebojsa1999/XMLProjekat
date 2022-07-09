@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { CommentDto } from 'src/app/components/dto/comment.dto';
 import { CompanyRequestDto } from 'src/app/components/dto/company-request.dto';
 import { CompanyDto } from 'src/app/components/dto/company.dto';
 import { NewCompanyDto } from 'src/app/components/dto/new-company.dto';
@@ -38,7 +39,10 @@ export class CompanyService {
   }
 
   updateCompany(id:string,dto:CompanyDto): Observable<CompanyDto>{
-    return this.http.put<CompanyDto>(`${environment.apiUrl}/agent-app/company-registration-request/${id}/update-by-owner`,dto);
+    return this.http.put<CompanyDto>(`${environment.apiUrl}/agent-app/company/${id}`,dto);
   }
+
+
+
   
 }

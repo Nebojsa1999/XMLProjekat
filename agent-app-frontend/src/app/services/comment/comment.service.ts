@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommentDto } from 'src/app/components/dto/comment.dto';
+import { NewCommentDto } from 'src/app/components/dto/new-comment.dto';
 import { Comment } from 'src/app/models/comment';
 import { environment } from 'src/environments/environment';
 
@@ -19,7 +20,7 @@ export class CommentService {
     return this._http.get<any>(this.applicationURL + "/agent-app/job/comment");
   }
 
-  createNewComment(dto: CommentDto) {
+  createNewComment(dto: NewCommentDto) {
     return this._http.post(this.applicationURL + "/agent-app/job/comment/create", dto);
   }
 }

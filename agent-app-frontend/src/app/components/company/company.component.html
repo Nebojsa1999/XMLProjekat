@@ -9,7 +9,7 @@
                 <div class="form-group row">
                     <label for="name">Company name:</label>
                     <div >
-                        <input class="form-control" type="text" id="name" placeholder="name"
+                        <input matInput style="width: 300px;" class="form-control" type="text" id="name" placeholder="name"
                             formControlName="name">
                         <small *ngIf="companyForm.controls['name'].touched && companyForm.controls['name'].errors?.['required']" class="text-danger">Name is required!</small>          
                     </div>
@@ -18,7 +18,7 @@
                 <div class="form-group row">
                     <label for="name">Company address:</label>
                     <div >
-                        <input class="form-control" type="text" id="address" placeholder="address"
+                        <input style="width: 300px;" class="form-control" type="text" id="address" placeholder="address"
                             formControlName="address">
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                 <div class="form-group row">
                     <label for="name">Company email:</label>
                     <div >
-                        <input class="form-control" type="text" id="email" placeholder="email"
+                        <input style="width: 300px;" class="form-control" type="text" id="email" placeholder="email"
                             formControlName="email">
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                 <div class="form-group row">
                     <label for="name">Company phone:</label>
                     <div >
-                        <input class="form-control" type="text" id="phone" placeholder="phone"
+                        <input style="width: 300px;" class="form-control" type="text" id="phone" placeholder="phone"
                             formControlName="phone">
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                 <div class="form-group row">
                     <label for="name">Area of work:</label>
                     <div >
-                        <textarea class="form-control" type="text" id="areaOfWork" placeholder="Area of work"
+                        <textarea style="width: 700px ; height: 130px;" class="form-control" type="text" id="areaOfWork" placeholder="Area of work"
                             formControlName="areaOfWork"> </textarea>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                 <div class="form-group row">
                     <label for="name">Description:</label>
                     <div >
-                        <textarea class="form-control" type="text" id="description" placeholder="description"
+                        <textarea  style="width: 700px ; height: 130px;"  class="form-control" type="text" id="description" placeholder="description"
                             formControlName="description"> </textarea>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                 <div class="form-group row">
                     <label for="name">Work culture:</label>
                     <div >
-                        <textarea class="form-control" type="text" id="workCulture" placeholder="Work culture"
+                        <textarea  style="width: 700px ; height: 300px;"  class="form-control" type="text" id="workCulture" placeholder="Work culture"
                             formControlName="workCulture"> </textarea>
                     </div>
                 </div>
@@ -68,13 +68,70 @@
 
                 <div class="form-group row float-right" *ngIf="isCompanyOwner">
                     <div class="col-12">
-                        <button class="btn btn-primary " type="submit"
+                        <button  mat-raised-button color="primary"  class="btn btn-primary " type="submit"
                             [disabled]="companyForm.invalid" (click)="onSubmit()" >Save changes</button>
                     </div>
                 </div>
             </form>
          </div>
     </div>
+    <br>
+    <br>
 
+  <!--  <div>
+        <mat-tab-group mat-align-tabs="start" color="warn">
+            
+            <mat-tab label="Comments">
+                <div style="margin-bottom: 10%; margin-top: 6%;">
+                    <div style="padding-bottom: 2%; padding-inline: 0%; margin-bottom: 1%;">
+                        <div class="flex-container">
+
+                            <div class="flex-container flex-item" style="padding-inline: 0%;">
+                                <h3 style="font-weight: 400; margin-bottom:5px; font-size: 24px;"><span
+                                        style="font-weight: 300; margin-right: 10px">Rating:</span> {{company.rating | number : '1.1-1'}} </h3>
+                                <mat-icon color="primary">star</mat-icon>
+                                <h4 style="font-size: 18px; padding-left:2%;"> ({{comments.length}} Comments)</h4>
+                            </div>
+                            <div class="flex-item" style="text-align: right;">
+                                <button mat-button color="warn" (click)="openAddCommentModal()" *ngIf="role == 'ROLE_CLIENT'">Leave a Comment</button>
+                            </div>
+                        </div>
+                        <div class="rectangle"></div>
+                        <br>
+                        <div class="flex-container">
+                            <div class="flex-item"  *ngFor="let comment of comments">
+                                <div class="white-container " style="padding: 3%; padding-inline: 4%;">
+
+                                    <div class="flex-container" style="padding-inline: 5%;">
+                                        <p style="font-size: 12px; font-weight: 300;  ">
+                                            <i>By <span style="font-weight: 400;"> {{comment.authorEmail}}</span>,
+                                                {{ comment.datePosted | date: 'dd.MM.yyyy.' }}</i>
+                                        </p>
+                                    </div>
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                                        <h3 style="font-weight: 400; margin-bottom:5px; font-size: 20px;">{{comment.rating}}</h3>
+                                        <mat-icon color="primary">star</mat-icon><span
+                                            style="margin-inline: 3%;margin-top: 0.5%; font-weight: 600;"> &#183;</span>
+                                        <h3
+                                            style="font-size: 20px; font-weight: 400;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">
+                                            {{comment.title}}
+                                        </h3>
+                                    </div>
+                                    <div>
+                                        <p> {{comment.content}}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+
+
+        </mat-tab-group>
+
+    </div>
+-->
 
 </div>

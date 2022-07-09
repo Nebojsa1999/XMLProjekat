@@ -46,6 +46,23 @@ func (handler *CommentHandler) GetAll(writer http.ResponseWriter, request *http.
 	renderJSON(writer, comments)
 }
 
+func (handler *CommentHandler) GetByCompanyId(writer http.ResponseWriter, request *http.Request) {
+	companyId, _ := mux.Vars(request)["companyId"]
+	objectId, err := primitive.ObjectIDFromHex(companyId)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	comments, err := handler.service.GetByCompanyId(objectId)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	renderJSON(writer, comments)
+}
+
 func (handler *CommentHandler) CreateNewComment(writer http.ResponseWriter, request *http.Request) {
 	if !isContentTypeValid(writer, request) {
 		return

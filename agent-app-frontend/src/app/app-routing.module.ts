@@ -10,10 +10,12 @@ import { RegisterCompanyComponent } from './components/register-company/register
 import { RegisterCompanyRequestsComponent } from './components/register-company-requests/register-company-requests.component';
 import { CompaniesComponent } from './components/companies/companies.component';
 import { CompanyComponent } from './components/company/company.component';
+import { JobComponent } from './components/job/job.component';
 
 const routes: Routes = [
   { path: 'register', component: RegistrationPageComponent },
   { path: 'login', component: LoginPageComponent },
+  { path: 'jobs',component:JobComponent},
   { path: 'register-company',component: RegisterCompanyComponent},
   { path: 'company-requests',component: RegisterCompanyRequestsComponent},
   { path: 'companies' , component: CompaniesComponent},

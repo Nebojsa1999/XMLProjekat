@@ -84,6 +84,12 @@ func isAProtectedRoute(method, path string) bool {
 	pathToSingleCompanyById, _ := regexp.MatchString("/agent-app/company/[0-9a-f]+", path)
 	pathToAllCompanies := "/agent-app/company"
 
+	pathToCompanyRegistrationRequestUpdateByOwner, _ :=
+		regexp.MatchString("/agent-app/company-registration-request/[0-9a-f]+/update-by-owner", path)
+
+	pathToCompany, _ :=
+		regexp.MatchString("/agent-app/company/[0-9a-f]+", path)
+
 	pathToSingleJobById, _ := regexp.MatchString("/agent-app/job/[0-9a-f]+", path)
 	pathToAllJobs := "/agent-app/job"
 
@@ -108,6 +114,11 @@ func isAProtectedRoute(method, path string) bool {
 		if path == pathToUserRegistration || path == pathToUserLogin {
 			return false
 		}
+
+	case "PUT":
+		if pathToCompanyRegistrationRequestUpdateByOwner || pathToCompany {
+			return false
+		}
 	}
 
 	return true
@@ -116,16 +127,15 @@ func isAProtectedRoute(method, path string) bool {
 func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDeterminingData) bool {
 	userId := authorizationDeterminingData.UserId
 	userRole := authorizationDeterminingData.UserRole
-	ownedCompanyId := authorizationDeterminingData.OwnedCompanyId
-	issuedCompanyRequestId := authorizationDeterminingData.IssuedCompanyRequestId
+	//	ownedCompanyId := authorizationDeterminingData.OwnedCompanyId
 	method := authorizationDeterminingData.Method
 	path := authorizationDeterminingData.Path
 
 	pathToUser, _ := regexp.MatchString("/agent-app/user/[0-9a-f]+", path)
 	pathToAllUsers := "/agent-app/user"
 
-	pathToCompany, _ :=
-		regexp.MatchString("/agent-app/company/[0-9a-f]+", path)
+	//pathToCompany, _ :=
+	//	regexp.MatchString("/agent-app/company/[0-9a-f]+", path)
 	pathToCompanyRegistration := "/agent-app/company/register"
 
 	pathToCompanyRegistrationRequest, _ :=
@@ -134,8 +144,7 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 	pathToAcceptedCompanyRegistrationRequests := "/agent-app/company-registration-request/accepted"
 	pathToRejectedCompanyRegistrationRequests := "/agent-app/company-registration-request/rejected"
 	pathToAllCompanyRegistrationRequests := "/agent-app/company-registration-request"
-	pathToCompanyRegistrationRequestUpdateByOwner, _ :=
-		regexp.MatchString("/agent-app/company-registration-request/[0-9a-f]+/update-by-owner", path)
+
 	pathToCompanyRegistrationRequestUpdateByAdministrator, _ :=
 		regexp.MatchString("/agent-app/company-registration-request/[0-9a-f]+/update-by-administrator", path)
 
@@ -199,16 +208,16 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		return false
 	}
 
-	if pathToCompany && method == http.MethodPut {
-		if userRole == enums.CompanyOwner {
-			idInPath := strings.TrimPrefix(path, "/agent-app/company/")
-			if ownedCompanyId == idInPath {
-				return true
-			}
-		}
-
-		return false
-	}
+	//if pathToCompany && method == http.MethodPut {
+	//	if userRole == enums.CompanyOwner {
+	//		idInPath := strings.TrimPrefix(path, "/agent-app/company/")
+	//		if ownedCompanyId == idInPath {
+	//			return true
+	//		}
+	//	}
+	//
+	//	return false
+	//}
 
 	if path == pathToJobCreation && method == "POST" {
 		if userRole == enums.CompanyOwner {
@@ -290,17 +299,6 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		return false
 	}
 
-	if pathToCompanyRegistrationRequestUpdateByOwner && method == http.MethodPut {
-		if userRole == enums.CompanyOwner {
-			idInPath := strings.TrimPrefix(path, "/agent-app/company-registration-request/")
-			if issuedCompanyRequestId == idInPath {
-				return true
-			}
-		}
-
-		return false
-	}
-
 	if (pathToCompanyRegistrationRequest || path == pathToPendingCompanyRegistrationRequests ||
 		path == pathToAcceptedCompanyRegistrationRequests ||
 		path == pathToRejectedCompanyRegistrationRequests ||
@@ -315,17 +313,6 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 	if path == pathToAllCompanyRegistrationRequests && method == http.MethodPost {
 		if userRole == enums.CommonUser {
 			return true
-		}
-
-		return false
-	}
-
-	if pathToCompanyRegistrationRequestUpdateByOwner && method == http.MethodPut {
-		if userRole == enums.CompanyOwner {
-			idInPath := strings.TrimPrefix(path, "/agent-app/company-registration-request/")
-			if issuedCompanyRequestId == idInPath {
-				return true
-			}
 		}
 
 		return false

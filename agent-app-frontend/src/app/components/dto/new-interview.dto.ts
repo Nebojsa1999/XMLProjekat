@@ -1,5 +1,4 @@
-export interface InterviewDto {
-    id: string;
+export interface NewInterviewDto {
     companyId: string;
     position: string;
     title: string;

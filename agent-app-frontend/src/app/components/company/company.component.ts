@@ -1,10 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { Interview } from 'src/app/models/interview';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { CommentService } from 'src/app/services/comment/comment.service';
 import { CompanyService } from 'src/app/services/company-service/company.service';
+import { InterviewService } from 'src/app/services/interview/interview.service';
+import { WageService } from 'src/app/services/wage/wage.service';
+import { AddCommentComponent } from '../add-comment/add-comment.component';
+import { AddInterviewComponent } from '../add-interview/add-interview.component';
+import { AddWageComponent } from '../add-wage/add-wage.component';
+import { CommentDto } from '../dto/comment.dto';
 import { CompanyDto } from '../dto/company.dto';
+import { InterviewDto } from '../dto/interview.dto';
+import { WageDto } from '../dto/wage.dto';
 
 @Component({
   selector: 'app-company',
@@ -33,9 +43,13 @@ export class CompanyComponent implements OnInit {
 
   currentUserId:any;
 
+  comments: CommentDto[] = []
+  interviews: InterviewDto[] = []
+  wages: WageDto[]=[]
+
   companyForm: FormGroup;
 
-  constructor(private fb: FormBuilder,public matDialog: MatDialog, private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder,public matDialog: MatDialog, private companyService: CompanyService,private wageService:WageService,private interviewService: InterviewService,private commentService:CommentService, private route: ActivatedRoute) {
     this.companyForm = this.fb.group({
       name: ["", [Validators.required]],
       address: ["", []],
@@ -50,7 +64,6 @@ export class CompanyComponent implements OnInit {
 
   ngOnInit(): void {
     this.cid =  this.route.snapshot.url[1].path;
-
     this.companyService.getCompany(this.cid).subscribe((response) => {
       this.company = response;
       this.companyForm.patchValue(this.company);
@@ -59,6 +72,20 @@ export class CompanyComponent implements OnInit {
       this.isCompanyOwnerCheck();
     })
     this.currentUserId=localStorage.getItem('id');
+
+    // this.commentService.getComments(this.cid).subscribe((response) => {
+    //   this.comments = response;
+    // })
+
+    // this.interviewService.getInterviews(this.cid).subscribe((response) => {
+    //   this.interviews = response;
+    // })
+
+    // this.wageService.getWages(this.cid).subscribe((response) => {
+    //   this.wages = response;
+    // })
+
+ 
   }
 
   isCompanyOwnerCheck():void{
@@ -83,6 +110,43 @@ export class CompanyComponent implements OnInit {
 
       }
     )
+  }
+
+  openNewCommentDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.height = "450px";
+    dialogConfig.width = "35%";
+    const modalDialog = this.matDialog.open(AddCommentComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      location.reload()
+    })
+    
+  }
+
+  openNewInterviewDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.height = "450px";
+    dialogConfig.width = "35%";
+    const modalDialog = this.matDialog.open(AddInterviewComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      location.reload()
+    })
+    
+  }
+
+
+  openNewWageDialog(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.height = "450px";
+    dialogConfig.width = "35%";
+    const modalDialog = this.matDialog.open(AddWageComponent, dialogConfig);
+    modalDialog.afterClosed().subscribe(result => {
+      location.reload()
+    })
+    
   }
 
   

@@ -20,8 +20,7 @@ export class InterviewComponent implements OnInit {
 
   public newInterview: InterviewDto = {
     id: "",
-    userId: "",
-    jobId: "",
+    companyId: "",
     position: "",
     title: "",
     yearOfInterview: "",
