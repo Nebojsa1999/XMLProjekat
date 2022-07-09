@@ -30,15 +30,15 @@ export class WageComponent implements OnInit {
   constructor(private wageService: WageService, public matDialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.wageService.getWages().subscribe(
-      response => {
-        this.wages = response.wages;
-        console.log(this.wages);
-        this.allWages = response.wages;
-        console.log(this.allWages);
-;
-      }
-    )
+//     this.wageService.getWages().subscribe(
+//       response => {
+//         this.wages = response.wages;
+//         console.log(this.wages);
+//         this.allWages = response.wages;
+//         console.log(this.allWages);
+// ;
+//       }
+//     )
   }
 
   openNewWageDialog(): void {

@@ -23,7 +23,7 @@ func (service *CommentService) GetAll() ([]*domain.Comment, error) {
 	return service.store.GetAll()
 }
 
-func (service *CommentService) GetByCompanyId(companyId primitive.ObjectID) (*domain.Comment, error) {
+func (service *CommentService) GetByCompanyId(companyId primitive.ObjectID) ([]*domain.Comment, error) {
 	return service.store.GetByCompanyId(companyId)
 }
 

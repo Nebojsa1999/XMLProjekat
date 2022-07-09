@@ -41,14 +41,10 @@ func (store *CommentMongoDBStore) Get(id primitive.ObjectID) (*domain.Comment, e
 	return existingUser, nil
 }
 
-func (store *CommentMongoDBStore) GetByCompanyId(companyId primitive.ObjectID) (*domain.Comment, error) {
+func (store *CommentMongoDBStore) GetByCompanyId(companyId primitive.ObjectID) ([]*domain.Comment, error) {
 	filter := bson.M{"company_id": companyId}
-	existingComment, err := store.filterOne(filter)
-	if err != nil {
-		return nil, err
-	}
 
-	return existingComment, nil
+	return store.filter(filter)
 }
 
 func (store *CommentMongoDBStore) CreateNewComment(comment *domain.Comment) (string, error) {

@@ -70,7 +70,7 @@ func ConfigureRouter(handlers Handlers) *mux.Router {
 
 	router.HandleFunc("/agent-app/job/comment/{id:[0-9a-f]+}",
 		handlers.CommentHandler.Get).Methods("GET")
-	router.HandleFunc("/agent-app/job/comment/{companyId:[0-9a-f]+}",
+	router.HandleFunc("/agent-app/company/comment/{companyId:[0-9a-f]+}",
 		handlers.CommentHandler.GetByCompanyId).Methods("GET")
 	router.HandleFunc("/agent-app/job/comment",
 		handlers.CommentHandler.GetAll).Methods("GET")
@@ -81,7 +81,7 @@ func ConfigureRouter(handlers Handlers) *mux.Router {
 
 	router.HandleFunc("/agent-app/job/wage/{id:[0-9a-f]+}",
 		handlers.WageHandler.Get).Methods("GET")
-	router.HandleFunc("/agent-app/job/wage/{companyId:[0-9a-f]+}",
+	router.HandleFunc("/agent-app/company/wage/{companyId:[0-9a-f]+}",
 		handlers.WageHandler.GetByCompanyId).Methods("GET")
 	router.HandleFunc("/agent-app/job/wage",
 		handlers.WageHandler.GetAll).Methods("GET")
@@ -92,7 +92,7 @@ func ConfigureRouter(handlers Handlers) *mux.Router {
 
 	router.HandleFunc("/agent-app/job/interview/{id:[0-9a-f]+}",
 		handlers.InterviewHandler.Get).Methods("GET")
-	router.HandleFunc("/agent-app/job/interview/{companyId:[0-9a-f]+}",
+	router.HandleFunc("/agent-app/company/interview/{companyId:[0-9a-f]+}",
 		handlers.InterviewHandler.GetByCompanyId).Methods("GET")
 	router.HandleFunc("/agent-app/job/interview",
 		handlers.InterviewHandler.GetAll).Methods("GET")

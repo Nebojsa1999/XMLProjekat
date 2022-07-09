@@ -19,7 +19,7 @@ func (service *InterviewService) Get(id primitive.ObjectID) (*domain.Interview, 
 	return service.store.Get(id)
 }
 
-func (service *InterviewService) GetByCompanyId(companyId primitive.ObjectID) (*domain.Interview, error) {
+func (service *InterviewService) GetByCompanyId(companyId primitive.ObjectID) ([]*domain.Interview, error) {
 	return service.store.GetByCompanyId(companyId)
 }
 

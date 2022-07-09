@@ -73,17 +73,21 @@ export class CompanyComponent implements OnInit {
     })
     this.currentUserId=localStorage.getItem('id');
 
-    // this.commentService.getComments(this.cid).subscribe((response) => {
-    //   this.comments = response;
-    // })
+    console.log(this.cid)
+    this.commentService.getComments(this.cid).subscribe((response) => {
+      this.comments = response;
+      console.log(response)
+    })
 
-    // this.interviewService.getInterviews(this.cid).subscribe((response) => {
-    //   this.interviews = response;
-    // })
+    this.interviewService.getInterviews(this.cid).subscribe((response) => {
+      this.interviews = response;
+      console.log(response)
+    })
 
-    // this.wageService.getWages(this.cid).subscribe((response) => {
-    //   this.wages = response;
-    // })
+    this.wageService.getWages(this.cid).subscribe((response) => {
+      this.wages = response;
+      console.log(response)
+    })
 
  
   }

@@ -16,8 +16,8 @@ export class CommentService {
   constructor(private _http: HttpClient) { }
 
 
-  getComments(): Observable<any> {
-    return this._http.get<any>(this.applicationURL + "/agent-app/job/comment");
+  getComments(id:string): Observable<CommentDto[]> {
+    return this._http.get<CommentDto[]>(`${this.applicationURL}/agent-app/company/comment/${id}`);
   }
 
   createNewComment(dto: NewCommentDto) {

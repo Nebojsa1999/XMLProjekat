@@ -16,8 +16,8 @@ export class InterviewService {
   constructor(private _http: HttpClient) { }
 
 
-  getInterviews(): Observable<any> {
-    return this._http.get<any>(this.applicationURL + "/agent-app/job/interview");
+  getInterviews(id:string): Observable<any> {
+    return this._http.get<any>(`${this.applicationURL}/agent-app/company/interview/${id}`);
   }
 
   createNewInterview(dto: NewInterviewDto) {

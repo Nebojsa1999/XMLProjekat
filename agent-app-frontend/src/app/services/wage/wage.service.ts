@@ -16,8 +16,8 @@ export class WageService {
   constructor(private _http: HttpClient) { }
 
 
-  getWages(): Observable<any> {
-    return this._http.get<any>(this.applicationURL + "/agent-app/job/wage");
+  getWages(id:string): Observable<any> {
+    return this._http.get<any>(`${this.applicationURL}/agent-app/company/wage/${id}`);
   }
 
   createNewWage(dto: NewWageDto) {

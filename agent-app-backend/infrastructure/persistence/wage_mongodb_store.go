@@ -41,14 +41,14 @@ func (store *WageMongoDBStore) Get(id primitive.ObjectID) (*domain.Wage, error) 
 	return existingUser, nil
 }
 
-func (store *WageMongoDBStore) GetByCompanyId(companyId primitive.ObjectID) (*domain.Wage, error) {
+func (store *WageMongoDBStore) GetByCompanyId(companyId primitive.ObjectID) ([]*domain.Wage, error) {
 	filter := bson.M{"company_id": companyId}
-	existingUser, err := store.filterOne(filter)
-	if err != nil {
-		return nil, err
-	}
+	//existingUser, err := store.filterOne(filter)
+	//if err != nil {
+	//	return nil, err
+	//}
 
-	return existingUser, nil
+	return store.filter(filter)
 }
 
 func (store *WageMongoDBStore) CreateNewWage(wage *domain.Wage) (string, error) {

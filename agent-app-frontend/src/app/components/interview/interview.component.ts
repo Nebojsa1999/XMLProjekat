@@ -31,15 +31,15 @@ export class InterviewComponent implements OnInit {
   constructor(private interviewService: InterviewService, public matDialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.interviewService.getInterviews().subscribe(
-      response => {
-        this.interviews = response.interviews;
-        console.log(this.interviews);
-        this.allInterviews = response.interviews;
-        console.log(this.allInterviews);
-;
-      }
-    )
+//     this.interviewService.getInterviews().subscribe(
+//       response => {
+//         this.interviews = response.interviews;
+//         console.log(this.interviews);
+//         this.allInterviews = response.interviews;
+//         console.log(this.allInterviews);
+// ;
+//       }
+//     )
   }
 
   openNewInterviewDialog(): void {

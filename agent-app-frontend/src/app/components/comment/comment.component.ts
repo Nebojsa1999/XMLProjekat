@@ -31,15 +31,15 @@ export class CommentComponent implements OnInit {
   constructor(private commentService: CommentService, public matDialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.commentService.getComments().subscribe(
-      response => {
-        this.comments = response.comments;
-        console.log(this.comments);
-        this.allComments = response.comments;
-        console.log(this.allComments);
-;
-      }
-    )
+//     this.commentService.getComments().subscribe(
+//       response => {
+//         this.comments = response.comments;
+//         console.log(this.comments);
+//         this.allComments = response.comments;
+//         console.log(this.allComments);
+// ;
+//       }
+//     )
   }
 
   openNewCommentDialog(): void {

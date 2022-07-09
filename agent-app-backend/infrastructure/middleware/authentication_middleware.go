@@ -94,20 +94,20 @@ func isAProtectedRoute(method, path string) bool {
 	pathToAllJobs := "/agent-app/job"
 
 	pathToSingleCommentById, _ := regexp.MatchString("/agent-app/job/comment/[0-9a-f]+", path)
-	pathToAllComments := "/agent-app/job/comment"
+	pathToAllComments, _ := regexp.MatchString("/agent-app/company/comment/[0-9a-f]+", path)
 
 	pathToSingleWageById, _ := regexp.MatchString("/agent-app/job/wage/[0-9a-f]+", path)
-	pathToAllWages := "/agent-app/job/wage"
+	pathToAllWages, _ := regexp.MatchString("/agent-app/company/wage/[0-9a-f]+", path)
 
 	pathToSingleInterviewById, _ := regexp.MatchString("/agent-app/job/interview/[0-9a-f]+", path)
-	pathToAllInterviews := "/agent-app/job/interview"
+	pathToAllInterviews, _ := regexp.MatchString("/agent-app/company/interview/[0-9a-f]+", path)
 
 	pathToUserRegistration := "/agent-app/user/register"
 	pathToUserLogin := "/agent-app/user/login"
 
 	switch method {
 	case "GET":
-		if pathToSingleCompanyById || path == pathToAllCompanies || pathToSingleJobById || path == pathToAllJobs || pathToSingleCommentById || path == pathToAllComments || pathToSingleWageById || path == pathToAllWages || pathToSingleInterviewById || path == pathToAllInterviews {
+		if pathToSingleCompanyById || path == pathToAllCompanies || pathToSingleJobById || path == pathToAllJobs || pathToSingleCommentById || pathToAllComments || pathToSingleWageById || pathToAllWages || pathToSingleInterviewById || pathToAllInterviews {
 			return false
 		}
 	case "POST":

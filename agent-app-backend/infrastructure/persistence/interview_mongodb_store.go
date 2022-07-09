@@ -41,14 +41,10 @@ func (store *InterviewMongoDBStore) Get(id primitive.ObjectID) (*domain.Intervie
 	return existingUser, nil
 }
 
-func (store *InterviewMongoDBStore) GetByCompanyId(companyId primitive.ObjectID) (*domain.Interview, error) {
+func (store *InterviewMongoDBStore) GetByCompanyId(companyId primitive.ObjectID) ([]*domain.Interview, error) {
 	filter := bson.M{"company_id": companyId}
-	existingUser, err := store.filterOne(filter)
-	if err != nil {
-		return nil, err
-	}
 
-	return existingUser, nil
+	return store.filter(filter)
 }
 
 func (store *InterviewMongoDBStore) CreateNewInterview(interview *domain.Interview) (string, error) {

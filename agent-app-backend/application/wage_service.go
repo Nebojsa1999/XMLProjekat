@@ -19,7 +19,7 @@ func (service *WageService) Get(id primitive.ObjectID) (*domain.Wage, error) {
 	return service.store.Get(id)
 }
 
-func (service *WageService) GetByCompanyId(companyId primitive.ObjectID) (*domain.Wage, error) {
+func (service *WageService) GetByCompanyId(companyId primitive.ObjectID) ([]*domain.Wage, error) {
 	return service.store.GetByCompanyId(companyId)
 }
 
