@@ -66,7 +66,7 @@ func (handler *PostJobHandler) PostAJobOffer(writer http.ResponseWriter, request
 		return
 	}
 
-	err = handler.createJob(postJobOfferRequest.Job)
+	err = handler.createJob(postJobOfferRequest.Job, userId)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
@@ -131,12 +131,12 @@ func (handler *PostJobHandler) hasUserGeneratedJobOffersAPIToken(jobOffersAPITok
 	return nil
 }
 
-func (handler *PostJobHandler) createJob(job *domain.Job) error {
+func (handler *PostJobHandler) createJob(job *domain.Job, userId string) error {
 	jobClient := services.NewJobClient(handler.jobClientAddress)
 
 	jobProtobufObject := jobPb.Job{
 		Id:           job.Id,
-		UserId:       job.UserId,
+		UserId:       userId,
 		CreatedAt:    timestamppb.New(job.CreatedAt),
 		Position:     job.Position,
 		Description:  job.Description,

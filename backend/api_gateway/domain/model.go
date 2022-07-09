@@ -42,7 +42,7 @@ type GetAllPostsRequest struct {
 
 type Job struct {
 	Id           string
-	UserId       string
+	CompanyId    string
 	CreatedAt    time.Time
 	Position     string
 	Description  string

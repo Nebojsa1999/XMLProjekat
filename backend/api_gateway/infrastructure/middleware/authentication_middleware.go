@@ -88,13 +88,13 @@ func isAProtectedRoute(method, path string) bool {
 
 	isPathToConnection, _ := regexp.MatchString("/connection/[0-9a-f]+", path)
 	pathToConnections := "/connection"
-	//isPathToConnectionDelete, _ := regexp.MatchString("/connection?issuerId=[0-9a-f]+&subjectId=[0-9a-f]+", path)
 
 	isPathToJob, _ := regexp.MatchString("/job/[0-9a-f]+", path)
 	pathToAllJobs := "/job/jobs"
 	pathToJobAdding := "/job"
 	pathToJobEdit := "/job/editJob"
 
+	pathToCreationOfPostFromAgentAppByAPIToken := "/post/job-offer"
 	isPathToPostFromUser, _ := regexp.MatchString("/user/[0-9a-f]+/post/[0-9a-f]+", path)
 	isPathToAllPostsFromUser, _ := regexp.MatchString("/user/[0-9a-f]+/post", path)
 	isPathToCommentsOfPost, _ := regexp.MatchString("/user/[0-9a-f]+/post/[0-9a-f]+/comment", path)
@@ -126,8 +126,9 @@ func isAProtectedRoute(method, path string) bool {
 			return false
 		}
 	case http.MethodPost:
-		if path == pathToConnections || path == pathToJobAdding || path == "/user/register" ||
-			path == "/user/login" || path == "/user/search" || isPathToCommentsOfPost {
+		if path == pathToCreationOfPostFromAgentAppByAPIToken || path == pathToConnections ||
+			path == pathToJobAdding || path == "/user/register" || path == "/user/login" ||
+			path == "/user/search" || isPathToCommentsOfPost {
 			return false
 		}
 	case http.MethodPut:
