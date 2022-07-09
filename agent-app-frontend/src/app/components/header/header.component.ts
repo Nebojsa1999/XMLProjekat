@@ -11,6 +11,7 @@ export class HeaderComponent implements OnInit {
 
   isAuthenticated = false;
   role : any;
+  user:any;
 
   constructor(private router: Router,private service:AuthService) { }
 
@@ -18,6 +19,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void { 
     this.isLoggedIn();
+    this.user=localStorage.getItem('username');
     this.role=localStorage.getItem('role');
     console.log(this.role);
   }

@@ -1,5 +1,6 @@
 <mat-toolbar color="primary" class="navbar">
     <button style="font-size: 25px" mat-button routerLink="/">AgentApp</button>
+    <button style="font-size: 12px" mat-button *ngIf="isAuthenticated" >{{user}}</button>
     <button  mat-raised-button mat-button  [routerLink]="['/register-company']" *ngIf="role == 'CommonUser' && isAuthenticated">Company Registration</button>
     <button mat-raised-button mat-button [routerLink]="['/companies']" *ngIf="isAuthenticated">Companies</button>
     <button mat-raised-button mat-button [routerLink]="['/jobs']" *ngIf="isAuthenticated">Jobs</button>
