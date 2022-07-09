@@ -51,6 +51,74 @@ func (handler *ConnectionHandler) GetAll(ctx context.Context, request *pb.GetAll
 	return response, nil
 }
 
+func (handler *ConnectionHandler) GetConnectionOfFollowingType(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
+	id := getObjectId(request.Id)
+
+	followingConnection, err := handler.service.GetConnectionOfFollowingType(id)
+	if err != nil {
+		return nil, err
+	}
+
+	followingConnectionPb := mapDomainConnectionToPbConnection(followingConnection)
+	response := &pb.GetResponse{
+		Connection: followingConnectionPb,
+	}
+
+	return response, nil
+}
+
+func (handler *ConnectionHandler) GetAllConnectionsOfFollowingType(ctx context.Context, request *pb.GetAllRequest) (*pb.GetMultipleResponse, error) {
+	followingConnections, err := handler.service.GetAllConnectionsOfFollowingType()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &pb.GetMultipleResponse{
+		Connections: []*pb.Connection{},
+	}
+
+	for _, fC := range followingConnections {
+		current := mapDomainConnectionToPbConnection(fC)
+		response.Connections = append(response.Connections, current)
+	}
+
+	return response, nil
+}
+
+func (handler *ConnectionHandler) GetConnectionOfBlockingType(ctx context.Context, request *pb.GetRequest) (*pb.GetResponse, error) {
+	id := getObjectId(request.Id)
+
+	blockingConnection, err := handler.service.GetConnectionOfBlockingType(id)
+	if err != nil {
+		return nil, err
+	}
+
+	blockingConnectionPb := mapDomainConnectionToPbConnection(blockingConnection)
+	response := &pb.GetResponse{
+		Connection: blockingConnectionPb,
+	}
+
+	return response, nil
+}
+
+func (handler *ConnectionHandler) GetAllConnectionsOfBlockingType(ctx context.Context, request *pb.GetAllRequest) (*pb.GetMultipleResponse, error) {
+	blockingConnections, err := handler.service.GetAllConnectionsOfBlockingType()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &pb.GetMultipleResponse{
+		Connections: []*pb.Connection{},
+	}
+
+	for _, bC := range blockingConnections {
+		current := mapDomainConnectionToPbConnection(bC)
+		response.Connections = append(response.Connections, current)
+	}
+
+	return response, nil
+}
+
 func (handler *ConnectionHandler) GetByUserId(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
 	userId := getObjectId(request.UserId)
 
@@ -71,10 +139,10 @@ func (handler *ConnectionHandler) GetByUserId(ctx context.Context, request *pb.G
 	return response, nil
 }
 
-func (handler *ConnectionHandler) GetFollowingByUserId(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
+func (handler *ConnectionHandler) GetConnectionsOfFollowingTypeByUserId(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
 	userId := getObjectId(request.UserId)
 
-	connections, err := handler.service.GetFollowingByUserId(userId)
+	followingConnections, err := handler.service.GetConnectionsOfFollowingTypeByUserId(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -83,8 +151,48 @@ func (handler *ConnectionHandler) GetFollowingByUserId(ctx context.Context, requ
 		Connections: []*pb.Connection{},
 	}
 
-	for _, connection := range connections {
-		current := mapDomainConnectionToPbConnection(connection)
+	for _, fC := range followingConnections {
+		current := mapDomainConnectionToPbConnection(fC)
+		response.Connections = append(response.Connections, current)
+	}
+
+	return response, nil
+}
+
+func (handler *ConnectionHandler) GetConnectionsOfBlockingTypeByUserId(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
+	userId := getObjectId(request.UserId)
+
+	blockingConnections, err := handler.service.GetConnectionsOfBlockingTypeByUserId(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &pb.GetMultipleResponse{
+		Connections: []*pb.Connection{},
+	}
+
+	for _, bC := range blockingConnections {
+		current := mapDomainConnectionToPbConnection(bC)
+		response.Connections = append(response.Connections, current)
+	}
+
+	return response, nil
+}
+
+func (handler *ConnectionHandler) GetFollowingByUserId(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
+	userId := getObjectId(request.UserId)
+
+	connectionsInWhichTheGivenUserIsFollowing, err := handler.service.GetFollowingByUserId(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &pb.GetMultipleResponse{
+		Connections: []*pb.Connection{},
+	}
+
+	for _, c := range connectionsInWhichTheGivenUserIsFollowing {
+		current := mapDomainConnectionToPbConnection(c)
 		response.Connections = append(response.Connections, current)
 	}
 
@@ -94,7 +202,7 @@ func (handler *ConnectionHandler) GetFollowingByUserId(ctx context.Context, requ
 func (handler *ConnectionHandler) GetFollowersByUserId(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
 	userId := getObjectId(request.UserId)
 
-	connections, err := handler.service.GetFollowersByUserId(userId)
+	connectionsInWhichTheGivenUserIsFollowed, err := handler.service.GetFollowersByUserId(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -103,9 +211,69 @@ func (handler *ConnectionHandler) GetFollowersByUserId(ctx context.Context, requ
 		Connections: []*pb.Connection{},
 	}
 
-	for _, connection := range connections {
-		current := mapDomainConnectionToPbConnection(connection)
+	for _, c := range connectionsInWhichTheGivenUserIsFollowed {
+		current := mapDomainConnectionToPbConnection(c)
 		response.Connections = append(response.Connections, current)
+	}
+
+	return response, nil
+}
+
+func (handler *ConnectionHandler) GetConnectionsInWhichTheGivenUserIsBlocker(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
+	userId := getObjectId(request.UserId)
+
+	connectionsInWhichTheGivenUserIsBlocker, err := handler.service.GetConnectionsInWhichTheGivenUserIsBlocker(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &pb.GetMultipleResponse{
+		Connections: []*pb.Connection{},
+	}
+
+	for _, c := range connectionsInWhichTheGivenUserIsBlocker {
+		current := mapDomainConnectionToPbConnection(c)
+		response.Connections = append(response.Connections, current)
+	}
+
+	return response, nil
+}
+
+func (handler *ConnectionHandler) GetConnectionsInWhichTheGivenUserIsBlockedOne(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetMultipleResponse, error) {
+	userId := getObjectId(request.UserId)
+
+	connectionsInWhichTheGivenUserIsBlockedOne, err := handler.service.GetConnectionsInWhichTheGivenUserIsBlockedOne(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &pb.GetMultipleResponse{
+		Connections: []*pb.Connection{},
+	}
+
+	for _, c := range connectionsInWhichTheGivenUserIsBlockedOne {
+		current := mapDomainConnectionToPbConnection(c)
+		response.Connections = append(response.Connections, current)
+	}
+
+	return response, nil
+}
+
+func (handler *ConnectionHandler) GetFollowingUsersIds(ctx context.Context, request *pb.GetByUserIdRequest) (*pb.GetFollowingUsersIdsResponse, error) {
+	userId := getObjectId(request.UserId)
+
+	followingUsersIds, err := handler.service.GetFollowingUsersIds(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &pb.GetFollowingUsersIdsResponse{
+		Ids: []string{},
+	}
+
+	for _, id := range followingUsersIds {
+		current := id.Hex()
+		response.Ids = append(response.Ids, current)
 	}
 
 	return response, nil
@@ -134,10 +302,11 @@ func (handler *ConnectionHandler) Update(ctx context.Context, request *pb.Update
 }
 
 func (handler *ConnectionHandler) Delete(ctx context.Context, request *pb.DeleteRequest) (*pb.DeleteResponse, error) {
+	typeAsString := request.Type
 	issuerId := getObjectId(request.IssuerId)
 	subjectId := getObjectId(request.SubjectId)
 
-	err := handler.service.Delete(issuerId, subjectId)
+	err := handler.service.Delete(typeAsString, issuerId, subjectId)
 	if err != nil {
 		return nil, err
 	}

@@ -10,6 +10,7 @@ import (
 func mapDomainConnectionToPbConnection(connection *domain.Connection) *pb.Connection {
 	return &pb.Connection{
 		Id:         connection.Id.Hex(),
+		Type:       mapDomainTypeOfConnectionToPbTypeOfConnection(connection.Type),
 		IssuerId:   connection.IssuerId.Hex(),
 		SubjectId:  connection.SubjectId.Hex(),
 		Date:       timestamppb.New(connection.Date),
@@ -20,6 +21,7 @@ func mapDomainConnectionToPbConnection(connection *domain.Connection) *pb.Connec
 func mapPbConnectionToDomainConnection(pbConnection *pb.Connection) *domain.Connection {
 	return &domain.Connection{
 		Id:         getObjectId(pbConnection.Id),
+		Type:       mapPbTypeOfConnectionToDomainTypeOfConnection(pbConnection.Type),
 		IssuerId:   getObjectId(pbConnection.IssuerId),
 		SubjectId:  getObjectId(pbConnection.SubjectId),
 		Date:       pbConnection.Date.AsTime(),
@@ -27,19 +29,37 @@ func mapPbConnectionToDomainConnection(pbConnection *pb.Connection) *domain.Conn
 	}
 }
 
+func mapDomainTypeOfConnectionToPbTypeOfConnection(typeOfConnection domain.TypeOfConnection) pb.TypeOfConnection {
+	if typeOfConnection == domain.Following {
+		return pb.TypeOfConnection_Following
+	} else {
+		return pb.TypeOfConnection_Blocking
+	}
+}
+
+func mapPbTypeOfConnectionToDomainTypeOfConnection(typeOfConnection pb.TypeOfConnection) domain.TypeOfConnection {
+	if typeOfConnection == pb.TypeOfConnection_Following {
+		return domain.Following
+	} else {
+		return domain.Blocking
+	}
+}
+
 func mapDomainConnectionUpdateDTOToPbConnectionUpdateDTO(connectionUpdateDTO *domain.ConnectionUpdateDTO) *pb.ConnectionUpdateDTO {
 	return &pb.ConnectionUpdateDTO{
-		IssuerId:  connectionUpdateDTO.IssuerId.Hex(),
-		SubjectId: connectionUpdateDTO.SubjectId.Hex(),
-		IsApproved:  connectionUpdateDTO.IsApproved,
+		Type:       mapDomainTypeOfConnectionToPbTypeOfConnection(connectionUpdateDTO.Type),
+		IssuerId:   connectionUpdateDTO.IssuerId.Hex(),
+		SubjectId:  connectionUpdateDTO.SubjectId.Hex(),
+		IsApproved: connectionUpdateDTO.IsApproved,
 	}
 }
 
 func mapPbConnectionUpdateDTOToDomainConnectionUpdateDTO(pbConnectionUpdateDTO *pb.ConnectionUpdateDTO) *domain.ConnectionUpdateDTO {
 	return &domain.ConnectionUpdateDTO{
-		IssuerId:  getObjectId(pbConnectionUpdateDTO.IssuerId),
-		SubjectId: getObjectId(pbConnectionUpdateDTO.SubjectId),
-		IsApproved:  pbConnectionUpdateDTO.IsApproved,
+		Type:       mapPbTypeOfConnectionToDomainTypeOfConnection(pbConnectionUpdateDTO.Type),
+		IssuerId:   getObjectId(pbConnectionUpdateDTO.IssuerId),
+		SubjectId:  getObjectId(pbConnectionUpdateDTO.SubjectId),
+		IsApproved: pbConnectionUpdateDTO.IsApproved,
 	}
 }
 

@@ -60,11 +60,11 @@ func isAProtectedRoute(method, path string) bool {
 	isPathToPostsOfPublicUser, _ := regexp.MatchString("/user/[0-9a-f]{24}/public", path)
 
 	switch method {
-	case "GET":
+	case http.MethodGet:
 		if isPathToPostsOfPublicUser || path == "/post/public" || path == "/user/public" {
 			return false
 		}
-	case "POST":
+	case http.MethodPost:
 		if path == "/user/register" || path == "/user/login" || path == "/user/search" {
 			return false
 		}
