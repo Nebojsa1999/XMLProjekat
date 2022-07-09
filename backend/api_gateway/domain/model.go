@@ -1,7 +1,7 @@
 package domain
 
 import (
-	postPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
+	postingPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/posting_service"
 	userPb "github.com/Nebojsa1999/XMLProjekat/backend/common/proto/user_service"
 
 	"time"
@@ -32,12 +32,12 @@ type UserRegistrationRequest struct {
 type UserStatusRequest struct {
 	Id        string
 	IsPrivate bool
-	Posts     []*postPb.Post
+	Posts     []*postingPb.Post
 }
 
 type GetAllPostsRequest struct {
 	UserIds []string
-	Posts   []*postPb.Post
+	Posts   []*postingPb.Post
 }
 
 type Job struct {
@@ -57,4 +57,29 @@ type PostJobOfferRequest struct {
 type JobOffersAPITokenStatusRequest struct {
 	UserId            string
 	HasGeneratedToken bool
+}
+
+type Post struct {
+	Id            string
+	OwnerId       string
+	Content       string
+	Image         string
+	LikesCount    int
+	DislikesCount int
+	Comments      []*Comment
+	Link          []string
+	WhoLiked      []string
+	WhoDisliked   []string
+	PostedAt      string
+}
+
+type Comment struct {
+	Code    string
+	Content string
+}
+
+type GetPostsOfFollowingUsersRequest struct {
+	UserId                string
+	FollowingIds          []string
+	PostsOfFollowingUsers []*postingPb.Post
 }

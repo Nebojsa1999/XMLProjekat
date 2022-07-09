@@ -18,6 +18,12 @@ service UserService{
       get: "/user"
     };
   }
+
+  rpc GetAllPublicUsers(GetAllRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/user/public"
+    };
+  }
   rpc RegisterANewUser(RegisterRequest) returns(RegisterResponse) {
     option (google.api.http) = {
       post: "/user/register",

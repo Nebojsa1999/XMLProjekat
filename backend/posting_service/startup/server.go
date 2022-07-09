@@ -11,7 +11,6 @@ import (
 	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/infrastructure/api"
 	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/infrastructure/persistence"
 	"github.com/Nebojsa1999/XMLProjekat/backend/posting_service/startup/config"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 )
@@ -48,10 +47,9 @@ func (server *Server) initMongoClient() *mongo.Client {
 func (server *Server) initPostStore(client *mongo.Client) domain.PostStore {
 	store := persistence.NewPostMongoDBStore(client)
 	store.DeleteAll()
-	id, _ := primitive.ObjectIDFromHex("000000000000000000000000")
 
 	for _, postRequest := range posts {
-		_, err := store.CreatePost(id, &postRequest)
+		_, err := store.CreatePost(postRequest.OwnerId, &postRequest)
 		if err != nil {
 			log.Fatal(err)
 		}

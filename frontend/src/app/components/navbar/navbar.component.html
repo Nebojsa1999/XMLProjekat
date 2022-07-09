@@ -1,0 +1,20 @@
+<mat-toolbar style="height: 7%; padding-inline: 15%; background-color: rgb(49, 169, 190); box-shadow: 2px 2px 10px #e6e6e6;" >
+
+    <span style="margin-left: 1%; margin-right: 5%; ">Dislinked</span>
+
+    <button *ngIf="isAuthenticated" mat-button class="example-icon" aria-label="Example icon-button with menu icon" [routerLink]="['/posts']">
+        Home
+    </button>
+    <button *ngIf="isAuthenticated" mat-button  [routerLink]="['/allprofiles']"> All Profiles</button>
+    <button *ngIf="isAuthenticated" mat-button   [routerLink]="['/connections']" > Connections</button>
+    <button *ngIf="isAuthenticated" mat-button   [routerLink]="['/requests']"> Requests</button>
+    <button *ngIf="isAuthenticated"  mat-button [routerLink]="['/jobs']" >Jobs</button>
+    <button *ngIf="isAuthenticated" mat-button (click)="openProfile()" >My profile</button>
+    
+    <button *ngIf="!isAuthenticated" mat-button [routerLink]="['/profiles']">Profiles</button>
+    <span class="example-spacer"></span>
+    <button mat-button *ngIf="isAuthenticated" (click)="signOut()">Sign Out</button>
+    
+    <button  *ngIf="!isAuthenticated"  mat-stroked-button [routerLink]="['/register']"  >Register</button>
+    <button  *ngIf="!isAuthenticated" mat-stroked-button  [routerLink]="['/login']">Sign In</button>
+</mat-toolbar>

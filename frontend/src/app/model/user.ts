@@ -1,0 +1,17 @@
+export interface User{
+    id:string,
+	username:string,
+	password:string,
+	isPrivate:boolean,
+	firstName:string,
+	lastName:string,
+	email:string,
+	phone:string,
+	gender:string,
+	dateOfBirth:Date,
+	biography:string,
+	workExperience:string,
+	education:      string,          
+	skills:         string,          
+	interests:      string,             
+}

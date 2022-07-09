@@ -1,0 +1,27 @@
+<div style="margin-inline: 20%; margin-top: 2%;">
+    <div class="profiles-container">
+        <h2 style="font-size:20px; font-weight: 200; padding-inline: 2%; padding-top: 2%;">{{connections.length}} Request(s)</h2>
+
+        <div *ngFor="let connection of connections">
+            <hr color="#c5c5c5" size="1" style="width: 97%;">
+            <div class="flex-container">
+                <div class="flex-item-left profile-picture">
+                    <img src="../../../assets/images/profilna.png" class="profile-picture" />
+                </div>
+                <div class="flex-item-center">
+                    <p style="font-size: large; font-weight: 400;">{{connection.firstName}} {{connection.lastName}}</p>
+                    <p>Phone: {{connection.phone}}</p>
+                    <p>Skills: {{connection.skills}}</p>
+
+                </div>
+                <div class="flex-item-right">
+                    <button mat-stroked-button color="primary" (click)="acceptRequest(connection.id)">Approve </button>
+                    <button mat-stroked-button color="primary" (click)="declineRequest(connection.id)">Decline </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <br>
+</div>
+

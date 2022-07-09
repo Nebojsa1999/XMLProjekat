@@ -2,12 +2,13 @@ package application
 
 import (
 	"fmt"
-	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/domain"
-	jwt "github.com/dgrijalva/jwt-go"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/Nebojsa1999/XMLProjekat/backend/user_service/domain"
+	jwt "github.com/dgrijalva/jwt-go"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserService struct {
@@ -26,6 +27,10 @@ func (service *UserService) Get(id primitive.ObjectID) (*domain.User, error) {
 
 func (service *UserService) GetAll() ([]*domain.User, error) {
 	return service.store.GetAll()
+}
+
+func (service *UserService) GetAllPublicUsers() ([]*domain.User, error) {
+	return service.store.GetAllPublicUsers()
 }
 
 func (service *UserService) RegisterANewUser(user *domain.User) (string, error) {

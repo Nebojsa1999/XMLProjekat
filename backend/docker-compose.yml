@@ -18,6 +18,8 @@ services:
       POSTING_SERVICE_PORT: ${POSTING_SERVICE_PORT}
       JOB_SERVICE_HOST: ${JOB_SERVICE_HOST}
       JOB_SERVICE_PORT: ${JOB_SERVICE_PORT}
+      CONNECTION_SERVICE_HOST: ${CONNECTION_SERVICE_HOST}
+      CONNECTION_SERVICE_PORT: ${CONNECTION_SERVICE_PORT}
     networks:
       - network
 
@@ -69,6 +71,22 @@ services:
     networks:
       - network
 
+  connection_service:
+    image: connection_service
+    container_name: connection_service
+    build:
+      context: .
+      dockerfile: ./connection_service/Dockerfile
+    restart: on-failure
+    environment:
+      CONNECTION_DB_HOST: ${CONNECTION_DB_HOST}
+      CONNECTION_DB_PORT: ${CONNECTION_DB_PORT}
+      CONNECTION_SERVICE_PORT: ${CONNECTION_SERVICE_PORT}
+    depends_on:
+      - connection_db
+    networks:
+      - network
+
   user_db:
     image: mongo:4.4.6
     container_name: user_db
@@ -86,6 +104,13 @@ services:
   job_db:
     image: mongo:4.4.6
     container_name: job_db
+    restart: unless-stopped
+    networks:
+      - network
+
+  connection_db:
+    image: mongo:4.4.6
+    container_name: connection_db
     restart: unless-stopped
     networks:
       - network

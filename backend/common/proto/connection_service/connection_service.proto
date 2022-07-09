@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+option go_package = "github.com/Nebojsa1999/XMLProjekat/backend/common/connection";
+
+package connection;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service ConnectionService{
+  rpc Get(GetRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      get: "/connection/{id}"
+    };
+  }
+  rpc GetAll(GetAllRequest) returns(GetMultipleResponse) {
+    option (google.api.http) = {
+      get: "/connection"
+    };
+  }
+  rpc GetByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
+    option (google.api.http) = {
+      get: "/connection/{userId}"
+    };
+  }
+  rpc GetFollowingByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
+    option (google.api.http) = {
+      get: "/connection/{userId}/following"
+    };
+  }
+  rpc GetFollowersByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
+    option (google.api.http) = {
+      get: "/connection/{userId}/followers"
+    };
+  }
+  rpc GetFollowingUsersIds(GetByUserIdRequest) returns(GetFollowingUsersIdsResponse) {
+    option (google.api.http) = {
+      get: "/connection/{userId}/following-users-ids"
+    };
+  }
+  rpc Create(CreateRequest) returns(CreateResponse) {
+    option (google.api.http) = {
+      post: "/connection",
+      body: "connection"
+    };
+  }
+  rpc Update(UpdateRequest) returns(UpdateResponse) {
+    option (google.api.http) = {
+      put: "/connection",
+      body: "connectionUpdateDTO"
+    };
+  }
+  rpc Delete(DeleteRequest) returns(DeleteResponse) {
+    option (google.api.http) = {
+      delete: "/connection"
+    };
+  }
+}
+
+message GetRequest {
+  string id = 1;
+}
+
+message GetAllRequest {
+}
+
+message GetResponse {
+  Connection connection = 1;
+}
+
+message GetByUserIdRequest {
+  string userId = 1;
+}
+
+message GetMultipleResponse {
+  repeated Connection connections = 1;
+}
+
+message GetFollowingUsersIdsResponse {
+  repeated string ids = 1;
+}
+
+message CreateRequest {
+  Connection connection = 1;
+}
+
+message CreateResponse {
+  Connection connection = 1;
+}
+
+message UpdateRequest {
+  ConnectionUpdateDTO connectionUpdateDTO = 1;
+}
+
+message UpdateResponse {
+  Connection connection = 1;
+}
+
+message DeleteRequest {
+  string issuerId = 1;
+  string subjectId = 2;
+}
+
+message DeleteResponse {
+}
+
+message Connection {
+  string id = 1;
+  string issuerId = 2;
+  string subjectId = 3;
+  google.protobuf.Timestamp date = 4;
+  bool isApproved = 5;
+}
+
+message ConnectionUpdateDTO {
+  string issuerId = 1;
+  string subjectId = 2;
+  bool isApproved = 3;
+}
