@@ -78,7 +78,7 @@
     <br>
     <br>
 
-  <!--  <div>
+    <div>
         <mat-tab-group mat-align-tabs="start" color="warn">
             
             <mat-tab label="Comments">
@@ -87,37 +87,36 @@
                         <div class="flex-container">
 
                             <div class="flex-container flex-item" style="padding-inline: 0%;">
-                                <h3 style="font-weight: 400; margin-bottom:5px; font-size: 24px;"><span
-                                        style="font-weight: 300; margin-right: 10px">Rating:</span> {{company.rating | number : '1.1-1'}} </h3>
-                                <mat-icon color="primary">star</mat-icon>
                                 <h4 style="font-size: 18px; padding-left:2%;"> ({{comments.length}} Comments)</h4>
                             </div>
                             <div class="flex-item" style="text-align: right;">
-                                <button mat-button color="warn" (click)="openAddCommentModal()" *ngIf="role == 'ROLE_CLIENT'">Leave a Comment</button>
+                                <button mat-raised-button color="primary" (click)="openNewCommentDialog()" *ngIf="!isCompanyOwner">Leave a Comment</button>
                             </div>
                         </div>
                         <div class="rectangle"></div>
                         <br>
                         <div class="flex-container">
                             <div class="flex-item"  *ngFor="let comment of comments">
-                                <div class="white-container " style="padding: 3%; padding-inline: 4%;">
+                                <div class="white-container" style="padding: 3%; padding-inline: 4%;">
 
-                                    <div class="flex-container" style="padding-inline: 5%;">
-                                        <p style="font-size: 12px; font-weight: 300;  ">
-                                            <i>By <span style="font-weight: 400;"> {{comment.authorEmail}}</span>,
-                                                {{ comment.datePosted | date: 'dd.MM.yyyy.' }}</i>
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                                        <p>
+                                            <strong>Position:</strong>: {{comment.position}}
                                         </p>
                                     </div>
                                     <div class="flex-container" style="padding-inline: 1%;">
-                                        <h3 style="font-weight: 400; margin-bottom:5px; font-size: 20px;">{{comment.rating}}</h3>
-                                        <mat-icon color="primary">star</mat-icon><span
-                                            style="margin-inline: 3%;margin-top: 0.5%; font-weight: 600;"> &#183;</span>
-                                        <h3
-                                            style="font-size: 20px; font-weight: 400;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">
-                                            {{comment.title}}
-                                        </h3>
+                
+                                        <p><strong>Part time/Full time:</strong> {{comment.engagement}}</p>
+                                    
                                     </div>
-                                    <div>
+
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                
+                                        <p><strong>Experience:</strong> {{comment.experienceLevel}}</p>
+                                    
+                                    </div>
+
+                                    <div  style="padding-inline: 1%;">
                                         <p> {{comment.content}}</p>
                                     </div>
                                 </div>
@@ -128,10 +127,110 @@
                 </div>
             </mat-tab>
 
+            <mat-tab label="Interviews">
+                <div style="margin-bottom: 10%; margin-top: 6%;">
+                    <div style="padding-bottom: 2%; padding-inline: 0%; margin-bottom: 1%;">
+                        <div class="flex-container">
+
+                            <div class="flex-container flex-item" style="padding-inline: 0%;">
+                                <h4 style="font-size: 18px; padding-left:2%;"> ({{interviews.length}} Interviews)</h4>
+                            </div>
+                            <div class="flex-item" style="text-align: right;">
+                                <button mat-raised-button color="primary" (click)="openNewInterviewDialog()" *ngIf="!isCompanyOwner">Leave experience on an interview</button>
+                            </div>
+                        </div>
+                        <div class="rectangle"></div>
+                        <br>
+                        <div class="flex-container">
+                            <div class="flex-item"  *ngFor="let interview of interviews">
+                                <div class="white-container" style="padding: 3%; padding-inline: 4%;">
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                
+                                        <h3><strong>Title:</strong> {{interview.title}}</h3>
+                                    
+                                    </div>
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                                        <p>
+                                            <strong>Position:</strong> {{interview.position}}
+                                        </p>
+                                    </div>
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                
+                                        <p><strong>Year:</strong>: {{interview.yearOfInterview}}</p>
+                                    
+                                    </div>
+
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                
+                                        <p><strong>HR interview:</strong> {{interview.hrInterview}}</p>
+                                    
+                                    </div>
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                
+                                        <p><strong>Technical interview:</strong> {{interview.technicalInterview}}</p>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+
+
+            <mat-tab label="Wages">
+                <div style="margin-bottom: 10%; margin-top: 6%;">
+                    <div style="padding-bottom: 2%; padding-inline: 0%; margin-bottom: 1%;">
+                        <div class="flex-container">
+
+                            <div class="flex-container flex-item" style="padding-inline: 0%;">
+                                <h4 style="font-size: 18px; padding-left:2%;"> ({{wages.length}} Wage overviews)</h4>
+                            </div>
+                            <div class="flex-item" style="text-align: right;">
+                                <button mat-raised-button color="primary" (click)="openNewWageDialog()" *ngIf="!isCompanyOwner">Leave your wage experience</button>
+                            </div>
+                        </div>
+                        <div class="rectangle"></div>
+                        <br>
+                        <div class="flex-container">
+                            <div class="flex-item"  *ngFor="let wage of wages">
+                                <div class="white-container" style="padding: 3%; padding-inline: 4%;">
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                
+                                        <h3><strong>Position:</strong> {{wage.position}}</h3>
+                                    
+                                    </div>
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                                        <p>
+                                            <strong>Part time/Full time:</strong> {{wage.engagement}}
+                                        </p>
+                                    </div>
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                
+                                        <p><strong>Experience:</strong>: {{wage.experienceLevel}}</p>
+                                    
+                                    </div>
+
+                                    <div class="flex-container" style="padding-inline: 1%;">
+                
+                                        <p><strong>Neto wage:</strong> {{wage.netoWage}}e monthly</p>
+                                    
+                                    </div>
+                                   
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+
+
 
         </mat-tab-group>
 
     </div>
--->
+
 
 </div>

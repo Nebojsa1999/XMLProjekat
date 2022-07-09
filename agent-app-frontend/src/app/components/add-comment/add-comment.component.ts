@@ -15,7 +15,6 @@ export interface DialogData {
   styleUrls: ['./add-comment.component.css']
 })
 export class AddCommentComponent implements OnInit {
-
   public addCommentForm: FormGroup;
 
   public position: FormControl;
@@ -38,6 +37,7 @@ export class AddCommentComponent implements OnInit {
    }
 
   ngOnInit(): void {
+ 
   }
 
   

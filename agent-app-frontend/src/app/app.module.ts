@@ -40,6 +40,7 @@ import { CompaniesComponent } from './components/companies/companies.component';
 import { RegisterCompanyRequestsComponent } from './components/register-company-requests/register-company-requests.component';
 import { CompanyComponent } from './components/company/company.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
 
 const MaterialComponents = [
   MatToolbarModule,
@@ -52,6 +53,7 @@ const MaterialComponents = [
   MatSnackBarModule,
   MatListModule,
   MatDialogModule,
+  MatTabsModule,
 ]
 
 @NgModule({

@@ -28,15 +28,15 @@ export class AddInterviewComponent implements OnInit {
       this.position= new FormControl("", [Validators.required]);
       this.title=new FormControl("", [Validators.required]);
       this.yearOfInterview= new FormControl("", [Validators.required]);
-      this.hrInterview= new FormControl("", [Validators.required]);
-      this.technicalInterview= new FormControl("", [Validators.required]);
+      this.hrInterview= new FormControl("", []);
+      this.technicalInterview= new FormControl("", []);
 
       this.addInterviewForm = new FormGroup({
         'position': this.position,
         'title': this.title,
         'yearOfInterview': this.yearOfInterview,
         'hrInterview': this.hrInterview,
-        'techniaclInterview': this.technicalInterview,
+        'technicalInterview': this.technicalInterview,
       })
    }
 

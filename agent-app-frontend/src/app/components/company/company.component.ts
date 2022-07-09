@@ -121,6 +121,7 @@ export class CompanyComponent implements OnInit {
     dialogConfig.disableClose = false;
     dialogConfig.height = "450px";
     dialogConfig.width = "35%";
+    dialogConfig.data = { companyId: this.cid }
     const modalDialog = this.matDialog.open(AddCommentComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       location.reload()
@@ -133,6 +134,7 @@ export class CompanyComponent implements OnInit {
     dialogConfig.disableClose = false;
     dialogConfig.height = "450px";
     dialogConfig.width = "35%";
+    dialogConfig.data = { companyId: this.cid }
     const modalDialog = this.matDialog.open(AddInterviewComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       location.reload()
@@ -146,6 +148,7 @@ export class CompanyComponent implements OnInit {
     dialogConfig.disableClose = false;
     dialogConfig.height = "450px";
     dialogConfig.width = "35%";
+    dialogConfig.data = { companyId: this.cid }
     const modalDialog = this.matDialog.open(AddWageComponent, dialogConfig);
     modalDialog.afterClosed().subscribe(result => {
       location.reload()

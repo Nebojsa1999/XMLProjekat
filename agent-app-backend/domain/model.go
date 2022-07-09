@@ -77,16 +77,16 @@ type Job struct {
 type Wage struct {
 	Id              primitive.ObjectID    `json:"id" bson:"_id"`
 	CompanyId       primitive.ObjectID    `json:"companyId" bson:"company_id"`
-	Position        enums.Position        `json:"poition" bson:"position"`
+	Position        enums.Position        `json:"position" bson:"position"`
 	Engagement      enums.Engagement      `json:"engagement" bson:"engagement"`
-	ExperienceLevel enums.ExperienceLevel `json:"experience_level" bson:"experience_level"`
+	ExperienceLevel enums.ExperienceLevel `json:"experienceLevel" bson:"experience_level"`
 	NetoWage        string                `json:"netoWage" bson:"neto_wage"`
 }
 
 type Interview struct {
 	Id                 primitive.ObjectID `json:"id" bson:"_id"`
 	CompanyId          primitive.ObjectID `json:"companyId" bson:"company_id"`
-	Position           enums.Position     `json:"poition" bson:"position"`
+	Position           enums.Position     `json:"position" bson:"position"`
 	Title              string             `json:"title" bson:"title"`
 	YearOfInterview    string             `json:"yearOfInterview" bson:"year_of_interview"`
 	HRInterview        string             `json:"hrInterview" bson:"hr_interview"`
@@ -96,8 +96,8 @@ type Interview struct {
 type Comment struct {
 	Id              primitive.ObjectID    `json:"id" bson:"_id"`
 	CompanyId       primitive.ObjectID    `json:"companyId" bson:"company_id"`
-	Position        enums.Position        `json:"poition" bson:"position"`
+	Position        enums.Position        `json:"position" bson:"position"`
 	Engagement      enums.Engagement      `json:"engagement" bson:"engagement"`
-	ExperienceLevel enums.ExperienceLevel `json:"experience_level" bson:"experience_level"`
+	ExperienceLevel enums.ExperienceLevel `json:"experienceLevel" bson:"experience_level"`
 	Content         string                `json:"content" bson:"content"`
 }
