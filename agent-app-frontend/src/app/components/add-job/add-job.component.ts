@@ -55,7 +55,9 @@ export class AddJobComponent implements OnInit {
           console.log(response);
           this.snackBar.open(response, "Close", { duration: 5000 });
 
-          this.dialogRef.close();
+          if (!this.createJobOnDislinktAppToo) {
+            this.dialogRef.close();
+          }
         },
         (error: HttpErrorResponse) => {
           console.log("Error on creating a job: ", error.error);
@@ -80,7 +82,7 @@ export class AddJobComponent implements OnInit {
           (error: HttpErrorResponse) => {
             console.log("Error on creating a job in Dislinkt application: ", error.error);
             this.snackBar.open("Error on creating a job in Dislinkt application!\n\n" + error.error, 
-              "Close", { duration: 5000});
+              "Close", { duration: 5000 });
           }
         );
       }

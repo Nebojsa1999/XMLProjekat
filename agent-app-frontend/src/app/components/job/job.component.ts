@@ -80,6 +80,9 @@ export class JobComponent implements OnInit {
     modalDialog.afterClosed().subscribe(
       result => {
         location.reload();
-    });
+      },
+      error => {
+        console.log("Job was not posted on Dislinkt application due to an error!\n\n", error);
+      });
   }
 }

@@ -159,12 +159,13 @@ func (handler *PostJobHandler) createPostWithJobOffer(job *domain.Job, userId st
 	postWithJobOffer := postingPb.Post{
 		Id:            "",
 		OwnerId:       userId,
-		Content:       "Nova ponuda za posao:",
-		Image:         "",
+		Content:       "Objavljena je nova ponuda za posao na agentskoj aplikaciji.\n\n" +
+			"Radno mesto: " + job.Position,
+		Image:         "job-offer-840x560.jpg",
 		LikesCount:    0,
 		DislikesCount: 0,
 		Comments:      nil,
-		Link:          []string{"http://localhost:8001/agent-app/job/" + job.Id},
+		Link:          []string{"http://localhost:8001/agent-app/job"},
 		WhoLiked:      nil,
 		WhoDisliked:   nil,
 		PostedAt:      timestamppb.Now().String(),
