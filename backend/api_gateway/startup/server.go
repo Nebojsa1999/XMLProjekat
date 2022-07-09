@@ -84,7 +84,7 @@ func (server *Server) initCustomHandlers() {
 
 func (server *Server) Start() {
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
+		AllowedOrigins: []string{"http://localhost:4200", "http://localhost:4201"},
 		AllowedMethods: []string{http.MethodGet,
 			http.MethodPost,
 			http.MethodPut,

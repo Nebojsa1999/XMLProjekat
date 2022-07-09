@@ -16,13 +16,16 @@ export class TokenInterceptor implements HttpInterceptor {
         next: HttpHandler
       ): Observable<HttpEvent<any>> {
         // add auth header with jwt if user is logged in and request is to api url
-        const accesToken = this.authService.getToken();
+        const accessToken = this.authService.getToken();
         const isLoggedIn = this.authService.isLoggedIn();
         const isApiUrl = request.url.startsWith(environment.apiUrl);
         if (isLoggedIn && isApiUrl) {
           request = request.clone({
             setHeaders: {
-              Authorization: `${accesToken}`,
+              'Accept': 'application/json',
+              'Access-Control-Allow-Origin': ['http://localhost:4200', 'http://localhost:4201'],
+              'Authorization': `${accessToken}`,
+              'Content-Type': 'application/json'
             },
           });
         }
