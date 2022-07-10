@@ -24,8 +24,32 @@ func (service *ConnectionService) GetAll() ([]*domain.Connection, error) {
 	return service.store.GetAll()
 }
 
+func (service *ConnectionService) GetConnectionOfFollowingType(id primitive.ObjectID) (*domain.Connection, error) {
+	return service.store.GetConnectionOfFollowingType(id)
+}
+
+func (service *ConnectionService) GetAllConnectionsOfFollowingType() ([]*domain.Connection, error) {
+	return service.store.GetAllConnectionsOfFollowingType()
+}
+
+func (service *ConnectionService) GetConnectionOfBlockingType(id primitive.ObjectID) (*domain.Connection, error) {
+	return service.store.GetConnectionOfBlockingType(id)
+}
+
+func (service *ConnectionService) GetAllConnectionsOfBlockingType() ([]*domain.Connection, error) {
+	return service.store.GetAllConnectionsOfBlockingType()
+}
+
 func (service *ConnectionService) GetByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
 	return service.store.GetByUserId(userId)
+}
+
+func (service *ConnectionService) GetConnectionsOfFollowingTypeByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	return service.store.GetConnectionsOfFollowingTypeByUserId(userId)
+}
+
+func (service *ConnectionService) GetConnectionsOfBlockingTypeByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	return service.store.GetConnectionsOfBlockingTypeByUserId(userId)
 }
 
 func (service *ConnectionService) GetFollowingByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
@@ -36,6 +60,28 @@ func (service *ConnectionService) GetFollowersByUserId(userId primitive.ObjectID
 	return service.store.GetFollowersByUserId(userId)
 }
 
+func (service *ConnectionService) GetConnectionsInWhichTheGivenUserIsBlocker(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	return service.store.GetConnectionsInWhichTheGivenUserIsBlocker(userId)
+}
+
+func (service *ConnectionService) GetConnectionsInWhichTheGivenUserIsBlockedOne(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	return service.store.GetConnectionsInWhichTheGivenUserIsBlockedOne(userId)
+}
+
+func (service *ConnectionService) GetFollowingUsersIds(userId primitive.ObjectID) ([]primitive.ObjectID, error) {
+	followingUsers, err := service.store.GetFollowingByUserId(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	var followingUsersIds []primitive.ObjectID
+	for _, u := range followingUsers {
+		followingUsersIds = append(followingUsersIds, u.Id)
+	}
+
+	return followingUsersIds, nil
+}
+
 func (service *ConnectionService) Create(connection *domain.Connection) (*domain.Connection, error) {
 	existingConnection, _ := service.store.Get(connection.Id)
 	connection.Id = primitive.NewObjectID()
@@ -44,12 +90,13 @@ func (service *ConnectionService) Create(connection *domain.Connection) (*domain
 	}
 
 	if connection.IssuerId == connection.SubjectId {
-		return nil, fmt.Errorf("user cannot follow themselves")
+		return nil, fmt.Errorf("user cannot follow or block themselves")
 	}
 
 	allConnections, _ := service.store.GetAll()
 	for _, c := range allConnections {
-		if c.IssuerId == connection.IssuerId && c.SubjectId == connection.SubjectId {
+		if c.IssuerId == connection.IssuerId && c.SubjectId == connection.SubjectId &&
+			c.Type == connection.Type {
 			return nil, fmt.Errorf("same connection already exists")
 		}
 	}
@@ -59,40 +106,36 @@ func (service *ConnectionService) Create(connection *domain.Connection) (*domain
 
 func (service *ConnectionService) Update(connectionUpdateDTO *domain.ConnectionUpdateDTO) (*domain.Connection, error) {
 	connectionInDatabase, _ :=
-		service.store.GetByIssuerIdAndSubjectId(connectionUpdateDTO.IssuerId, connectionUpdateDTO.SubjectId)
+		service.store.GetByTypeAndIssuerIdAndSubjectId(connectionUpdateDTO)
 	if connectionInDatabase == nil {
 		return nil, fmt.Errorf("connection with given issuer id and subject id does not exist")
 	}
 
+	connectionInDatabase.Type = connectionUpdateDTO.Type
 	connectionInDatabase.IsApproved = connectionUpdateDTO.IsApproved
 
 	return service.store.Update(connectionInDatabase)
 }
 
-func (service *ConnectionService) Delete(issuerId, subjectId primitive.ObjectID) error {
-	connectionInDatabase, _ := service.store.GetByIssuerIdAndSubjectId(issuerId, subjectId)
+func (service *ConnectionService) Delete(typeAsString string, issuerId, subjectId primitive.ObjectID) error {
+	if typeAsString != domain.Following && typeAsString != domain.Blocking {
+		return fmt.Errorf("type of connection is invalid")
+	}
+
+	var typeOfConnection domain.TypeOfConnection
+	if typeAsString == domain.Following {
+		typeOfConnection = domain.Following
+	} else {
+		typeOfConnection = domain.Blocking
+	}
+
+	connectionUpdateDTO :=
+		&domain.ConnectionUpdateDTO{Type: typeOfConnection, IssuerId: issuerId, SubjectId: subjectId}
+
+	connectionInDatabase, _ := service.store.GetByTypeAndIssuerIdAndSubjectId(connectionUpdateDTO)
 	if connectionInDatabase == nil {
 		return fmt.Errorf("connection with given issuer id and subject id does not exist")
 	}
 
 	return service.store.Delete(connectionInDatabase.Id)
-}
-
-func (service *ConnectionService) CreateProfilePrivacy(privacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
-	return service.store.CreateProfilePrivacy(privacy)
-}
-
-func (service *ConnectionService) UpdatePrivacy(modifiedPrivacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
-	privacyInDatabase, _ := service.store.GetPrivacy(modifiedPrivacy.Id)
-	if privacyInDatabase == nil {
-		return nil, fmt.Errorf("profile privacy with given id does not exist")
-	}
-
-	privacyInDatabase.IsPrivate = !privacyInDatabase.IsPrivate
-
-	return service.store.UpdatePrivacy(modifiedPrivacy)
-}
-
-func (service *ConnectionService) DeleteProfilePrivacy(id primitive.ObjectID) error {
-	return service.store.DeleteProfilePrivacy(id)
 }

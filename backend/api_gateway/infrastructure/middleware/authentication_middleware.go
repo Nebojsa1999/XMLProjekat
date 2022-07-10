@@ -2,12 +2,13 @@ package middleware
 
 import (
 	"fmt"
-	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"net/http"
 	"os"
 	"regexp"
 	"strings"
+
+	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 )
 
 type Role string

@@ -24,9 +24,17 @@ const _ = grpc.SupportPackageIsVersion7
 type ConnectionServiceClient interface {
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
+	GetConnectionOfFollowingType(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
+	GetAllConnectionsOfFollowingType(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
+	GetConnectionOfBlockingType(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
+	GetAllConnectionsOfBlockingType(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
 	GetByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
+	GetConnectionsOfFollowingTypeByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
+	GetConnectionsOfBlockingTypeByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
 	GetFollowingByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
 	GetFollowersByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
+	GetConnectionsInWhichTheGivenUserIsBlocker(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
+	GetConnectionsInWhichTheGivenUserIsBlockedOne(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error)
 	GetFollowingUsersIds(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetFollowingUsersIdsResponse, error)
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
@@ -59,9 +67,63 @@ func (c *connectionServiceClient) GetAll(ctx context.Context, in *GetAllRequest,
 	return out, nil
 }
 
+func (c *connectionServiceClient) GetConnectionOfFollowingType(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error) {
+	out := new(GetResponse)
+	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetConnectionOfFollowingType", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *connectionServiceClient) GetAllConnectionsOfFollowingType(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error) {
+	out := new(GetMultipleResponse)
+	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetAllConnectionsOfFollowingType", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *connectionServiceClient) GetConnectionOfBlockingType(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error) {
+	out := new(GetResponse)
+	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetConnectionOfBlockingType", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *connectionServiceClient) GetAllConnectionsOfBlockingType(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error) {
+	out := new(GetMultipleResponse)
+	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetAllConnectionsOfBlockingType", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *connectionServiceClient) GetByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error) {
 	out := new(GetMultipleResponse)
 	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetByUserId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *connectionServiceClient) GetConnectionsOfFollowingTypeByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error) {
+	out := new(GetMultipleResponse)
+	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetConnectionsOfFollowingTypeByUserId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *connectionServiceClient) GetConnectionsOfBlockingTypeByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error) {
+	out := new(GetMultipleResponse)
+	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetConnectionsOfBlockingTypeByUserId", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,6 +142,24 @@ func (c *connectionServiceClient) GetFollowingByUserId(ctx context.Context, in *
 func (c *connectionServiceClient) GetFollowersByUserId(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error) {
 	out := new(GetMultipleResponse)
 	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetFollowersByUserId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *connectionServiceClient) GetConnectionsInWhichTheGivenUserIsBlocker(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error) {
+	out := new(GetMultipleResponse)
+	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetConnectionsInWhichTheGivenUserIsBlocker", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *connectionServiceClient) GetConnectionsInWhichTheGivenUserIsBlockedOne(ctx context.Context, in *GetByUserIdRequest, opts ...grpc.CallOption) (*GetMultipleResponse, error) {
+	out := new(GetMultipleResponse)
+	err := c.cc.Invoke(ctx, "/connection.ConnectionService/GetConnectionsInWhichTheGivenUserIsBlockedOne", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -128,9 +208,17 @@ func (c *connectionServiceClient) Delete(ctx context.Context, in *DeleteRequest,
 type ConnectionServiceServer interface {
 	Get(context.Context, *GetRequest) (*GetResponse, error)
 	GetAll(context.Context, *GetAllRequest) (*GetMultipleResponse, error)
+	GetConnectionOfFollowingType(context.Context, *GetRequest) (*GetResponse, error)
+	GetAllConnectionsOfFollowingType(context.Context, *GetAllRequest) (*GetMultipleResponse, error)
+	GetConnectionOfBlockingType(context.Context, *GetRequest) (*GetResponse, error)
+	GetAllConnectionsOfBlockingType(context.Context, *GetAllRequest) (*GetMultipleResponse, error)
 	GetByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error)
+	GetConnectionsOfFollowingTypeByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error)
+	GetConnectionsOfBlockingTypeByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error)
 	GetFollowingByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error)
 	GetFollowersByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error)
+	GetConnectionsInWhichTheGivenUserIsBlocker(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error)
+	GetConnectionsInWhichTheGivenUserIsBlockedOne(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error)
 	GetFollowingUsersIds(context.Context, *GetByUserIdRequest) (*GetFollowingUsersIdsResponse, error)
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
@@ -148,14 +236,38 @@ func (UnimplementedConnectionServiceServer) Get(context.Context, *GetRequest) (*
 func (UnimplementedConnectionServiceServer) GetAll(context.Context, *GetAllRequest) (*GetMultipleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
+func (UnimplementedConnectionServiceServer) GetConnectionOfFollowingType(context.Context, *GetRequest) (*GetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetConnectionOfFollowingType not implemented")
+}
+func (UnimplementedConnectionServiceServer) GetAllConnectionsOfFollowingType(context.Context, *GetAllRequest) (*GetMultipleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllConnectionsOfFollowingType not implemented")
+}
+func (UnimplementedConnectionServiceServer) GetConnectionOfBlockingType(context.Context, *GetRequest) (*GetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetConnectionOfBlockingType not implemented")
+}
+func (UnimplementedConnectionServiceServer) GetAllConnectionsOfBlockingType(context.Context, *GetAllRequest) (*GetMultipleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllConnectionsOfBlockingType not implemented")
+}
 func (UnimplementedConnectionServiceServer) GetByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByUserId not implemented")
+}
+func (UnimplementedConnectionServiceServer) GetConnectionsOfFollowingTypeByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetConnectionsOfFollowingTypeByUserId not implemented")
+}
+func (UnimplementedConnectionServiceServer) GetConnectionsOfBlockingTypeByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetConnectionsOfBlockingTypeByUserId not implemented")
 }
 func (UnimplementedConnectionServiceServer) GetFollowingByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowingByUserId not implemented")
 }
 func (UnimplementedConnectionServiceServer) GetFollowersByUserId(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowersByUserId not implemented")
+}
+func (UnimplementedConnectionServiceServer) GetConnectionsInWhichTheGivenUserIsBlocker(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetConnectionsInWhichTheGivenUserIsBlocker not implemented")
+}
+func (UnimplementedConnectionServiceServer) GetConnectionsInWhichTheGivenUserIsBlockedOne(context.Context, *GetByUserIdRequest) (*GetMultipleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetConnectionsInWhichTheGivenUserIsBlockedOne not implemented")
 }
 func (UnimplementedConnectionServiceServer) GetFollowingUsersIds(context.Context, *GetByUserIdRequest) (*GetFollowingUsersIdsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowingUsersIds not implemented")
@@ -218,6 +330,78 @@ func _ConnectionService_GetAll_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ConnectionService_GetConnectionOfFollowingType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConnectionServiceServer).GetConnectionOfFollowingType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/connection.ConnectionService/GetConnectionOfFollowingType",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConnectionServiceServer).GetConnectionOfFollowingType(ctx, req.(*GetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ConnectionService_GetAllConnectionsOfFollowingType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConnectionServiceServer).GetAllConnectionsOfFollowingType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/connection.ConnectionService/GetAllConnectionsOfFollowingType",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConnectionServiceServer).GetAllConnectionsOfFollowingType(ctx, req.(*GetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ConnectionService_GetConnectionOfBlockingType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConnectionServiceServer).GetConnectionOfBlockingType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/connection.ConnectionService/GetConnectionOfBlockingType",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConnectionServiceServer).GetConnectionOfBlockingType(ctx, req.(*GetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ConnectionService_GetAllConnectionsOfBlockingType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConnectionServiceServer).GetAllConnectionsOfBlockingType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/connection.ConnectionService/GetAllConnectionsOfBlockingType",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConnectionServiceServer).GetAllConnectionsOfBlockingType(ctx, req.(*GetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ConnectionService_GetByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetByUserIdRequest)
 	if err := dec(in); err != nil {
@@ -232,6 +416,42 @@ func _ConnectionService_GetByUserId_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ConnectionServiceServer).GetByUserId(ctx, req.(*GetByUserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ConnectionService_GetConnectionsOfFollowingTypeByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByUserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConnectionServiceServer).GetConnectionsOfFollowingTypeByUserId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/connection.ConnectionService/GetConnectionsOfFollowingTypeByUserId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConnectionServiceServer).GetConnectionsOfFollowingTypeByUserId(ctx, req.(*GetByUserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ConnectionService_GetConnectionsOfBlockingTypeByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByUserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConnectionServiceServer).GetConnectionsOfBlockingTypeByUserId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/connection.ConnectionService/GetConnectionsOfBlockingTypeByUserId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConnectionServiceServer).GetConnectionsOfBlockingTypeByUserId(ctx, req.(*GetByUserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -268,6 +488,42 @@ func _ConnectionService_GetFollowersByUserId_Handler(srv interface{}, ctx contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ConnectionServiceServer).GetFollowersByUserId(ctx, req.(*GetByUserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ConnectionService_GetConnectionsInWhichTheGivenUserIsBlocker_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByUserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConnectionServiceServer).GetConnectionsInWhichTheGivenUserIsBlocker(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/connection.ConnectionService/GetConnectionsInWhichTheGivenUserIsBlocker",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConnectionServiceServer).GetConnectionsInWhichTheGivenUserIsBlocker(ctx, req.(*GetByUserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ConnectionService_GetConnectionsInWhichTheGivenUserIsBlockedOne_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByUserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConnectionServiceServer).GetConnectionsInWhichTheGivenUserIsBlockedOne(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/connection.ConnectionService/GetConnectionsInWhichTheGivenUserIsBlockedOne",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConnectionServiceServer).GetConnectionsInWhichTheGivenUserIsBlockedOne(ctx, req.(*GetByUserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -360,8 +616,32 @@ var ConnectionService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ConnectionService_GetAll_Handler,
 		},
 		{
+			MethodName: "GetConnectionOfFollowingType",
+			Handler:    _ConnectionService_GetConnectionOfFollowingType_Handler,
+		},
+		{
+			MethodName: "GetAllConnectionsOfFollowingType",
+			Handler:    _ConnectionService_GetAllConnectionsOfFollowingType_Handler,
+		},
+		{
+			MethodName: "GetConnectionOfBlockingType",
+			Handler:    _ConnectionService_GetConnectionOfBlockingType_Handler,
+		},
+		{
+			MethodName: "GetAllConnectionsOfBlockingType",
+			Handler:    _ConnectionService_GetAllConnectionsOfBlockingType_Handler,
+		},
+		{
 			MethodName: "GetByUserId",
 			Handler:    _ConnectionService_GetByUserId_Handler,
+		},
+		{
+			MethodName: "GetConnectionsOfFollowingTypeByUserId",
+			Handler:    _ConnectionService_GetConnectionsOfFollowingTypeByUserId_Handler,
+		},
+		{
+			MethodName: "GetConnectionsOfBlockingTypeByUserId",
+			Handler:    _ConnectionService_GetConnectionsOfBlockingTypeByUserId_Handler,
 		},
 		{
 			MethodName: "GetFollowingByUserId",
@@ -370,6 +650,14 @@ var ConnectionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFollowersByUserId",
 			Handler:    _ConnectionService_GetFollowersByUserId_Handler,
+		},
+		{
+			MethodName: "GetConnectionsInWhichTheGivenUserIsBlocker",
+			Handler:    _ConnectionService_GetConnectionsInWhichTheGivenUserIsBlocker_Handler,
+		},
+		{
+			MethodName: "GetConnectionsInWhichTheGivenUserIsBlockedOne",
+			Handler:    _ConnectionService_GetConnectionsInWhichTheGivenUserIsBlockedOne_Handler,
 		},
 		{
 			MethodName: "GetFollowingUsersIds",

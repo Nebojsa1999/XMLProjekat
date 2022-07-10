@@ -18,24 +18,64 @@ service ConnectionService{
       get: "/connection"
     };
   }
+  rpc GetConnectionOfFollowingType(GetRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      get: "/connection/following-type/{id}"
+    };
+  }
+  rpc GetAllConnectionsOfFollowingType(GetAllRequest) returns(GetMultipleResponse) {
+    option (google.api.http) = {
+      get: "/connection/following-type"
+    };
+  }
+  rpc GetConnectionOfBlockingType(GetRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      get: "/connection/blocking-type/{id}"
+    };
+  }
+  rpc GetAllConnectionsOfBlockingType(GetAllRequest) returns(GetMultipleResponse) {
+    option (google.api.http) = {
+      get: "/connection/blocking-type"
+    };
+  }
   rpc GetByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
     option (google.api.http) = {
       get: "/connection/{userId}"
     };
   }
+  rpc GetConnectionsOfFollowingTypeByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
+    option (google.api.http) = {
+      get: "/connection/following-type/{userId}"
+    };
+  }
+  rpc GetConnectionsOfBlockingTypeByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
+    option (google.api.http) = {
+      get: "/connection/blocking-type/{userId}"
+    };
+  }
   rpc GetFollowingByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
     option (google.api.http) = {
-      get: "/connection/{userId}/following"
+      get: "/connection/following-type/{userId}/following"
     };
   }
   rpc GetFollowersByUserId(GetByUserIdRequest) returns(GetMultipleResponse) {
     option (google.api.http) = {
-      get: "/connection/{userId}/followers"
+      get: "/connection/following-type/{userId}/followers"
+    };
+  }
+  rpc GetConnectionsInWhichTheGivenUserIsBlocker(GetByUserIdRequest) returns(GetMultipleResponse) {
+    option (google.api.http) = {
+      get: "/connection/blocking-type/{userId}/as-blocker"
+    };
+  }
+  rpc GetConnectionsInWhichTheGivenUserIsBlockedOne(GetByUserIdRequest) returns(GetMultipleResponse) {
+    option (google.api.http) = {
+      get: "/connection/blocking-type/{userId}/as-blocked-one"
     };
   }
   rpc GetFollowingUsersIds(GetByUserIdRequest) returns(GetFollowingUsersIdsResponse) {
     option (google.api.http) = {
-      get: "/connection/{userId}/following-users-ids"
+      get: "/connection/following-type/{userId}/following-users-ids"
     };
   }
   rpc Create(CreateRequest) returns(CreateResponse) {
@@ -97,23 +137,32 @@ message UpdateResponse {
 }
 
 message DeleteRequest {
-  string issuerId = 1;
-  string subjectId = 2;
+  string type = 1;
+  string issuerId = 2;
+  string subjectId = 3;
 }
 
 message DeleteResponse {
 }
 
+enum TypeOfConnection {
+  UndefinedTypeOfConnection = 0;
+  Following = 1;
+  Blocking = 2;
+}
+
 message Connection {
   string id = 1;
-  string issuerId = 2;
-  string subjectId = 3;
-  google.protobuf.Timestamp date = 4;
-  bool isApproved = 5;
+  TypeOfConnection type = 2;
+  string issuerId = 3;
+  string subjectId = 4;
+  google.protobuf.Timestamp date = 5;
+  bool isApproved = 6;
 }
 
 message ConnectionUpdateDTO {
-  string issuerId = 1;
-  string subjectId = 2;
-  bool isApproved = 3;
+  TypeOfConnection type = 1;
+  string issuerId = 2;
+  string subjectId = 3;
+  bool isApproved = 4;
 }

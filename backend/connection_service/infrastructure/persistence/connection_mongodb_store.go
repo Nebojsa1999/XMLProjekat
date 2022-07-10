@@ -9,23 +9,19 @@ import (
 )
 
 const (
-	DATABASE    = "connection_db"
-	COLLECTION1 = "connections"
-	COLLECTION2 = "profilesPrivacy"
+	DATABASE   = "connection_db"
+	COLLECTION = "connections"
 )
 
 type ConnectionMongoDBStore struct {
 	connections     *mongo.Collection
-	profilesPrivacy *mongo.Collection
 }
 
 func NewConnectionMongoDBStore(client *mongo.Client) domain.ConnectionStore {
-	connections := client.Database(DATABASE).Collection(COLLECTION1)
-	profilesPrivacy := client.Database(DATABASE).Collection(COLLECTION2)
+	connections := client.Database(DATABASE).Collection(COLLECTION)
 
 	return &ConnectionMongoDBStore{
 		connections:     connections,
-		profilesPrivacy: profilesPrivacy,
 	}
 }
 
@@ -41,10 +37,28 @@ func (store *ConnectionMongoDBStore) GetAll() ([]*domain.Connection, error) {
 	return store.filterConnections(filter)
 }
 
-func (store *ConnectionMongoDBStore) GetByIssuerIdAndSubjectId(issuerId, subjectId primitive.ObjectID) (*domain.Connection, error) {
-	filter := bson.M{"issuer_id": issuerId, "subject_id": subjectId}
+func (store *ConnectionMongoDBStore) GetConnectionOfFollowingType(id primitive.ObjectID) (*domain.Connection, error) {
+	filter := bson.M{"_id": id, "type": domain.Following}
 
 	return store.filterOneConnection(filter)
+}
+
+func (store *ConnectionMongoDBStore) GetAllConnectionsOfFollowingType() ([]*domain.Connection, error) {
+	filter := bson.D{{"type", domain.Following}}
+
+	return store.filterConnections(filter)
+}
+
+func (store *ConnectionMongoDBStore) GetConnectionOfBlockingType(id primitive.ObjectID) (*domain.Connection, error) {
+	filter := bson.M{"_id": id, "type": domain.Blocking}
+
+	return store.filterOneConnection(filter)
+}
+
+func (store *ConnectionMongoDBStore) GetAllConnectionsOfBlockingType() ([]*domain.Connection, error) {
+	filter := bson.D{{"type", domain.Blocking}}
+
+	return store.filterConnections(filter)
 }
 
 func (store *ConnectionMongoDBStore) GetByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
@@ -53,14 +67,45 @@ func (store *ConnectionMongoDBStore) GetByUserId(userId primitive.ObjectID) ([]*
 	return store.filterConnections(filter)
 }
 
+func (store *ConnectionMongoDBStore) GetConnectionsOfFollowingTypeByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	filter := bson.M{"$or": []bson.M{{"type": domain.Following}, {"issuer_id": userId}, {"subject_id": userId}}}
+
+	return store.filterConnections(filter)
+}
+
+func (store *ConnectionMongoDBStore) GetConnectionsOfBlockingTypeByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	filter := bson.M{"$or": []bson.M{{"type": domain.Blocking}, {"issuer_id": userId}, {"subject_id": userId}}}
+
+	return store.filterConnections(filter)
+}
+
+func (store *ConnectionMongoDBStore) GetByTypeAndIssuerIdAndSubjectId(connectionUpdateDTO *domain.ConnectionUpdateDTO) (*domain.Connection, error) {
+	filter := bson.M{"type": connectionUpdateDTO.Type, "issuer_id": connectionUpdateDTO.IssuerId,
+		"subject_id": connectionUpdateDTO.SubjectId}
+
+	return store.filterOneConnection(filter)
+}
+
 func (store *ConnectionMongoDBStore) GetFollowingByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
-	filter := bson.M{"issuer_id": userId}
+	filter := bson.M{"type": domain.Following, "issuer_id": userId}
 
 	return store.filterConnections(filter)
 }
 
 func (store *ConnectionMongoDBStore) GetFollowersByUserId(userId primitive.ObjectID) ([]*domain.Connection, error) {
-	filter := bson.M{"subject_id": userId}
+	filter := bson.M{"type": domain.Following, "subject_id": userId}
+
+	return store.filterConnections(filter)
+}
+
+func (store *ConnectionMongoDBStore) GetConnectionsInWhichTheGivenUserIsBlocker(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	filter := bson.M{"type": domain.Blocking, "issuer_id": userId}
+
+	return store.filterConnections(filter)
+}
+
+func (store *ConnectionMongoDBStore) GetConnectionsInWhichTheGivenUserIsBlockedOne(userId primitive.ObjectID) ([]*domain.Connection, error) {
+	filter := bson.M{"type": domain.Blocking, "subject_id": userId}
 
 	return store.filterConnections(filter)
 }
@@ -105,49 +150,6 @@ func (store *ConnectionMongoDBStore) DeleteAll() error {
 		return err
 	}
 
-	_, err = store.profilesPrivacy.DeleteMany(context.TODO(), bson.D{{}})
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (store *ConnectionMongoDBStore) GetPrivacy(id primitive.ObjectID) (*domain.ProfilePrivacy, error) {
-	filter := bson.M{"_id": id}
-
-	return store.filterOnePrivacy(filter)
-}
-
-func (store *ConnectionMongoDBStore) UpdatePrivacy(updatedPrivacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
-	filter := bson.M{"_id": updatedPrivacy.Id}
-	update := bson.M{"$set": updatedPrivacy}
-
-	_, err := store.profilesPrivacy.UpdateOne(context.TODO(), filter, update)
-	if err != nil {
-		return nil, err
-	}
-
-	return updatedPrivacy, nil
-}
-
-func (store *ConnectionMongoDBStore) CreateProfilePrivacy(privacy *domain.ProfilePrivacy) (*domain.ProfilePrivacy, error) {
-	result, err := store.profilesPrivacy.InsertOne(context.TODO(), privacy)
-	if err != nil {
-		return nil, err
-	}
-
-	privacy.Id = result.InsertedID.(primitive.ObjectID)
-	return privacy, nil
-}
-
-func (store *ConnectionMongoDBStore) DeleteProfilePrivacy(id primitive.ObjectID) error {
-	filter := bson.M{"user_id": id}
-	_, err := store.profilesPrivacy.DeleteOne(context.TODO(), filter)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -159,7 +161,7 @@ func (store *ConnectionMongoDBStore) filterConnections(filter interface{}) ([]*d
 		return nil, err
 	}
 
-	return decode(cursor)
+	return decodeIntoConnections(cursor)
 }
 
 func (store *ConnectionMongoDBStore) filterOneConnection(filter interface{}) (connection *domain.Connection, err error) {
@@ -172,17 +174,7 @@ func (store *ConnectionMongoDBStore) filterOneConnection(filter interface{}) (co
 	return connection, nil
 }
 
-func (store *ConnectionMongoDBStore) filterOnePrivacy(filter interface{}) (privacy *domain.ProfilePrivacy, err error) {
-	result := store.profilesPrivacy.FindOne(context.TODO(), filter)
-	err = result.Decode(&privacy)
-	if err != nil {
-		return nil, err
-	}
-
-	return privacy, nil
-}
-
-func decode(cursor *mongo.Cursor) (connections []*domain.Connection, err error) {
+func decodeIntoConnections(cursor *mongo.Cursor) (connections []*domain.Connection, err error) {
 	for cursor.Next(context.TODO()) {
 		var Connection domain.Connection
 		err = cursor.Decode(&Connection)

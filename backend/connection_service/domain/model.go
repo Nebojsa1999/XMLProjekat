@@ -5,8 +5,16 @@ import (
 	"time"
 )
 
+type TypeOfConnection string
+const (
+	UndefinedTypeOfConnection TypeOfConnection = ""
+	Following                                  = "Following"
+	Blocking                                   = "Blocking"
+)
+
 type Connection struct {
 	Id         primitive.ObjectID `json:"id" bson:"_id"`
+	Type       TypeOfConnection   `json:"type" bson:"type"`
 	IssuerId   primitive.ObjectID `json:"issuerId" bson:"issuer_id"`
 	SubjectId  primitive.ObjectID `json:"subjectId" bson:"subject_id"`
 	Date       time.Time          `json:"date" bson:"date"`
@@ -14,13 +22,8 @@ type Connection struct {
 }
 
 type ConnectionUpdateDTO struct {
+	Type       TypeOfConnection
 	IssuerId   primitive.ObjectID
 	SubjectId  primitive.ObjectID
 	IsApproved bool
-}
-
-type ProfilePrivacy struct {
-	Id        primitive.ObjectID `json:"id" bson:"_id"`
-	UserId    primitive.ObjectID `json:"userId" bson:"user_id"`
-	IsPrivate bool               `json:"isPrivate" bson:"is_private"`
 }
