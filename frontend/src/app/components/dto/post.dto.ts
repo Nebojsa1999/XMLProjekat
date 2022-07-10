@@ -3,5 +3,5 @@ export interface PostDTO{
 	ownerId:string;       
 	content:string;      
 	image:string;         
-    links:string[];          
+    link:string[];          
 }

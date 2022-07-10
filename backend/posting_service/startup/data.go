@@ -24,6 +24,9 @@ var posts = []domain.Post{
 			},
 		},
 		Image: "programiranje1.jpg",
+		Link: []string{
+			"www.google.com",
+		},
 		User: domain.User{
 			Id:                getObjectId("623b0cc3a34d25d8567f9f84"),
 			Role:              domain.CommonUser,

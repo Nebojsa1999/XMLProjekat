@@ -60,7 +60,7 @@ export class PostsComponent implements OnInit {
     ownerId:"",      
     content:"",      
     image:"",         
-    links:[]          
+    link:[""]         
   }
   
   selectedImage: any;
@@ -103,30 +103,20 @@ export class PostsComponent implements OnInit {
         console.log(response)
         for(let i = 0;i<response.posts.length;i++){
           this.posts.push(response.posts[i]);
+         // this.posts[i]=findLinksInContentOfPost(this.posts[i]);
           this.setUserToPost(this.posts);
 
-          // this.currentWrapper.post = response.posts[i];
-          // console.log("Trenutni obmotac nakon dodavanja objave:\n" + JSON.stringify(this.currentWrapper));
-          
-         // this.getProfileOfFollowingUser(response.posts[i].ownerId);
-
-          // console.log("Trenutni obmotac nakon dodavanja korisnika:\n" + JSON.stringify(this.currentWrapper));
-          // this.wrappers.push(this.currentWrapper);
-          // console.log("Niz obmotaca:\n" + JSON.stringify(this.wrappers));
         }
       }
     )
   }
 
-  // getProfileOfFollowingUser(userId: string): void {
-  //   this._profileService.getProfile(userId).subscribe(
-  //     response => {
-  //       console.log("Zapraceni korisnik:\n" + response);
-  //       this.users.push(response.user);
-        
-  //     //  this.currentWrapper.user = response.user;
-  //     }
-  //   )
+  // findLinksInContentOfPost(post:Post): Post{
+  //   //let match=new RegExp(/^\"(http|www)\"$/)
+  //   let match=new RegExp(/^(http|ftp|https):\/\/([\w-]+(?:(?:.[\w-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])$/)
+  //   if(match.test(post.content)){
+  //     post.
+  //   }
   // }
 
   setUserToPost(posts: Post[]): void {

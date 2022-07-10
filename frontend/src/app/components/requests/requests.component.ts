@@ -62,6 +62,7 @@ export class RequestsComponent implements OnInit {
       this.requestDTO.isApproved=true;
       this.requestDTO.issuerId=senderId;
       this.requestDTO.subjectId=this.id;
+      this.requestDTO.type="Following";
       this._connectionService.editRequest(this.requestDTO).subscribe(
         response => {
           console.log(response);

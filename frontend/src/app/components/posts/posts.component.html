@@ -4,6 +4,8 @@
         <div class="feed-input">
           <form>
             <input type="text" placeholder="Start a post" name="text" [(ngModel)]="newPost.content"/>
+            
+            <input type="text" placeholder="Share links" name="text" [(ngModel)]="newPost.link[0]"/>
           </form>
         </div>
         <div className="feed-input-options">
@@ -26,7 +28,12 @@
                 <h5>{{post.user?this.ParseFirstName(post.user):""}} {{post.user?this.ParseLastName(post.user):""}} </h5> 
             </div> <br> <br>
             <p class="post-text" [innerHTML]="post.content"></p> 
+            <label>Links:</label>
+            <p *ngFor="let link of post.link">
+                <a href="{{link}}" target="_blank">{{link}}</a>
+            </p>
             <img style="width: 500px; " src="../../../assets/images/{{post.image}}"/><br><br>
+
             <p class="post-info likes">{{post.likesCount}} likes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{post.dislikesCount}} dislikes</p>
             <hr color="#c5c5c5" size="1" class="line">
             <button mat-raised-button color="secondary" class="like-button" (click)="insertLikeOrDislike(post.ownerId, post.id, this.like)">Like</button>

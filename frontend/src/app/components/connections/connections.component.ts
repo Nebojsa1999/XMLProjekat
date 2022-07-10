@@ -82,7 +82,7 @@ export class ConnectionsComponent implements OnInit {
         console.log(response);
       }
     )
-    window.location.reload();
+    //window.location.reload();
   }
   }
 

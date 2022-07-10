@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+
 import { Interview } from 'src/app/models/interview';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { CommentService } from 'src/app/services/comment/comment.service';
@@ -76,18 +77,30 @@ export class CompanyComponent implements OnInit {
     console.log(this.cid)
     this.commentService.getComments(this.cid).subscribe((response) => {
       this.comments = response;
+      if(this.comments==null){
+        this.comments=[];
+      }
       console.log(response)
     })
+  
 
     this.interviewService.getInterviews(this.cid).subscribe((response) => {
       this.interviews = response;
+      if(this.interviews==null){
+        this.interviews=[];
+      }
       console.log(response)
     })
 
+
     this.wageService.getWages(this.cid).subscribe((response) => {
       this.wages = response;
+      if(this.wages==null){
+        this.wages=[];
+      }
       console.log(response)
     })
+  
 
  
   }

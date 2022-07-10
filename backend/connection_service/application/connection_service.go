@@ -125,10 +125,18 @@ func (service *ConnectionService) Update(connectionUpdateDTO *domain.ConnectionU
 		if err != nil {
 			return nil, err
 		}
-
-		err = service.Delete(connectionInDatabase.SubjectId, connectionInDatabase.IssuerId)
-		if err != nil {
-			return nil, err
+		var connectionDTO *domain.ConnectionUpdateDTO = &domain.ConnectionUpdateDTO{
+			Type:       domain.Following,
+			IssuerId:   connectionInDatabase.SubjectId,
+			SubjectId:  connectionInDatabase.IssuerId,
+			IsApproved: true,
+		}
+		possibleReverseConnection, err := service.store.GetByIssuerIdAndSubjectId(connectionDTO)
+		if possibleReverseConnection != nil {
+			err = service.Delete(connectionInDatabase.SubjectId, connectionInDatabase.IssuerId)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		updatedConnection, err = service.Create(&domain.Connection{

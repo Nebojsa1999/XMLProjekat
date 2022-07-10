@@ -8,7 +8,7 @@ export interface Post{
 	likesCount: number;    
 	dislikesCount: number; 
 	comments: Comment[];      
-	links: string[];          
+	link: string[];          
 	whoLiked: string[];      
 	whoDisliked: string[];   
 	user: User;

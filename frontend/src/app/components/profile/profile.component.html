@@ -4,8 +4,8 @@
                 <h1>
                     {{profile.firstName}} {{profile.lastName}} <button mat-button color="primary" *ngIf="isProfileOwner" (click)="generateTokenDialog()" >Generate Job Token</button>
                 </h1> 
-                <label for="isPrivate">Private profile?</label>
-                <input type="checkbox" id="isPrivate" [(ngModel)]="profilePrivacy">
+                <label for="isPrivate">Private profile:</label>
+                <input type="checkbox" id="isPrivate" *ngIf="isProfileOwner" [(ngModel)]="profilePrivacy">
             </div>
             <div>
                 <h3 style="margin-top: 5%; font-size: 18px; font-weight: 400;">Contact Info:</h3>
@@ -147,6 +147,10 @@
                         </div> <br> 
                         <h6>Content:</h6>
                         <p class="post-text" [innerHTML]="post.content"></p> 
+                        <label>Links:</label>
+                        <p *ngFor="let link of post.link">
+                            <a href="{{link}}" target="_blank">{{link}}</a>
+                        </p>
                         
                         <img style="width: 300px; " src="../../../assets/images/{{post.image}}"/><br><br>
                         <span class="post-info likes">{{post.likesCount}} Likes</span>
