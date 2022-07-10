@@ -1,4 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { User } from 'src/app/model/user';
 import { AuthenticationService } from 'src/app/service/authentication.service';
@@ -29,7 +31,7 @@ export class AllProfilesComponent implements OnInit {
   }
 
   constructor(private _profileService: ProfileService,private authservice: AuthenticationService,
-    public _router: Router, private _connectionService: ConnectionService) { }
+    public _router: Router, private _connectionService: ConnectionService,private snackBar:MatSnackBar) { }
 
   ngOnInit(): void {
     this.getAllProfiles();
@@ -92,8 +94,8 @@ export class AllProfilesComponent implements OnInit {
           console.log(response);
           alert("Done");
         },
-        error =>{ alert("Already sent request to this profile")
-
+        (error:HttpErrorResponse) =>{ 
+            this.snackBar.open("Cant connect to this profile","close",{duration:5000})
         }
       )
     } else {
@@ -103,7 +105,9 @@ export class AllProfilesComponent implements OnInit {
           console.log(response);
           alert("Done");
         },
-        error =>{ alert("Already sent request to this profile")}
+        (error:HttpErrorResponse) =>{ 
+          this.snackBar.open("Cant connect to this profile","close",{duration:5000})
+      }
       )
     }
   }

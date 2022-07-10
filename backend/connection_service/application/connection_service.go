@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Nebojsa1999/XMLProjekat/backend/connection_service/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 type ConnectionService struct {
@@ -99,6 +100,12 @@ func (service *ConnectionService) Create(connection *domain.Connection) (*domain
 			c.Type == connection.Type {
 			return nil, fmt.Errorf("same connection already exists")
 		}
+		if c.IssuerId == connection.IssuerId && c.SubjectId == connection.SubjectId && c.Type == domain.Blocking {
+			return nil, fmt.Errorf("user is blocked")
+		}
+		if c.IssuerId == connection.SubjectId && c.SubjectId == connection.IssuerId && c.Type == domain.Blocking {
+			return nil, fmt.Errorf("user is blocked")
+		}
 	}
 
 	return service.store.Create(connection)
@@ -111,8 +118,36 @@ func (service *ConnectionService) Update(connectionUpdateDTO *domain.ConnectionU
 		return nil, fmt.Errorf("connection with given issuer id and subject id does not exist")
 	}
 
-	connectionInDatabase.Type = connectionUpdateDTO.Type
-	connectionInDatabase.IsApproved = connectionUpdateDTO.IsApproved
+	var updatedConnection *domain.Connection
+
+	if connectionInDatabase.Type == domain.Following && connectionUpdateDTO.Type == domain.Blocking {
+		err := service.Delete(connectionInDatabase.IssuerId, connectionInDatabase.SubjectId)
+		if err != nil {
+			return nil, err
+		}
+
+		err = service.Delete(connectionInDatabase.SubjectId, connectionInDatabase.IssuerId)
+		if err != nil {
+			return nil, err
+		}
+
+		updatedConnection, err = service.Create(&domain.Connection{
+			Id:         primitive.ObjectID{},
+			Type:       domain.Blocking,
+			IssuerId:   connectionUpdateDTO.IssuerId,
+			SubjectId:  connectionUpdateDTO.SubjectId,
+			Date:       time.Now(),
+			IsApproved: true,
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		return updatedConnection, nil
+	} else {
+		connectionInDatabase.Type = connectionUpdateDTO.Type
+		connectionInDatabase.IsApproved = connectionUpdateDTO.IsApproved
+	}
 
 	return service.store.Update(connectionInDatabase)
 }
