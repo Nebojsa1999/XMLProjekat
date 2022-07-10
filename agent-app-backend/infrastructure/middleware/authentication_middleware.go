@@ -95,12 +95,15 @@ func isAProtectedRoute(method, path string) bool {
 
 	pathToSingleCommentById, _ := regexp.MatchString("/agent-app/job/comment/[0-9a-f]+", path)
 	pathToAllComments, _ := regexp.MatchString("/agent-app/company/comment/[0-9a-f]+", path)
+	pathToCommentCreation := "/agent-app/job/comment/create"
 
 	pathToSingleWageById, _ := regexp.MatchString("/agent-app/job/wage/[0-9a-f]+", path)
 	pathToAllWages, _ := regexp.MatchString("/agent-app/company/wage/[0-9a-f]+", path)
+	pathToWageCreation := "/agent-app/job/wage/create"
 
 	pathToSingleInterviewById, _ := regexp.MatchString("/agent-app/job/interview/[0-9a-f]+", path)
 	pathToAllInterviews, _ := regexp.MatchString("/agent-app/company/interview/[0-9a-f]+", path)
+	pathToInterviewCreation := "/agent-app/job/interview/create"
 
 	pathToUserRegistration := "/agent-app/user/register"
 	pathToUserLogin := "/agent-app/user/login"
@@ -111,7 +114,8 @@ func isAProtectedRoute(method, path string) bool {
 			return false
 		}
 	case "POST":
-		if path == pathToUserRegistration || path == pathToUserLogin {
+		if path == pathToUserRegistration || path == pathToUserLogin || path == pathToCommentCreation ||
+			path == pathToWageCreation || path == pathToInterviewCreation {
 			return false
 		}
 
@@ -155,16 +159,13 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 	pathToJobUpdateReviews, _ := regexp.MatchString("/agent-app/job/[0-9a-f]+/update-reviews", path)
 
 	pathToComment, _ :=
-		regexp.MatchString("/agent-app/job/comment/[0-9a-f]+", path)
-	pathToCommentCreation := "/agent-app/job/comment/create"
+		regexp.MatchString("/agent-app/company/comment/[0-9a-f]+", path)
 
 	pathToWage, _ :=
 		regexp.MatchString("/agent-app/job/wage/[0-9a-f]+", path)
-	pathToWageCreation := "/agent-app/job/wage/create"
 
 	pathToInterview, _ :=
 		regexp.MatchString("/agent-app/job/interview/[0-9a-f]+", path)
-	pathToInterviewCreation := "/agent-app/job/interview/create"
 
 	if pathToUser && method == http.MethodGet {
 		if userRole == enums.Administrator {
@@ -235,14 +236,6 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		return false
 	}
 
-	if path == pathToCommentCreation && method == "POST" {
-		if userRole == enums.CommonUser {
-			return true
-		}
-
-		return false
-	}
-
 	if pathToComment && method == "PUT" {
 		if userRole == enums.CommonUser {
 			return true
@@ -251,23 +244,7 @@ func isUserAuthorizedToAccessRoute(authorizationDeterminingData AuthorizationDet
 		return false
 	}
 
-	if path == pathToWageCreation && method == "POST" {
-		if userRole == enums.CommonUser {
-			return true
-		}
-
-		return false
-	}
-
 	if pathToWage && method == "PUT" {
-		if userRole == enums.CommonUser {
-			return true
-		}
-
-		return false
-	}
-
-	if path == pathToInterviewCreation && method == "POST" {
 		if userRole == enums.CommonUser {
 			return true
 		}

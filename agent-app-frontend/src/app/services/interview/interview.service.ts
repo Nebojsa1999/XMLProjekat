@@ -20,7 +20,7 @@ export class InterviewService {
     return this._http.get<any>(`${this.applicationURL}/agent-app/company/interview/${id}`);
   }
 
-  createNewInterview(dto: NewInterviewDto) {
-    return this._http.post(this.applicationURL + "/agent-app/job/interview/create", dto);
+  createNewInterview(dto: NewInterviewDto): Observable<any> {
+    return this._http.post<any>(this.applicationURL + "/agent-app/job/interview/create", dto);
   }
 }

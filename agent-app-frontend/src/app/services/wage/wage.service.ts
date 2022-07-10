@@ -20,7 +20,7 @@ export class WageService {
     return this._http.get<any>(`${this.applicationURL}/agent-app/company/wage/${id}`);
   }
 
-  createNewWage(dto: NewWageDto) {
-    return this._http.post(this.applicationURL + "/agent-app/job/wage/create", dto);
+  createNewWage(dto: NewWageDto): Observable<any> {
+    return this._http.post<any>(this.applicationURL + "/agent-app/job/wage/create", dto);
   }
 }
