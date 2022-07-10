@@ -15,6 +15,7 @@ export class RequestsComponent implements OnInit {
   connections: User[] = [];
   numberOfConnections: number = 0;
   private requestDTO: ConnectionDTO = {
+    type : "",
     issuerId : "",
     subjectId : "",
     isApproved : false

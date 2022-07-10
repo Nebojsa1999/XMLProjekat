@@ -12,6 +12,7 @@ type ConnectionStore interface {
 	GetByUserId(userId primitive.ObjectID) ([]*Connection, error)
 	GetConnectionsOfFollowingTypeByUserId(userId primitive.ObjectID) ([]*Connection, error)
 	GetConnectionsOfBlockingTypeByUserId(userId primitive.ObjectID) ([]*Connection, error)
+	GetByIssuerIdAndSubjectId(connectionUpdateDTO *ConnectionUpdateDTO) (*Connection, error)
 	GetByTypeAndIssuerIdAndSubjectId(connectionUpdateDTO *ConnectionUpdateDTO) (*Connection, error)
 	GetFollowingByUserId(userId primitive.ObjectID) ([]*Connection, error)
 	GetFollowersByUserId(userId primitive.ObjectID) ([]*Connection, error)

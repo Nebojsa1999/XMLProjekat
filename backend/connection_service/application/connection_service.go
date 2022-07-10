@@ -106,7 +106,7 @@ func (service *ConnectionService) Create(connection *domain.Connection) (*domain
 
 func (service *ConnectionService) Update(connectionUpdateDTO *domain.ConnectionUpdateDTO) (*domain.Connection, error) {
 	connectionInDatabase, _ :=
-		service.store.GetByTypeAndIssuerIdAndSubjectId(connectionUpdateDTO)
+		service.store.GetByIssuerIdAndSubjectId(connectionUpdateDTO)
 	if connectionInDatabase == nil {
 		return nil, fmt.Errorf("connection with given issuer id and subject id does not exist")
 	}
@@ -117,22 +117,12 @@ func (service *ConnectionService) Update(connectionUpdateDTO *domain.ConnectionU
 	return service.store.Update(connectionInDatabase)
 }
 
-func (service *ConnectionService) Delete(typeAsString string, issuerId, subjectId primitive.ObjectID) error {
-	if typeAsString != domain.Following && typeAsString != domain.Blocking {
-		return fmt.Errorf("type of connection is invalid")
-	}
-
-	var typeOfConnection domain.TypeOfConnection
-	if typeAsString == domain.Following {
-		typeOfConnection = domain.Following
-	} else {
-		typeOfConnection = domain.Blocking
-	}
+func (service *ConnectionService) Delete(issuerId, subjectId primitive.ObjectID) error {
 
 	connectionUpdateDTO :=
-		&domain.ConnectionUpdateDTO{Type: typeOfConnection, IssuerId: issuerId, SubjectId: subjectId}
+		&domain.ConnectionUpdateDTO{IssuerId: issuerId, SubjectId: subjectId}
 
-	connectionInDatabase, _ := service.store.GetByTypeAndIssuerIdAndSubjectId(connectionUpdateDTO)
+	connectionInDatabase, _ := service.store.GetByIssuerIdAndSubjectId(connectionUpdateDTO)
 	if connectionInDatabase == nil {
 		return fmt.Errorf("connection with given issuer id and subject id does not exist")
 	}

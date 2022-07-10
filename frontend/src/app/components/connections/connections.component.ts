@@ -13,6 +13,7 @@ export class ConnectionsComponent implements OnInit {
   private id: any;
   public connectionsId: string[]=[];
   users: User[] = [];
+  connections: ConnectionDTO[]=[];
   numberOfConnections: number = 0;
 
   constructor(private _connectionService: ConnectionService,
@@ -27,6 +28,7 @@ export class ConnectionsComponent implements OnInit {
     this._connectionService.getConnections(userId).subscribe(
       response => {
         console.log(response);
+        this.connections=response.connections;
         for(let i = 0;i<response.connections.length;i++){
           if(response.connections[i].isApproved == true){
             this.connectionsId.push(response.connections[i].id);
@@ -58,6 +60,28 @@ export class ConnectionsComponent implements OnInit {
       }
     )
     window.location.reload();
+  }
+
+  blockUser(id:string):void{
+    let connectionToBlock:ConnectionDTO={
+      type: '',
+      issuerId: '',
+      subjectId: '',
+      isApproved: false
+    };
+    console.log(this.connections)
+    for(let i of this.connections){
+      if(id == i.subjectId ){
+        connectionToBlock=i;
+        break;
+      }
+    }
+    connectionToBlock.type = "Blocking";
+    this._connectionService.editRequest(connectionToBlock).subscribe(
+      (response)=>{
+        console.log(response);
+      }
+    )
   }
   }
 

@@ -137,7 +137,6 @@ message UpdateResponse {
 }
 
 message DeleteRequest {
-  string type = 1;
   string issuerId = 2;
   string subjectId = 3;
 }

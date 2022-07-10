@@ -9,6 +9,7 @@ import (
 var connections = []*domain.Connection{
 	{
 		Id:         getObjectId("62706d1b624b3da748f63fe1"),
+		Type:       domain.Following,
 		IssuerId:   getObjectId("623b0cc3a34d25d8567f9f85"),
 		SubjectId:  getObjectId("623b0cc3a34d25d8567f9f82"),
 		IsApproved: true,
@@ -16,6 +17,7 @@ var connections = []*domain.Connection{
 	},
 	{
 		Id:         getObjectId("62706c1b624b3da748f63fe2"),
+		Type:       domain.Following,
 		IssuerId:   getObjectId("623b0cc3a34d25d8567f9f82"),
 		SubjectId:  getObjectId("623b0cc3a34d25d8567f9f83"),
 		IsApproved: true,
@@ -23,33 +25,11 @@ var connections = []*domain.Connection{
 	},
 	{
 		Id:         getObjectId("62706c1b624b3da748f63fe3"),
+		Type:       domain.Following,
 		IssuerId:   getObjectId("623b0cc3a34d25d8567f9f83"),
 		SubjectId:  getObjectId("623b0cc3a34d25d8567f9f82"),
 		IsApproved: true,
 		Date:       time.Now(),
-	},
-}
-
-var profilesPrivacy = []*domain.ProfilePrivacy{
-	{
-		Id:        primitive.NewObjectID(),
-		UserId:    getObjectId("623b0cc3a34d25d8567f9f82"),
-		IsPrivate: true,
-	},
-	{
-		Id:        primitive.NewObjectID(),
-		UserId:    getObjectId("623b0cc3a34d25d8567f9f83"),
-		IsPrivate: true,
-	},
-	{
-		Id:        primitive.NewObjectID(),
-		UserId:    getObjectId("623b0cc3a34d25d8567f9f84"),
-		IsPrivate: false,
-	},
-	{
-		Id:        primitive.NewObjectID(),
-		UserId:    getObjectId("623b0cc3a34d25d8567f9f85"),
-		IsPrivate: false,
 	},
 }
 

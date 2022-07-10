@@ -8,12 +8,12 @@ import (
 
 type ConnectionHandler struct {
 	pb.UnimplementedConnectionServiceServer
-	service    *application.ConnectionService
+	service *application.ConnectionService
 }
 
 func NewConnectionHandler(service *application.ConnectionService) *ConnectionHandler {
 	return &ConnectionHandler{
-		service:    service,
+		service: service,
 	}
 }
 
@@ -302,11 +302,10 @@ func (handler *ConnectionHandler) Update(ctx context.Context, request *pb.Update
 }
 
 func (handler *ConnectionHandler) Delete(ctx context.Context, request *pb.DeleteRequest) (*pb.DeleteResponse, error) {
-	typeAsString := request.Type
 	issuerId := getObjectId(request.IssuerId)
 	subjectId := getObjectId(request.SubjectId)
 
-	err := handler.service.Delete(typeAsString, issuerId, subjectId)
+	err := handler.service.Delete(issuerId, subjectId)
 	if err != nil {
 		return nil, err
 	}

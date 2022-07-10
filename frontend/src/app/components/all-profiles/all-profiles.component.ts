@@ -22,6 +22,7 @@ export class AllProfilesComponent implements OnInit {
   // isFollowing = false;
 
   private connectionDTO: ConnectionDTO = {
+    type: "",
     issuerId : "",
     subjectId : "",
     isApproved : false,
@@ -53,7 +54,6 @@ export class AllProfilesComponent implements OnInit {
         this.profiles = response.users;
         console.log(this.profiles);
         this.results = response.users.length;
-        console.log(response.length);
         console.log(typeof(this.profiles))
       }
     )
@@ -84,6 +84,7 @@ export class AllProfilesComponent implements OnInit {
   connect(subjectId: string, isPrivate: boolean): void {
     this.connectionDTO.issuerId = this.id;
     this.connectionDTO.subjectId = subjectId;
+    this.connectionDTO.type="Following";
     if (isPrivate) {
       this.connectionDTO.isApproved=false;
       this._connectionService.makeConnection(this.connectionDTO).subscribe(

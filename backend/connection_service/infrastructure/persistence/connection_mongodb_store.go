@@ -14,14 +14,14 @@ const (
 )
 
 type ConnectionMongoDBStore struct {
-	connections     *mongo.Collection
+	connections *mongo.Collection
 }
 
 func NewConnectionMongoDBStore(client *mongo.Client) domain.ConnectionStore {
 	connections := client.Database(DATABASE).Collection(COLLECTION)
 
 	return &ConnectionMongoDBStore{
-		connections:     connections,
+		connections: connections,
 	}
 }
 
@@ -77,6 +77,13 @@ func (store *ConnectionMongoDBStore) GetConnectionsOfBlockingTypeByUserId(userId
 	filter := bson.M{"$or": []bson.M{{"type": domain.Blocking}, {"issuer_id": userId}, {"subject_id": userId}}}
 
 	return store.filterConnections(filter)
+}
+
+func (store *ConnectionMongoDBStore) GetByIssuerIdAndSubjectId(connectionUpdateDTO *domain.ConnectionUpdateDTO) (*domain.Connection, error) {
+	filter := bson.M{"issuer_id": connectionUpdateDTO.IssuerId,
+		"subject_id": connectionUpdateDTO.SubjectId}
+
+	return store.filterOneConnection(filter)
 }
 
 func (store *ConnectionMongoDBStore) GetByTypeAndIssuerIdAndSubjectId(connectionUpdateDTO *domain.ConnectionUpdateDTO) (*domain.Connection, error) {

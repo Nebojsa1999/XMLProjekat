@@ -13,11 +13,11 @@ export class ConnectionService {
   constructor(private _http: HttpClient) { }
 
   getConnections(userId: string): Observable<any> {
-    return this._http.get<any>(this.applicationURL + "/connection/" + userId + "/following");
+    return this._http.get<any>(this.applicationURL + "/connection/following-type/" + userId + "/following");
   }
 
   getConnectionsRequest(userId: string): Observable<any> {
-    return this._http.get<any>(this.applicationURL + "/connection/" + userId + "/followers");
+    return this._http.get<any>(this.applicationURL + "/connection/following-type/" + userId + "/followers");
   }
 
   makeConnection(request: ConnectionDTO): Observable<any> {
@@ -31,4 +31,8 @@ export class ConnectionService {
   deleteConnection(issuerId:string,subjectId:string): Observable<any> {
     return this._http.delete<any>(this.applicationURL + "/connection?issuerId=" + issuerId + "&subjectId=" + subjectId);
   }
+
+ 
+
+  
 }
