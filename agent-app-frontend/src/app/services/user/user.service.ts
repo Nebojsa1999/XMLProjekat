@@ -16,6 +16,10 @@ export class UserService {
     return this.httpClient.get<any>(this.userEntityURL + '/' + id);
   }
 
+  updateUser(id:string,user:User): Observable<any>{
+    return this.httpClient.put<any>(this.userEntityURL + '/' + id,user);
+  }
+
   registerAsACommonUser(newCommonUser: User): Observable<any> {
     const headers = new HttpHeaders({
       'Accept': 'application/json',

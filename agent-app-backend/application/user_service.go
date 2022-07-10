@@ -124,6 +124,7 @@ func (service *UserService) Update(modifiedUser *domain.User) (string, *domain.U
 	}
 
 	userInDatabase.Username = modifiedUser.Username
+	userInDatabase.Role = modifiedUser.Role
 	userInDatabase.Password = modifiedUser.Password
 	userInDatabase.FirstName = modifiedUser.FirstName
 	userInDatabase.LastName = modifiedUser.LastName
